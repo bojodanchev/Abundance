@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Diamond } from "lucide-react";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
+import { Link } from "@/i18n/navigation";
 
 const NAV_LINKS = [
   { label: "Диагностика", href: "#diagnostic" },
@@ -41,23 +42,23 @@ export default function Navbar() {
         {/* Desktop right side */}
         <div className="hidden md:flex items-center gap-4">
           <LanguageSwitcher />
-          <a
-            href="#diagnostic"
+          <Link
+            href="/diagnose"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-accent text-primary text-sm font-display font-semibold rounded-lg hover:bg-accent-dark transition-all duration-200"
           >
             Започни
             <span aria-hidden="true">&rarr;</span>
-          </a>
+          </Link>
         </div>
 
         {/* Mobile: CTA + hamburger */}
         <div className="flex md:hidden items-center gap-3">
-          <a
-            href="#diagnostic"
+          <Link
+            href="/diagnose"
             className="px-4 py-2 bg-accent text-primary text-sm font-display font-semibold rounded-lg"
           >
             Започни
-          </a>
+          </Link>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="text-text-primary p-1"

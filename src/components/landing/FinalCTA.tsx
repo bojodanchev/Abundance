@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Link } from "@/i18n/navigation";
 
 export default function FinalCTA() {
   return (
@@ -23,12 +24,12 @@ export default function FinalCTA() {
         <p className="text-primary/80 font-body text-lg mb-10 max-w-xl mx-auto">
           Започни безплатната диагностика и получи персонализиран анализ на живота си.
         </p>
-        <a
-          href="#diagnostic"
+        <Link
+          href="/diagnose"
           className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white text-base font-display font-semibold rounded-lg hover:opacity-90 transition-all duration-200 mb-4"
         >
           Започни Безплатната Диагностика
-        </a>
+        </Link>
         <p className="text-primary/60 text-sm font-body">
           Безплатно &bull; 7 минути &bull; Без ангажимент
         </p>

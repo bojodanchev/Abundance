@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 
 export default function Hero() {
   return (
@@ -60,13 +61,13 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
         >
-          <a
-            href="#diagnostic"
+          <Link
+            href="/diagnose"
             className="inline-flex items-center gap-2 px-8 py-4 bg-accent text-primary text-base font-display font-semibold rounded-lg hover:bg-accent-dark transition-all duration-200"
           >
             Започни Диагностиката
             <span aria-hidden="true">&rarr;</span>
-          </a>
+          </Link>
           <a
             href="#how-it-works"
             className="inline-flex items-center gap-2 px-8 py-4 border-2 border-accent text-accent text-base font-display font-semibold rounded-lg hover:bg-accent hover:text-primary transition-all duration-200"

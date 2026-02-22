@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "@/i18n/navigation";
 
 const TABS = [
   {
@@ -111,13 +112,13 @@ export default function ForWho() {
                 </li>
               ))}
             </ul>
-            <a
-              href="#diagnostic"
+            <Link
+              href="/diagnose"
               className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-primary text-sm font-display font-semibold rounded-lg hover:bg-accent-dark transition-all duration-200"
             >
               Започни Диагностиката
               <span aria-hidden="true">&rarr;</span>
-            </a>
+            </Link>
           </motion.div>
         </AnimatePresence>
       </div>
