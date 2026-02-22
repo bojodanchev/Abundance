@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+/* ================================================
+   CODE: ABUNDANCE — Bold Luxury Design Tokens
+   ================================================ */
+
+@theme inline {
+  /* Primary palette */
+  --color-primary: #000000;
+  --color-accent: #C9A84C;
+  --color-accent-light: #E8D5A3;
+  --color-accent-dark: #8B7235;
+
+  /* Surfaces */
+  --color-surface: #FFFFFF;
+  --color-surface-dark: #0A0A0A;
+  --color-surface-muted: #141414;
+
+  /* Text */
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #9CA3AF;
+  --color-text-dark: #0A0A0A;
+
+  /* Borders */
+  --color-border: #1F1F1F;
+  --color-border-light: #E5E7EB;
+
+  /* Background / foreground shortcuts */
+  --color-background: var(--color-surface-dark);
+  --color-foreground: var(--color-text-primary);
+
+  /* Fonts */
+  --font-display: var(--font-plus-jakarta-sans), "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-body: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* ================================================
+   Base styles
+   ================================================ */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-surface-dark);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+/* Selection highlight */
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-primary);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent-dark);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* ================================================
+   Utility classes
+   ================================================ */
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, var(--color-accent-light), var(--color-accent), var(--color-accent-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.border-gradient-gold {
+  border-image: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent), var(--color-accent-dark)) 1;
+}
+
+.bg-radial-gold {
+  background: radial-gradient(ellipse at center, rgba(201, 168, 76, 0.15) 0%, transparent 70%);
+}
