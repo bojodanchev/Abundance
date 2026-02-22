@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import CookieConsent from "@/components/shared/CookieConsent";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
@@ -20,10 +21,45 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "700"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://codeabundance.com";
+
 export const metadata: Metadata = {
-  title: "CODE: ABUNDANCE — Diagnostic Assessment",
+  title: {
+    default: "CODE: ABUNDANCE — Открий Кода Си Към Изобилието",
+    template: "%s | CODE: ABUNDANCE",
+  },
   description:
-    "Discover your personal abundance blueprint. A luxury diagnostic experience that reveals your strengths, blind spots, and the exact next step to unlock your potential.",
+    "Персонализирана AI диагностика базирана на Human Design, астрология и нумерология. Разкрий силните си страни и получи 90-дневен план за действие.",
+  metadataBase: new URL(siteUrl),
+  openGraph: {
+    type: "website",
+    locale: "bg_BG",
+    alternateLocale: "en_US",
+    siteName: "CODE: ABUNDANCE",
+    title: "CODE: ABUNDANCE — Открий Кода Си Към Изобилието",
+    description:
+      "7-минутна AI диагностика, която разкрива какво те спира и как да го преодолееш. Human Design + Астрология + Нумерология.",
+    url: siteUrl,
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "CODE: ABUNDANCE — AI Diagnostic",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CODE: ABUNDANCE — Открий Кода Си Към Изобилието",
+    description:
+      "7-минутна AI диагностика, която разкрива какво те спира и как да го преодолееш.",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -37,6 +73,7 @@ export default function RootLayout({
         className={`${plusJakartaSans.variable} ${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
         {children}
+        <CookieConsent />
       </body>
     </html>
   );

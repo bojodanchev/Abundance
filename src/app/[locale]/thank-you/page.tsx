@@ -1,7 +1,10 @@
 "use client";
 
+import { Suspense, useState } from "react";
 import { motion } from "framer-motion";
-import { Shield, Play, Check, Star, ArrowRight } from "lucide-react";
+import { Shield, Play, Check, Star, ArrowRight, Loader2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useLocale } from "next-intl";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
 
 /* -------------------------------------------------- */
@@ -39,8 +42,11 @@ const popularCardHover = {
 /*  Data                                               */
 /* -------------------------------------------------- */
 
+type CheckoutTier = "low" | "mid" | "high";
+
 type PricingTier = {
   id: string;
+  checkoutTier?: CheckoutTier;
   header: string;
   price: string;
   priceSuffix?: string;
@@ -69,6 +75,7 @@ const tiers: PricingTier[] = [
   },
   {
     id: "full",
+    checkoutTier: "low",
     header: "Пълен Доклад",
     price: "€37",
     badge: "Най-популярен",
@@ -87,6 +94,7 @@ const tiers: PricingTier[] = [
   },
   {
     id: "vip",
+    checkoutTier: "high",
     header: "VIP Coaching",
     price: "€697+",
     badge: "Ограничени места",
@@ -125,7 +133,15 @@ function FeatureItem({ text }: { text: string }) {
   );
 }
 
-function PricingCard({ tier }: { tier: PricingTier }) {
+function PricingCard({
+  tier,
+  onCheckout,
+  loading,
+}: {
+  tier: PricingTier;
+  onCheckout?: (checkoutTier: CheckoutTier) => void;
+  loading?: boolean;
+}) {
   const isPopular = tier.highlighted;
 
   return (
@@ -206,15 +222,25 @@ function PricingCard({ tier }: { tier: PricingTier }) {
         {/* CTA */}
         <div className="mt-8">
           {tier.buttonVariant === "primary" && (
-            <button className="w-full inline-flex items-center justify-center gap-2 bg-accent text-primary font-display font-bold rounded-lg px-6 py-3.5 text-sm transition-all duration-300 hover:bg-accent-light cursor-pointer">
+            <button
+              onClick={() => tier.checkoutTier && onCheckout?.(tier.checkoutTier)}
+              disabled={loading}
+              className="w-full inline-flex items-center justify-center gap-2 bg-accent text-primary font-display font-bold rounded-lg px-6 py-3.5 text-sm transition-all duration-300 hover:bg-accent-light cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+            >
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {tier.buttonLabel}
-              <ArrowRight className="w-4 h-4" />
+              {!loading && <ArrowRight className="w-4 h-4" />}
             </button>
           )}
           {tier.buttonVariant === "secondary" && (
-            <button className="w-full inline-flex items-center justify-center gap-2 border-2 border-accent text-accent font-display font-bold rounded-lg px-6 py-3.5 text-sm transition-all duration-300 hover:bg-accent/10 cursor-pointer">
+            <button
+              onClick={() => tier.checkoutTier && onCheckout?.(tier.checkoutTier)}
+              disabled={loading}
+              className="w-full inline-flex items-center justify-center gap-2 border-2 border-accent text-accent font-display font-bold rounded-lg px-6 py-3.5 text-sm transition-all duration-300 hover:bg-accent/10 cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+            >
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {tier.buttonLabel}
-              <ArrowRight className="w-4 h-4" />
+              {!loading && <ArrowRight className="w-4 h-4" />}
             </button>
           )}
           {tier.buttonVariant === "ghost" && (
@@ -236,7 +262,47 @@ function PricingCard({ tier }: { tier: PricingTier }) {
 /*  Page                                               */
 /* -------------------------------------------------- */
 
-export default function ThankYouPage() {
+export default function ThankYouPageWrapper() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-surface-dark" />}>
+      <ThankYouPage />
+    </Suspense>
+  );
+}
+
+function ThankYouPage() {
+  const searchParams = useSearchParams();
+  const locale = useLocale();
+  const email = searchParams.get("email") ?? "";
+  const submissionId = searchParams.get("id") ?? "";
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+
+  async function handleCheckout(tier: CheckoutTier) {
+    if (!submissionId || checkoutLoading) return;
+    setCheckoutLoading(tier);
+    try {
+      const res = await fetch("/api/create-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          submission_id: submissionId,
+          tier,
+          locale,
+        }),
+      });
+      const json = await res.json();
+      if (json.success && json.url) {
+        window.location.href = json.url;
+      } else {
+        console.error("Checkout error:", json.error);
+        setCheckoutLoading(null);
+      }
+    } catch (err) {
+      console.error("Checkout fetch error:", err);
+      setCheckoutLoading(null);
+    }
+  }
+
   return (
     <main className="min-h-screen bg-surface-dark">
       {/* ---- Minimal Navbar ---- */}
@@ -279,7 +345,7 @@ export default function ThankYouPage() {
               className="text-text-secondary text-base sm:text-lg"
             >
               Провери inbox-а си за{" "}
-              <span className="text-accent font-medium">email@example.com</span>
+              <span className="text-accent font-medium">{email || "..."}</span>
             </motion.p>
           </div>
         </motion.section>
@@ -372,7 +438,12 @@ export default function ThankYouPage() {
               className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch"
             >
               {tiers.map((tier) => (
-                <PricingCard key={tier.id} tier={tier} />
+                <PricingCard
+                  key={tier.id}
+                  tier={tier}
+                  onCheckout={handleCheckout}
+                  loading={checkoutLoading === tier.checkoutTier}
+                />
               ))}
             </motion.div>
           </div>

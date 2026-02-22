@@ -163,15 +163,20 @@ function buildWelcomeEmail(
   });
 }
 
-function buildNurtureEmail(
+export function buildNurtureEmail(
   submission: Record<string, unknown>,
-  emailType: string
+  emailType: string,
+  baseUrl: string
 ) {
   const locale = (submission.locale as string) ?? "bg";
   const name = submission.user_name as string;
+  const submissionId = submission.id as string;
   const isBg = locale === "bg";
 
-  const nurtureContent: Record<string, { subject: string; heading: string; body: string; cta: string }> = {
+  const resultsUrl = `${baseUrl}/${locale}/results/${submissionId}`;
+  const upgradeUrl = `${baseUrl}/${locale}/results/${submissionId}?upgrade=true`;
+
+  const nurtureContent: Record<string, { subject: string; heading: string; body: string; cta: string; ctaUrl: string }> = {
     nurture_1: {
       subject: isBg ? "Прочете ли доклада си?" : "Have you read your report?",
       heading: isBg ? `${name}, видя ли какво открихме?` : `${name}, did you see what we found?`,
@@ -179,6 +184,7 @@ function buildNurtureEmail(
         ? "Твоят безплатен анализ разкрива само повърхността. Пълният доклад съдържа детайлен Human Design профил, нумерологичен анализ и персонализиран 90-дневен план за действие — специално създаден за теб."
         : "Your free analysis only scratches the surface. The full report contains a detailed Human Design profile, numerology analysis, and a personalized 90-day action plan — created specifically for you.",
       cta: isBg ? "Отключи Пълния Доклад →" : "Unlock Full Report →",
+      ctaUrl: resultsUrl,
     },
     nurture_2: {
       subject: isBg ? "Цената на бездействието" : "The cost of staying stuck",
@@ -187,6 +193,7 @@ function buildNurtureEmail(
         ? "Всеки ден без ясна посока е ден, в който потенциалът ти остава неизползван. Хората с твоя профил, които следват персонализиран план, постигат 3 пъти по-бърз прогрес в рамките на 90 дни."
         : "Every day without clear direction is a day your potential remains untapped. People with your profile who follow a personalized plan achieve 3x faster progress within 90 days.",
       cta: isBg ? "Вземи Своя План →" : "Get Your Plan →",
+      ctaUrl: resultsUrl,
     },
     nurture_3: {
       subject: isBg ? "Как Мария постигна целите си за 60 дни" : "How Maria achieved her goals in 60 days",
@@ -195,6 +202,7 @@ function buildNurtureEmail(
         ? "Мария беше точно като теб — усещаше, че нещо не е наред, но не знаеше откъде да започне. След като получи пълния си CODE: ABUNDANCE доклад, тя следва плана стъпка по стъпка и постигна финансовите си цели за 60 дни. Ограничен брой места за тази оферта."
         : "Maria was just like you — she felt something was off but didn't know where to start. After getting her full CODE: ABUNDANCE report, she followed the plan step by step and achieved her financial goals in 60 days. Limited spots available for this offer.",
       cta: isBg ? "Виж Офертата →" : "See the Offer →",
+      ctaUrl: upgradeUrl,
     },
     nurture_4: {
       subject: isBg ? "Последен шанс: персонален коучинг" : "Last chance: personal coaching",
@@ -203,6 +211,7 @@ function buildNurtureEmail(
         ? "За хора като теб, които са готови да действат сериозно, предлагаме 1-на-1 коучинг програма с персонализиран roadmap базиран на твоя CODE: ABUNDANCE профил. Местата са ограничени."
         : "For people like you who are ready to take serious action, we offer a 1-on-1 coaching program with a personalized roadmap based on your CODE: ABUNDANCE profile. Spots are limited.",
       cta: isBg ? "Запази Място →" : "Reserve Your Spot →",
+      ctaUrl: upgradeUrl,
     },
     nurture_5: {
       subject: isBg ? "Финална покана" : "Final invitation",
@@ -211,6 +220,7 @@ function buildNurtureEmail(
         ? "Тази оферта изтича утре. Ако чувстваш, че е време за промяна, сега е моментът. Не позволявай на страха да те спре. Твоят CODE: ABUNDANCE профил показва огромен потенциал — нужно е само да направиш първата стъпка."
         : "This offer expires tomorrow. If you feel it's time for change, now is the moment. Don't let fear hold you back. Your CODE: ABUNDANCE profile shows enormous potential — all you need is to take the first step.",
       cta: isBg ? "Вземи Решение Сега →" : "Decide Now →",
+      ctaUrl: upgradeUrl,
     },
   };
 
@@ -228,7 +238,7 @@ function buildNurtureEmail(
       preheader: content.heading,
       bodyHtml,
       ctaText: content.cta,
-      ctaUrl: "#", // TODO: replace with actual upgrade/booking URL
+      ctaUrl: content.ctaUrl,
       locale,
     }),
   };
@@ -293,7 +303,7 @@ export async function POST(request: Request) {
         : `${submission.user_name}, your diagnostic is ready ✦`;
       html = buildWelcomeEmail(submission, analysis, resultsUrl);
     } else {
-      const nurture = buildNurtureEmail(submission, email_type);
+      const nurture = buildNurtureEmail(submission, email_type, baseUrl);
       subject = nurture.subject;
       html = nurture.html;
     }

@@ -121,6 +121,18 @@ export const sendEmailSchema = z.object({
 export type SendEmailInput = z.infer<typeof sendEmailSchema>;
 
 // ============================================================
+// Create Checkout Input
+// ============================================================
+
+export const createCheckoutSchema = z.object({
+  submission_id: z.string().uuid(),
+  tier: z.enum(["low", "mid", "high"]),
+  locale: z.enum(["bg", "en"]).default("bg"),
+});
+
+export type CreateCheckoutInput = z.infer<typeof createCheckoutSchema>;
+
+// ============================================================
 // Analysis Result Shape (from OpenAI)
 // ============================================================
 

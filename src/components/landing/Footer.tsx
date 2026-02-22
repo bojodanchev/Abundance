@@ -1,5 +1,6 @@
 import { Diamond, Instagram, Facebook, Youtube } from "lucide-react";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
+import { Link } from "@/i18n/navigation";
 
 const FOOTER_COLUMNS = [
   {
@@ -21,12 +22,12 @@ const FOOTER_COLUMNS = [
   {
     title: "Правна информация",
     links: [
-      { label: "Условия за ползване", href: "#" },
-      { label: "Политика за поверителност", href: "#" },
+      { label: "Условия за ползване", href: "/terms", isRoute: true },
+      { label: "Политика за поверителност", href: "/privacy", isRoute: true },
       { label: "Бисквитки", href: "#" },
     ],
   },
-];
+] as const;
 
 const SOCIALS = [
   { icon: Instagram, href: "#", label: "Instagram" },
@@ -73,12 +74,21 @@ export default function Footer() {
               <ul className="space-y-3">
                 {col.links.map((link) => (
                   <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="text-sm text-text-secondary hover:text-text-primary transition-colors duration-200 font-body"
-                    >
-                      {link.label}
-                    </a>
+                    {"isRoute" in link && link.isRoute ? (
+                      <Link
+                        href={link.href as "/terms" | "/privacy"}
+                        className="text-sm text-text-secondary hover:text-text-primary transition-colors duration-200 font-body"
+                      >
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={link.href}
+                        className="text-sm text-text-secondary hover:text-text-primary transition-colors duration-200 font-body"
+                      >
+                        {link.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>

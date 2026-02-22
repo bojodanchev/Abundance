@@ -1,14 +1,11 @@
+import React from "react";
+import { renderToBuffer } from "@react-pdf/renderer";
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { generatePdfSchema } from "@/lib/schemas";
-
-// TODO: Implement actual PDF generation with @react-pdf/renderer
-// Install: npm install @react-pdf/renderer
-// This route will:
-// 1. Build a branded Bold Luxury PDF (black bg, gold accents, white text)
-// 2. Free tier: profile type + radar chart placeholder + 1 teaser per area
-// 3. Paid tier: full analysis + 90-day plan + deep dives
-// 4. Upload to Cloudinary and return the URL
+import type { AnalysisResult, LifeArea } from "@/lib/schemas";
+import { AbundanceReport } from "@/lib/pdf/AbundanceReport";
+import type { PdfSubmission } from "@/lib/pdf/AbundanceReport";
 
 export async function POST(request: Request) {
   try {
@@ -46,39 +43,33 @@ export async function POST(request: Request) {
       );
     }
 
-    // TODO: Replace this placeholder with actual @react-pdf/renderer implementation
-    // The PDF should follow the Bold Luxury design system:
-    // - Background: #0A0A0A (near-black)
-    // - Accent: #C9A84C (royal gold)
-    // - Headings: Plus Jakarta Sans 700, white
-    // - Body: Inter 400, #9CA3AF
-    // - Scores: JetBrains Mono 700, gold
-    //
-    // Free tier content:
-    //   - Cover page with name + profile type badge
-    //   - Life audit radar chart visualization
-    //   - 7 teaser insights (one line each)
-    //   - CTA to upgrade for full report
-    //
-    // Paid tier content:
-    //   - Everything in free tier
-    //   - Full Human Design analysis
-    //   - Full numerology analysis
-    //   - Full astrological analysis
-    //   - 90-day action plan (3 phases)
-    //   - Deep dives per priority area
+    // --- Build typed submission for PDF ---
+    const analysis = submission.analysis_result as AnalysisResult;
+    const pdfSubmission: PdfSubmission = {
+      id: submission.id,
+      user_name: submission.user_name,
+      user_email: submission.user_email,
+      scores: submission.scores as Record<LifeArea, number>,
+      priority_top3: submission.priority_top3 as LifeArea[],
+      analysis_result: analysis,
+    };
 
-    const analysis = submission.analysis_result as Record<string, unknown>;
-
-    return NextResponse.json({
-      success: true,
-      submission_id,
+    // --- Generate PDF ---
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const element = React.createElement(AbundanceReport, {
+      submission: pdfSubmission,
       tier,
-      message: "PDF generation placeholder — @react-pdf/renderer implementation pending",
-      preview: {
-        profile: analysis.hd_type_profile,
-        life_path: analysis.life_path_number,
-        content_tier: tier === "free" ? "teaser_only" : "full_report",
+    }) as any;
+
+    const buffer = await renderToBuffer(element);
+
+    const filename = `abundance-report-${tier}.pdf`;
+
+    return new Response(new Uint8Array(buffer), {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="${filename}"`,
+        "Cache-Control": "private, no-cache",
       },
     });
   } catch (error) {

@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Check } from "lucide-react";
 
@@ -13,9 +14,25 @@ const TIP_INTERVAL = 5000;
 
 type StepStatus = "pending" | "active" | "done";
 
-export default function ProcessingPage() {
+export default function ProcessingPageWrapper() {
+  return (
+    <Suspense
+      fallback={
+        <main className="fixed inset-0 z-50 flex items-center justify-center bg-[#0A0A0A]">
+          <span className="text-accent text-2xl">&#9670;</span>
+        </main>
+      }
+    >
+      <ProcessingPage />
+    </Suspense>
+  );
+}
+
+function ProcessingPage() {
   const t = useTranslations("processing");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const submissionId = searchParams.get("id");
 
   /* step state */
   const [steps, setSteps] = useState<StepStatus[]>([
@@ -95,11 +112,15 @@ export default function ProcessingPage() {
 
   /* ── redirect after completion ── */
   useEffect(() => {
+    if (!submissionId) {
+      router.push("/");
+      return;
+    }
     const timeout = setTimeout(() => {
-      router.push("/results/demo");
+      router.push(`/results/${submissionId}`);
     }, TOTAL_DURATION + 1200); // small buffer after 100%
     return () => clearTimeout(timeout);
-  }, [router]);
+  }, [router, submissionId]);
 
   return (
     <main className="fixed inset-0 z-50 flex items-center justify-center bg-[#0A0A0A] overflow-hidden">
