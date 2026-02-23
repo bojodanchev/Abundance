@@ -2,15 +2,7 @@
 
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { useQuiz } from "../QuizContext";
-
-const INCOME_OPTIONS = [
-  "Под €1,000",
-  "€1,000 – €3,000",
-  "€3,000 – €6,000",
-  "€6,000 – €10,000",
-  "Над €10,000",
-];
+import { useQuiz, INCOME_LEVEL_OPTIONS } from "../QuizContext";
 
 export default function IncomeScreen() {
   const { data, updateData, setCanProceed } = useQuiz();
@@ -38,16 +30,16 @@ export default function IncomeScreen() {
       </motion.div>
 
       <div className="flex flex-wrap gap-3">
-        {INCOME_OPTIONS.map((opt, i) => {
-          const selected = data.incomeLevel === opt;
+        {INCOME_LEVEL_OPTIONS.map((opt, i) => {
+          const selected = data.incomeLevel === opt.value;
           return (
             <motion.button
-              key={opt}
+              key={opt.value}
               type="button"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.05 * i }}
-              onClick={() => updateData({ incomeLevel: opt })}
+              onClick={() => updateData({ incomeLevel: opt.value })}
               className={`
                 px-5 py-3 rounded-full border-2 text-sm font-display font-semibold
                 transition-all duration-200 cursor-pointer whitespace-nowrap
@@ -58,7 +50,7 @@ export default function IncomeScreen() {
                 }
               `}
             >
-              {opt}
+              {opt.label}
             </motion.button>
           );
         })}

@@ -9,6 +9,10 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
+function isSupportedLocale(locale: string): locale is (typeof routing.locales)[number] {
+  return routing.locales.includes(locale as (typeof routing.locales)[number]);
+}
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
@@ -16,7 +20,7 @@ export function generateStaticParams() {
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
 
-  if (!routing.locales.includes(locale as any)) {
+  if (!isSupportedLocale(locale)) {
     notFound();
   }
 

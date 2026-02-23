@@ -3,17 +3,27 @@
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { useQuiz, LIFE_AREAS } from "../QuizContext";
 
 export default function ConfirmationScreen() {
   const { data, updateData, setCanProceed, isSubmitting, setIsSubmitting } =
     useQuiz();
   const router = useRouter();
+  const locale = useLocale();
   const [error, setError] = useState("");
 
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email);
-  const formValid = data.name.trim().length > 0 && emailValid;
+  const formValid =
+    data.name.trim().length > 0 &&
+    emailValid &&
+    data.gdprConsent &&
+    data.birthDate.trim().length > 0 &&
+    data.birthCity.trim().length > 0 &&
+    data.commitmentLevel !== "" &&
+    data.incomeLevel !== "" &&
+    data.priorities.length === 3;
 
   useEffect(() => {
     setCanProceed(false); // hide the shell's Continue button
@@ -25,10 +35,28 @@ export default function ConfirmationScreen() {
     setIsSubmitting(true);
 
     try {
+      const payload = {
+        user_name: data.name.trim(),
+        user_email: data.email.trim(),
+        user_phone: data.phone.trim() || undefined,
+        locale: locale === "en" ? "en" : "bg",
+        scores: data.scores,
+        priority_top3: data.priorities,
+        goals: data.goals,
+        birth_date: data.birthDate,
+        birth_time: data.birthTimeUnknown ? undefined : data.birthTime || undefined,
+        birth_time_unknown: data.birthTimeUnknown,
+        birth_city: data.birthCity.trim() || undefined,
+        birth_country: undefined,
+        commitment_level: data.commitmentLevel,
+        income_level: data.incomeLevel,
+        gdpr_consent: data.gdprConsent,
+      };
+
       const res = await fetch("/api/webhook/quiz", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       });
 
       if (!res.ok) {
@@ -51,7 +79,7 @@ export default function ConfirmationScreen() {
       setError(err instanceof Error ? err.message : "Нещо се обърка.");
       setIsSubmitting(false);
     }
-  }, [data, formValid, isSubmitting, setIsSubmitting, router]);
+  }, [data, formValid, isSubmitting, locale, router, setIsSubmitting]);
 
   /* Priorities labels */
   const priorityLabels = data.priorities.map(

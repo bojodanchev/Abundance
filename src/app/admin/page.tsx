@@ -62,25 +62,29 @@ async function getDashboardStats() {
   };
 }
 
+type DashboardStats = Awaited<ReturnType<typeof getDashboardStats>>;
+
 export default async function AdminDashboardPage() {
   const isAuth = await isAdminAuthenticated();
   if (!isAuth) redirect("/admin/login");
 
+  const fallbackStats: DashboardStats = {
+    totalLeads: 0,
+    leadsToday: 0,
+    leadsThisMonth: 0,
+    conversionRate: 0,
+    totalRevenue: 0,
+    emailsSent: 0,
+    statusBreakdown: { pending: 0, processing: 0, completed: 0, error: 0 },
+    recentLeads: [],
+  };
+
+  let stats: DashboardStats = fallbackStats;
   try {
-    const stats = await getDashboardStats();
-    return <DashboardContent stats={stats} />;
+    stats = await getDashboardStats();
   } catch (error) {
     console.error("Dashboard stats error:", error);
-    const fallbackStats = {
-      totalLeads: 0,
-      leadsToday: 0,
-      leadsThisMonth: 0,
-      conversionRate: 0,
-      totalRevenue: 0,
-      emailsSent: 0,
-      statusBreakdown: { pending: 0, processing: 0, completed: 0, error: 0 },
-      recentLeads: [],
-    };
-    return <DashboardContent stats={fallbackStats} />;
   }
+
+  return <DashboardContent stats={stats} />;
 }

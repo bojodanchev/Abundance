@@ -21,6 +21,10 @@ export default async function LeadDetailPage({
 
   const { id } = await params;
 
+  let leadData: Record<string, unknown> | null = null;
+  let emailLogs: Record<string, unknown>[] = [];
+  let payments: Record<string, unknown>[] = [];
+
   try {
     const supabase = getSupabaseAdmin();
 
@@ -41,18 +45,25 @@ export default async function LeadDetailPage({
     if (submissionRes.error || !submissionRes.data) {
       redirect("/admin/leads");
     }
-
-    return (
-      <LeadDetail
-        lead={submissionRes.data}
-        emailLogs={emailLogsRes.data ?? []}
-        payments={paymentsRes.data ?? []}
-      />
-    );
+    leadData = submissionRes.data as Record<string, unknown>;
+    emailLogs = (emailLogsRes.data ?? []) as Record<string, unknown>[];
+    payments = (paymentsRes.data ?? []) as Record<string, unknown>[];
   } catch (error) {
     // redirect() throws NEXT_REDIRECT which must propagate
     if (error && typeof error === "object" && "digest" in error) throw error;
     console.error("Lead detail error:", error);
     redirect("/admin/leads");
   }
+
+  if (!leadData) {
+    redirect("/admin/leads");
+  }
+
+  return (
+    <LeadDetail
+      lead={leadData}
+      emailLogs={emailLogs}
+      payments={payments}
+    />
+  );
 }

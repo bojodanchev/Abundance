@@ -49,7 +49,7 @@ function ProcessingPage() {
   const [showBar, setShowBar] = useState(false);
   const [showTips, setShowTips] = useState(false);
 
-  const startTime = useRef(Date.now());
+  const startTime = useRef(0);
   const rafRef = useRef<number>(0);
 
   const tips = [t("tip1"), t("tip2"), t("tip3")];
@@ -73,8 +73,10 @@ function ProcessingPage() {
 
   /* ── progress bar + step advancement ── */
   useEffect(() => {
+    startTime.current = performance.now();
+
     const tick = () => {
-      const elapsed = Date.now() - startTime.current;
+      const elapsed = performance.now() - startTime.current;
       const pct = Math.min(elapsed / TOTAL_DURATION, 1);
       setProgress(pct);
 

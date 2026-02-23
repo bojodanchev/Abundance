@@ -25,6 +25,24 @@ export const LIFE_AREAS = [
 
 export type LifeAreaKey = (typeof LIFE_AREAS)[number]["key"];
 
+export const INCOME_LEVEL_OPTIONS = [
+  { value: "under_1000", label: "Под €1,000" },
+  { value: "1000_3000", label: "€1,000 – €3,000" },
+  { value: "3000_6000", label: "€3,000 – €6,000" },
+  { value: "6000_10000", label: "€6,000 – €10,000" },
+  { value: "over_10000", label: "Над €10,000" },
+] as const;
+
+export type IncomeLevel = (typeof INCOME_LEVEL_OPTIONS)[number]["value"];
+
+const LEGACY_INCOME_MAP: Record<string, IncomeLevel> = {
+  "Под €1,000": "under_1000",
+  "€1,000 – €3,000": "1000_3000",
+  "€3,000 – €6,000": "3000_6000",
+  "€6,000 – €10,000": "6000_10000",
+  "Над €10,000": "over_10000",
+};
+
 /* -------------------------------------------------- */
 /*  Quiz data shape                                   */
 /* -------------------------------------------------- */
@@ -42,7 +60,7 @@ export interface QuizData {
   birthTimeUnknown: boolean;
   birthCity: string;
   commitmentLevel: "high" | "medium" | "low" | "";
-  incomeLevel: string;
+  incomeLevel: IncomeLevel | "";
 }
 
 const DEFAULT_SCORES: Record<LifeAreaKey, number> = {
@@ -75,6 +93,22 @@ const TOTAL_STEPS = 8;
 const STORAGE_KEY = "abundance_quiz_data";
 const STEP_KEY = "abundance_quiz_step";
 
+function normalizeStoredData(parsed: unknown): QuizData {
+  if (!parsed || typeof parsed !== "object") return INITIAL_DATA;
+  const partial = parsed as Partial<QuizData>;
+  const rawIncomeLevel = partial.incomeLevel ?? "";
+  const incomeLevel =
+    rawIncomeLevel in LEGACY_INCOME_MAP
+      ? LEGACY_INCOME_MAP[rawIncomeLevel as string]
+      : rawIncomeLevel;
+
+  return {
+    ...INITIAL_DATA,
+    ...partial,
+    incomeLevel: (incomeLevel ?? "") as IncomeLevel | "",
+  };
+}
+
 /* -------------------------------------------------- */
 /*  Context type                                      */
 /* -------------------------------------------------- */
@@ -100,41 +134,40 @@ const QuizContext = createContext<QuizContextValue | null>(null);
 /* -------------------------------------------------- */
 
 export function QuizProvider({ children }: { children: ReactNode }) {
-  const [data, setData] = useState<QuizData>(INITIAL_DATA);
-  const [step, setStep] = useState(1);
-  const [canProceed, setCanProceed] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
-
-  /* Restore from localStorage on mount */
-  useEffect(() => {
+  const [data, setData] = useState<QuizData>(() => {
+    if (typeof window === "undefined") return INITIAL_DATA;
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored) as QuizData;
-        setData({ ...INITIAL_DATA, ...parsed });
-      }
-      const storedStep = localStorage.getItem(STEP_KEY);
-      if (storedStep) {
-        const n = parseInt(storedStep, 10);
-        if (n >= 1 && n <= TOTAL_STEPS) setStep(n);
-      }
+      if (!stored) return INITIAL_DATA;
+      return normalizeStoredData(JSON.parse(stored));
     } catch {
-      /* ignore corrupted storage */
+      return INITIAL_DATA;
     }
-    setHydrated(true);
-  }, []);
+  });
+  const [step, setStep] = useState(() => {
+    if (typeof window === "undefined") return 1;
+    try {
+      const storedStep = localStorage.getItem(STEP_KEY);
+      if (!storedStep) return 1;
+      const n = parseInt(storedStep, 10);
+      return n >= 1 && n <= TOTAL_STEPS ? n : 1;
+    } catch {
+      return 1;
+    }
+  });
+  const [canProceed, setCanProceed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   /* Persist to localStorage on every change (after hydration) */
   useEffect(() => {
-    if (!hydrated) return;
+    if (typeof window === "undefined") return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       localStorage.setItem(STEP_KEY, String(step));
     } catch {
       /* storage full – non-critical */
     }
-  }, [data, step, hydrated]);
+  }, [data, step]);
 
   const updateData = useCallback((partial: Partial<QuizData>) => {
     setData((prev) => ({ ...prev, ...partial }));

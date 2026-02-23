@@ -22,7 +22,7 @@
   ┌─────────────────────────────────────────────────────────────┐  
   │                    FRONTEND LAYER                           │  
   │  • Landing Page (Next.js/Vercel)                           │  
-  │  • Typeform Embed (Widget)                                 │  
+  │  • Custom Quiz (in-app React flow)                          │  
   │  • Thank You Page                                          │  
   └──────────────────────┬──────────────────────────────────────┘  
                          │  
@@ -37,21 +37,21 @@
           ┌──────────────┼──────────────┐  
           ▼              ▼              ▼  
   ┌──────────┐   ┌──────────┐   ┌──────────────┐  
-  │ Typeform │   │   AI     │   │ Email Service│  
-  │  (API)   │   │ (OpenAI) │   │(SendGrid/   │  
-  │          │   │          │   │ ConvertKit)  │  
+  │ Custom Quiz │   │   AI     │   │ Email Service│  
+  │  (In-App) │   │ (OpenAI) │   │(SendGrid)   │  
+  │          │   │          │   │ + CRM Nurture │  
   └──────────┘   └──────────┘   └──────────────┘
 
   1.2 Data Flow (Поток на данните)
 
   1\. User Entry → Landing Page (Vercel)  
-  2\. Form Submit → Typeform (9 екрана)  
-  3\. Webhook Trigger → Backend API endpoint (/api/webhook/typeform)  
+  2\. Form Submit → Custom Quiz (9 екрана)  
+  3\. Webhook Trigger → Backend API endpoint (/api/webhook/quiz)  
   4\. Data Processing → AI Analysis (OpenAI API)  
   5\. PDF Generation → PDFKit / Puppeteer  
   6\. Storage → Cloudinary/AWS S3 (за PDF)  
   7\. Email Send → SendGrid API (Email \+ PDF attachment)  
-  8\. Email Sequence → ConvertKit/Mailchimp Automation
+  8\. Email Sequence → SendGrid Nurture Automation (Cron)
 
   ─────────────────────────────────────────────────────────────────────────────────────  
   2\. FRONTEND СПЕЦИФИКАЦИИ
@@ -63,16 +63,16 @@
    Framework   Next.js 14 (App Router)      React \+ Vite  
    Hosting     Vercel                       Netlify  
    Styling     Tailwind CSS                 Styled Components  
-   Forms       Typeform Embed               Tally.so  
+   Forms       Custom Quiz (in-app)            Tally.so  
    Analytics   Google Analytics 4 \+ Pixel   Plausible  
    Fonts       Inter (Google Fonts)         Local fonts
 
   2.2 Страници и Рутове
 
   /                           → Landing Page (Hero \+ CTA)  
-  /diagnose                   → Redirect към Typeform (или Embed)  
-  /thank-you                  → Thank You Page (след Typeform)  
-  /api/webhook/typeform       → Webhook endpoint (POST)  
+  /diagnose                   → In-app quiz (8 екрана)  
+  /thank-you                  → Thank You Page (след quiz submit)  
+  /api/webhook/quiz           → Webhook endpoint (POST)  
   /api/generate-pdf           → PDF Generation (POST)  
   /api/send-email             → Email sending (POST)
 
@@ -85,7 +85,7 @@
     \- \<Countdown /\> (Остават X места \- динамично)  
     \- \<Headline /\> ("Ключът към изобилието...")  
     \- \<Subheadline /\> (Описание)  
-    \- \<CTAButton /\> (→ Typeform)  
+    \- \<CTAButton /\> (→ Custom Quiz)  
     \- \<SocialProof /\> (Брояч: "Вече 1,200+ анализа")
 
   Ключови Секции
@@ -102,23 +102,17 @@
   • Tablet: 640px \- 1024px (2 колони)  
   • Desktop: \> 1024px (3-4 колони)
 
-  2.4 Typeform Интеграция
+  2.4 Custom Quiz Интеграция (In-App)
 
-  Опция A: Embed (Препоръчително за MVP)
+  Изпълнение за MVP:
 
-  \<div data-tf-widget="TYPEFORM\_ID"  
-       data-tf-opacity="100"  
-       data-tf-inline-on-mobile  
-       data-tf-redirect-target="\_self"  
-       style="width:100%;height:600px;"\>  
-  \</div\>  
-  \<script src="https://embed.typeform.com/next/embed.js"\>\</script\>
-
-  Опция B: Redirect Бутонът отвежда към: https://form.typeform.com/to/XXXXXX?name=defau  
-  lt
+  • `/[locale]/diagnose` рендира 8-екранен React quiz flow  
+  • Финален submit → `POST /api/webhook/quiz`  
+  • След submit → `/[locale]/processing?id=...` → `/[locale]/results/[id]`  
+  • Лийдовете и статуса се управляват през `/admin` CRM панела
 
   ─────────────────────────────────────────────────────────────────────────────────────  
-  3\. TYPEFORM СТРУКТУРА (Детайлно)
+  3\. QUIZ СТРУКТУРА (Детайлно)
 
   3.1 Form Logic & Flowchart
 
@@ -166,9 +160,9 @@
     \- Съобщение: "Анализът се генерира..."  
     \- Бутон: "Гледай видеото" (VSL)
 
-  3.2 Typeform Hidden Fields (За Tracking)
+  3.2 Tracking Fields (За Tracking)
 
-  Задай тези hidden fields в Typeform за да получаваш:
+  Подай тези полета от URL/query params към quiz submit payload:
 
   • utm\_source (откъде идва трафика)  
   • utm\_medium (organic/paid)  
@@ -183,7 +177,7 @@
   \-- Таблица: submissions  
   CREATE TABLE submissions (  
     id UUID PRIMARY KEY DEFAULT gen\_random\_uuid(),  
-    typeform\_response\_id VARCHAR(255) UNIQUE,  
+    quiz\_response\_id VARCHAR(255) UNIQUE,  
     user\_name VARCHAR(255),  
     user\_email VARCHAR(255) UNIQUE,  
     user\_phone VARCHAR(50),
@@ -229,12 +223,12 @@
 
   4.2 API Endpoints
 
-  Webhook от Typeform
+  Webhook от Custom Quiz
 
-  // POST /api/webhook/typeform  
+  // POST /api/webhook/quiz  
   // Headers: Authorization Bearer TOKEN
 
-  // Body (Typeform payload):  
+  // Body (Custom Quiz payload):  
   {  
     "event\_id": "uuid",  
     "event\_type": "form\_response",  
@@ -311,14 +305,15 @@
 
   5.1 Интеграция с Email Service Provider (ESP)
 
-  Препоръка: ConvertKit или Mailchimp (и двата имат добри automation-и)
+  Препоръка: SendGrid за welcome + nurture (cron), без външен ESP за MVP.
 
   Webhook Flow:
 
-  Typeform Submit  
-    → Zapier/Make  
-      → Add to ESP List (Tag: "Diagnosis Complete")  
-        → Trigger Automation Sequence
+  Quiz Submit  
+    → /api/webhook/quiz  
+      → /api/generate-analysis  
+        → /api/send-email (welcome)  
+          → /api/cron/nurture-emails (daily)
 
   5.2 Email Sequence (5 имейла)
 
@@ -348,7 +343,7 @@
   • \[ \] Cookie Consent Banner (OneTrust или CookieBot)  
   • \[ \] Privacy Policy страница  
   • \[ \] Terms of Service страница  
-  • \[ \] Checkbox в Typeform: "Съгласен съм с обработката на лични данни"  
+  • \[ \] Checkbox в Custom Quiz: "Съгласен съм с обработката на лични данни"  
   • \[ \] "Unsubscribe" линк във всеки имейл  
   • \[ \] Data Deletion процедура (Right to be forgotten)
 
@@ -395,9 +390,9 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  
    Vercel       Hosting               €0-20/мес        30 мин  
    Supabase     Database              €0-25/мес        1 час  
-   Typeform     Forms                 €25/мес          2 часа  
+   Custom Quiz     Forms                 €0 (in-app)      already built  
    SendGrid     Transactional Email   €0 (100/ден)     1 час  
-   ConvertKit   Email Automation      €29/мес          2 часа  
+   Admin CRM       Lead management       €0               already built  
    Cloudinary   PDF Storage           €0-25/мес        30 мин  
    OpenAI       AI Analysis           \~€0.01/request   30 мин
 
@@ -422,9 +417,7 @@
 
   \# APIs  
   OPENAI\_API\_KEY="sk-..."  
-  TYPEFORM\_API\_KEY="..."  
   SENDGRID\_API\_KEY="SG..."  
-  CONVERTKIT\_API\_KEY="..."
 
   \# Storage  
   CLOUDINARY\_CLOUD\_NAME="..."  
@@ -441,7 +434,7 @@
 
   • \[ \] Всички env variables са зададени в Vercel  
   • \[ \] Database migrations са изпълнени  
-  • \[ \] Typeform webhook е тестван (ngrok за локално тестване)  
+  • \[ \] Quiz webhook е тестван (POST към /api/webhook/quiz)  
   • \[ \] Email templates са тествани (spam тест)  
   • \[ \] Mobile responsive тест (Chrome DevTools)  
   • \[ \] PageSpeed Insights \> 90  
@@ -457,7 +450,7 @@
 
   • \[ \] Landing Page (Hero \+ 3 секции \+ FAQ)  
   • \[ \] Thank You Page  
-  • \[ \] Typeform Embed (без conditional logic за сега)
+  • \[ \] Custom Quiz flow (8 екрана, in-app)
 
   Backend:
 
@@ -477,14 +470,14 @@
   • \[ \] Астро калкулации (swisseph или външен API)  
   • \[ \] Пълна Email automation  
   • \[ \] User Dashboard (да виждат PDF-а си онлайн)  
-  • \[ \] Admin Panel (да управляваш submission-ите)
+  • \[x\] Admin CRM Panel (lead management \+ capture) — по дизайн в текущата версия
 
   ─────────────────────────────────────────────────────────────────────────────────────  
   10\. КОДОВИ ПРИМЕРИ
 
   10.1 Webhook Handler (Next.js API Route)
 
-  // app/api/webhook/typeform/route.ts  
+  // app/api/webhook/quiz/route.ts  
   import { NextResponse } from 'next/server';  
   import { createClient } from '@supabase/supabase-js';
 
@@ -497,22 +490,17 @@
     try {  
       const body \= await request.json();
 
-      // Валидация на webhook-a (Typeform подпис)  
-      // const signature \= request.headers.get('typeform-signature');
+  // Валидация на webhook-a (internal key / schema)  
+      // const signature \= request.headers.get('quiz-signature');
 
-      // Парсване на отговорите  
-      const answers \= body.form\_response.answers;  
-      const hidden \= body.form\_response.hidden;
-
-      // Мапване на полетата  
+      // Парсване на quiz payload  
       const submission \= {  
-        typeform\_response\_id: body.form\_response.token,  
-        user\_name: getAnswerByRef(answers, 'name'),  
-        user\_email: getAnswerByRef(answers, 'email'),  
+        user\_name: body.user\_name,  
+        user\_email: body.user\_email,  
         // ... всички останали полета
 
         status: 'pending',  
-        utm\_source: hidden?.utm\_source || 'organic'  
+        utm\_source: body.utm\_source || 'organic'  
       };
 
       // Запис в базата  
@@ -543,11 +531,6 @@
     }  
   }
 
-  function getAnswerByRef(answers: any\[\], ref: string) {  
-    const answer \= answers.find(a \=\> a.field.ref \=== ref);  
-    return answer?.\[answer.type\] || null;  
-  }
-
   ─────────────────────────────────────────────────────────────────────────────────────  
   11\. ЧЕКЛИСТ ЗА ДЕВЕЛОПЕРА
 
@@ -556,7 +539,7 @@
   • \[ \] Създаване на Vercel проект  
   • \[ \] Свързване с GitHub repo  
   • \[ \] Настройка на Supabase проект  
-  • \[ \] Настройка на Typeform акаунт  
+  • \[ \] Потвърждение на Custom Quiz flow в `/diagnose`  
   • \[ \] Настройка на SendGrid
 
   Phase 2: Database (Час 3\)
@@ -569,7 +552,7 @@
 
   • \[ \] Landing Page layout  
   • \[ \] Responsive design  
-  • \[ \] Typeform embed  
+  • \[ \] Custom Quiz flow (in-app)  
   • \[ \] Thank You page  
   • \[ \] GDPR банер
 
@@ -584,7 +567,7 @@
 
   • \[ \] Email templates (HTML)  
   • \[ \] SendGrid integration  
-  • \[ \] Automation rules в ConvertKit  
+  • \[ \] Nurture automation rules (SendGrid + cron)  
   • \[ \] Testing (spam проверка)
 
   Phase 6: Testing (Час 17-20)
@@ -609,9 +592,9 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  
    Vercel Pro          €20               €20  
    Supabase Pro        €25               €75  
-   Typeform Business   €25               €50  
+   Custom Quiz (in-app)   €0                €0  
    SendGrid            €0 (до 100/ден)   €20  
-   ConvertKit          €29               €79  
+   Admin CRM              €0                €0  
    OpenAI API          €10               €100  
    Cloudinary          €0                €25  
    ОБЩО                \~€110/мес         \~€370/мес
@@ -619,5 +602,5 @@
   ─────────────────────────────────────────────────────────────────────────────────────  
   Готово за изпращане на девелопера?
 
-  Ако има въпроси по конкретна част (например "Как точно да настрои Typeform webhook-а"  
+  Ако има въпроси по конкретна част (например "Как точно да настроя /api/webhook/quiz"  
   ), мога да разширя с още детайли.  

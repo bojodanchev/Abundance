@@ -17,7 +17,6 @@ import {
   Calendar,
   MapPin,
   Clock,
-  CreditCard,
   CheckCircle2,
   XCircle,
   AlertCircle,

@@ -102,42 +102,18 @@ async function findEligible(
   supabase: ReturnType<typeof getSupabaseAdmin>,
   step: { emailType: string; prevType: string | null; delayHours: number }
 ): Promise<string[]> {
+  if (!step.prevType) return [];
+
   const cutoff = new Date(
     Date.now() - step.delayHours * 60 * 60 * 1000
   ).toISOString();
 
-  if (step.prevType === "welcome") {
-    // Special case: nurture_1 looks at submissions with email_sent=true
-    // created 24h+ ago, with no nurture_1 log yet.
-    const { data: submissions } = await supabase
-      .from("submissions")
-      .select("id")
-      .eq("email_sent", true)
-      .lte("created_at", cutoff);
-
-    if (!submissions || submissions.length === 0) return [];
-
-    const ids = submissions.map((s) => s.id as string);
-
-    // Filter out those who already received this nurture email
-    const { data: alreadySent } = await supabase
-      .from("email_logs")
-      .select("submission_id")
-      .eq("email_type", step.emailType)
-      .in("submission_id", ids);
-
-    const sentSet = new Set(
-      (alreadySent ?? []).map((r) => r.submission_id as string)
-    );
-    return ids.filter((id) => !sentSet.has(id));
-  }
-
-  // General case: prevType was sent delayHours+ ago, emailType not yet sent
+  // General case: previous email was sent delayHours+ ago, current email not yet sent.
   const { data: prevLogs } = await supabase
     .from("email_logs")
     .select("submission_id")
-    .eq("email_type", step.prevType!)
-    .lte("created_at", cutoff);
+    .eq("email_type", step.prevType)
+    .lte("sent_at", cutoff);
 
   if (!prevLogs || prevLogs.length === 0) return [];
 

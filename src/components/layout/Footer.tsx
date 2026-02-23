@@ -1,5 +1,7 @@
 "use client";
 
+import { Link } from "@/i18n/navigation";
+
 export default function Footer() {
   const year = new Date().getFullYear();
 
@@ -10,12 +12,12 @@ export default function Footer() {
           &copy; {year} CODE: ABUNDANCE. All rights reserved.
         </span>
         <div className="flex items-center gap-6 text-sm text-text-secondary">
-          <a href="/privacy" className="hover:text-accent transition-colors">
+          <Link href="/privacy" className="hover:text-accent transition-colors">
             Privacy
-          </a>
-          <a href="/terms" className="hover:text-accent transition-colors">
+          </Link>
+          <Link href="/terms" className="hover:text-accent transition-colors">
             Terms
-          </a>
+          </Link>
         </div>
       </div>
     </footer>

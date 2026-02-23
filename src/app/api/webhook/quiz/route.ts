@@ -4,10 +4,7 @@ import { quizSubmissionSchema } from "@/lib/schemas";
 
 export async function POST(request: Request) {
   try {
-    // --- Rate limiting: basic IP check ---
-    const forwarded = request.headers.get("x-forwarded-for");
-    const ip = forwarded?.split(",")[0]?.trim() ?? "unknown";
-
+    // --- Rate limiting: basic global throttle ---
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
     const { count } = await getSupabaseAdmin()
       .from("submissions")
@@ -80,9 +77,9 @@ export async function POST(request: Request) {
     const internalApiKey = process.env.INTERNAL_API_KEY;
     const baseUrl =
       process.env.NEXT_PUBLIC_SITE_URL ??
-      process.env.VERCEL_URL
+      (process.env.VERCEL_URL
         ? `https://${process.env.VERCEL_URL}`
-        : "http://localhost:3000";
+        : "http://localhost:3000");
 
     // Fire-and-forget: don't await, let it run in the background
     fetch(`${baseUrl}/api/generate-analysis`, {

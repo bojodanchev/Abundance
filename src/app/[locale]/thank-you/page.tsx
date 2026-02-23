@@ -6,6 +6,7 @@ import { Shield, Play, Check, Star, ArrowRight, Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
+import { Link } from "@/i18n/navigation";
 
 /* -------------------------------------------------- */
 /*  Animation helpers                                  */
@@ -490,18 +491,18 @@ function ThankYouPage() {
               reserved.
             </span>
             <div className="flex items-center gap-6 text-xs sm:text-sm text-text-secondary">
-              <a
-                href="/bg/privacy"
+              <Link
+                href="/privacy"
                 className="hover:text-accent transition-colors"
               >
                 Privacy
-              </a>
-              <a
-                href="/bg/terms"
+              </Link>
+              <Link
+                href="/terms"
                 className="hover:text-accent transition-colors"
               >
                 Terms
-              </a>
+              </Link>
             </div>
           </div>
         </footer>

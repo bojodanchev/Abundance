@@ -116,17 +116,19 @@ export default async function AnalyticsPage() {
   const isAuth = await isAdminAuthenticated();
   if (!isAuth) redirect("/admin/login");
 
+  const fallback: AnalyticsData = {
+    funnel: { total: 0, completed: 0, paid: 0 },
+    revenueOverTime: [],
+    incomeDistribution: [],
+    emailPerformance: [],
+  };
+
+  let data: AnalyticsData = fallback;
   try {
-    const data = await getAnalyticsData();
-    return <AnalyticsCharts initialData={data} />;
+    data = await getAnalyticsData();
   } catch (error) {
     console.error("Analytics data error:", error);
-    const fallback: AnalyticsData = {
-      funnel: { total: 0, completed: 0, paid: 0 },
-      revenueOverTime: [],
-      incomeDistribution: [],
-      emailPerformance: [],
-    };
-    return <AnalyticsCharts initialData={fallback} />;
   }
+
+  return <AnalyticsCharts initialData={data} />;
 }

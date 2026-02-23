@@ -4,7 +4,31 @@
 **Status**: Approved
 **Brand**: Bold Luxury (Black/Gold/Minimal)
 **Languages**: Bulgarian + English (next-intl)
-**Stack**: Next.js 14 App Router, Tailwind CSS, Supabase, OpenAI, SendGrid, ConvertKit, Framer Motion, Vercel
+**Stack**: Next.js 16 App Router, Tailwind CSS v4, Supabase, OpenAI, SendGrid, Framer Motion, Vercel
+
+---
+
+## Implementation Progress
+
+**Last updated**: 2026-02-22
+**Overall**: 93% complete (54/58 items)
+
+| Category | Done | Total | % |
+|----------|------|-------|---|
+| Landing Page Components | 9 | 9 | 100% |
+| Quiz Flow (8 screens) | 8 | 8 | 100% |
+| Results Components | 2 | 5 | 40% |
+| Pages | 7 | 7 | 100% |
+| API Routes | 7 | 7 | 100% |
+| Backend / Infrastructure | 9 | 9 | 100% |
+| Shared Components | 5 | 6 | 83% |
+| Admin CRM (bonus) | 7 | 7 | 100% |
+
+### Remaining Items
+- [ ] `ProfileBadge` component — HD type display for results page
+- [ ] `RadarChart` — currently placeholder, needs Recharts spider chart
+- [ ] `UpgradeSection` — standalone pricing CTA for results page (logic exists inline in thank-you)
+- [ ] `Custom Slider` — dedicated gold-thumb range input component
 
 ---
 
@@ -15,34 +39,34 @@ ACQUISITION LAYER
 ─────────────────────────────────────────────
 [Ad / Social / SEO]
        ↓
-[Landing Page] ─── Bold Luxury aesthetic
+[Landing Page] ─── Bold Luxury aesthetic                          [DONE]
        ↓          Hero + Problem + How It Works + Social Proof + CTA
        ↓
-[Custom Quiz] ─── 8-screen diagnostic experience
+[Custom Quiz] ─── 8-screen diagnostic experience                 [DONE]
        ↓          Full-screen, one-question-at-a-time
        ↓          Collects: name, email, life audit (7 areas),
        ↓          priorities, goals, birth data, commitment, income
        ↓
-[Processing Screen] ─── "Generating your analysis..."
+[Processing Screen] ─── "Generating your analysis..."            [DONE]
        ↓                 Animated, builds anticipation (15-20s)
 
 CONVERSION LAYER
 ─────────────────────────────────────────────
-[Results Preview Page] ─── Shows teaser insights
+[Results Preview Page] ─── Shows teaser insights                  [DONE]
        ↓                   Profile type, top scores, 1 key insight
        ↓                   UPGRADE CTA → full report (€37)
        ↓
-[VSL / Thank You Page] ─── Video sales letter
+[VSL / Thank You Page] ─── Video sales letter                    [DONE]
        ↓                    Plays while PDF is being emailed
        ↓                    Soft-sells the mid-tier (€147)
 
 NURTURE LAYER
 ─────────────────────────────────────────────
-[Email 1] Immediate ─── Teaser PDF + results recap
-[Email 2] +24h ─────── Value story + upgrade to full report
-[Email 3] +48h ─────── "The cost of staying stuck" + mid-tier
-[Email 4] +72h ─────── Case study + scarcity (limited spots)
-[Email 5] +5 days ──── Final CTA: high-ticket coaching offer
+[Email 1] Immediate ─── Teaser PDF + results recap               [DONE]
+[Email 2] +24h ─────── Value story + upgrade to full report      [DONE]
+[Email 3] +48h ─────── "The cost of staying stuck" + mid-tier    [DONE]
+[Email 4] +72h ─────── Case study + scarcity (limited spots)     [DONE]
+[Email 5] +5 days ──── Final CTA: high-ticket coaching offer     [DONE]
 
 UPSELL LAYER (Post-Purchase)
 ─────────────────────────────────────────────
@@ -52,18 +76,18 @@ UPSELL LAYER (Post-Purchase)
 
 ### Value Ladder
 
-| Tier | Price | Deliverable | Trigger |
-|------|-------|-------------|---------|
-| Free | €0 | Teaser PDF (profile type + 1 insight per area) | Quiz completion |
-| Low | €27-47 | Full detailed PDF + 90-day action plan | Results preview page upsell |
-| Mid | €97-197 | Full report + video walkthrough + 90-day community | Thank-you page / Email #3-4 |
-| High | €497-997+ | Full report + 1-on-1 coaching + personalized roadmap | Email #4-5 / Booking call |
+| Tier | Price | Deliverable | Trigger | Status |
+|------|-------|-------------|---------|--------|
+| Free | €0 | Teaser PDF (profile type + 1 insight per area) | Quiz completion | [DONE] |
+| Low | €27-47 | Full detailed PDF + 90-day action plan | Results preview page upsell | [DONE] |
+| Mid | €97-197 | Full report + video walkthrough + 90-day community | Thank-you page / Email #3-4 | [DONE] |
+| High | €497-997+ | Full report + 1-on-1 coaching + personalized roadmap | Email #4-5 / Booking call | [DONE] |
 
 ---
 
-## 2. Visual Design System — "Bold Luxury"
+## 2. Visual Design System — "Bold Luxury" [DONE]
 
-### 2.1 Color Palette
+### 2.1 Color Palette [DONE] — implemented in `src/app/globals.css`
 
 ```css
 :root {
@@ -108,7 +132,7 @@ Gold usage discipline:
 - Key highlights, badges, icons
 - **Nothing else.** Everything else is black, white, and grays.
 
-### 2.2 Typography
+### 2.2 Typography [DONE] — loaded in `src/app/layout.tsx`
 
 ```css
 --font-display: 'Plus Jakarta Sans', sans-serif;  /* Headings */
@@ -126,7 +150,7 @@ Gold usage discipline:
 | Small/meta | Inter | 400 | 14px | Tertiary gray |
 | Scores/data | JetBrains Mono | 700 | varies | Gold or White |
 
-### 2.3 Section Rhythm
+### 2.3 Section Rhythm [DONE]
 
 Every content section follows the enterprise-ui "label + heading" pattern:
 
@@ -150,7 +174,7 @@ Landing page alternates dark/light backgrounds:
 [DARK]   Footer (multi-column)
 ```
 
-### 2.4 Button Hierarchy
+### 2.4 Button Hierarchy [DONE] — `src/components/shared/Button.tsx`
 
 | Type | Background | Text | Border | Hover |
 |------|-----------|------|--------|-------|
@@ -161,7 +185,7 @@ Landing page alternates dark/light backgrounds:
 
 All buttons: `rounded-lg`, `px-6 py-3`, `text-sm font-semibold`, `transition-all duration-200`
 
-### 2.5 Motion Design (Framer Motion)
+### 2.5 Motion Design (Framer Motion) [DONE]
 
 | Element | Animation | Duration | Easing |
 |---------|-----------|----------|--------|
@@ -174,7 +198,7 @@ All buttons: `rounded-lg`, `px-6 py-3`, `text-sm font-semibold`, `transition-all
 | Progress bar | width transition | 300ms | ease-out |
 | Gold particles | float upward | infinite, 3-5s | linear |
 
-### 2.6 Spacing & Layout
+### 2.6 Spacing & Layout [DONE]
 
 ```css
 /* Section padding */
@@ -195,32 +219,32 @@ wide:    1280px+   (max-width containers)
 
 ## 3. Page Specifications
 
-### 3.1 Landing Page (`/[locale]/page.tsx`)
+### 3.1 Landing Page (`/[locale]/page.tsx`) [DONE]
 
-#### Nav Bar
+#### Nav Bar [DONE] — `src/components/landing/Navbar.tsx`
 - Sticky, `bg-black/95 backdrop-blur-sm`, border-bottom `#1F1F1F`
 - Logo: gold diamond icon + "ABUNDANCE" (Plus Jakarta Sans 700)
 - Center links: Diagnostic, How It Works, FAQ
 - Right: Language switcher (BG/EN) + gold CTA button "Започни →"
 - Mobile: hamburger + persistent CTA
 
-#### Hero Section (Full Viewport, Dark)
+#### Hero Section (Full Viewport, Dark) [DONE] — `src/components/landing/Hero.tsx`
 - `min-h-screen`, centered content
 - Gold label: "DIAGNOSTIC"
 - Headline: "Открий Кода Си Към Изобилието." (64px, ExtraBold, white)
 - EN: "Discover Your Code to Abundance."
 - Subtext: "7-минутна диагностика, която разкрива какво те спира и как да го преодолееш."
 - Dual CTAs: [Започни Диагностиката →] gold filled + [Научи повече] gold outlined
-- Social proof: "✦ Вече 1,200+ анализа" counter
+- Social proof: "Вече 1,200+ анализа" counter
 - Subtle gold floating particles animation in background
 
-#### Social Proof Strip (Light)
+#### Social Proof Strip (Light) [DONE] — `src/components/landing/SocialProofStrip.tsx`
 - White bg, py-12
 - "Методологии, базирани на" label
 - Logos: Human Design, Астрология, Нумерология, Психология
 - Grayscale, 60% opacity, hover → full color
 
-#### Problem Section (Dark)
+#### Problem Section (Dark) [DONE] — `src/components/landing/ProblemSection.tsx`
 - Gold label: "ПРОБЛЕМЪТ"
 - Heading: "Живееш в хаос и не знаеш откъде да започнеш."
 - 3 pain-point cards (dark cards, `#1A1A1A` bg, gold icon accents):
@@ -228,7 +252,7 @@ wide:    1280px+   (max-width containers)
   2. "Пробвал си всичко" — courses, books, mentors, still stuck
   3. "Нямаш ясна посока" — no personalized roadmap for YOUR situation
 
-#### How It Works (Dark)
+#### How It Works (Dark) [DONE] — `src/components/landing/HowItWorks.tsx`
 - Gold label: "КАК РАБОТИ"
 - Heading: "3 Стъпки Към Яснота"
 - 3 numbered steps connected by gold line:
@@ -237,7 +261,7 @@ wide:    1280px+   (max-width containers)
   - 03: План — "Получаваш персонализиран 90-дневен план"
 - Each step: gold number (JetBrains Mono), heading, gray description
 
-#### For Who Section (Light)
+#### For Who Section (Light) [DONE] — `src/components/landing/ForWho.tsx`
 - White bg
 - Gold label: "ЗА КОГО Е"
 - 4 tabs with gold active indicator:
@@ -247,20 +271,20 @@ wide:    1280px+   (max-width containers)
   - Готови за промяна (Ready for change)
 - Tab content: description + 3 bullet points + CTA
 
-#### FAQ Section (Dark)
+#### FAQ Section (Dark) [DONE] — `src/components/landing/FAQ.tsx`
 - 3 accordion items (MVP, expandable later)
 - Gold chevron icons
 - Q1: "Колко време отнема диагностиката?" → "7 минути"
 - Q2: "Безплатна ли е?" → "Да, базовият анализ е безплатен"
 - Q3: "Колко точна е AI диагностиката?" → Methodology explanation
 
-#### Final CTA (Gold Gradient)
+#### Final CTA (Gold Gradient) [DONE] — `src/components/landing/FinalCTA.tsx`
 - `background: linear-gradient(135deg, #C9A84C, #8B7235)`
 - Heading: "Готов ли си да откриеш кода си?" (black text)
 - Button: black bg, white text [Започни Безплатната Диагностика]
-- Microcopy: "Безплатно • 7 минути • Без ангажимент"
+- Microcopy: "Безплатно . 7 минути . Без ангажимент"
 
-#### Footer (Dark)
+#### Footer (Dark) [DONE] — `src/components/landing/Footer.tsx`
 - Multi-column enterprise footer
 - Columns: Продукт, Ресурси, Правна информация, Контакт
 - Social icons (Instagram, Facebook, YouTube)
@@ -269,133 +293,52 @@ wide:    1280px+   (max-width containers)
 
 ---
 
-### 3.2 Custom Quiz (`/[locale]/diagnose/page.tsx`)
+### 3.2 Custom Quiz (`/[locale]/diagnose/page.tsx`) [DONE]
 
 Full-screen, immersive, one-question-at-a-time experience.
 
-#### Shell
+#### Shell [DONE] — `src/components/quiz/QuizShell.tsx`
 - Black bg, no nav bar (distraction-free)
-- Top: thin gold progress bar (animated width)
+- Top: thin gold progress bar (animated width) — `QuizProgress.tsx`
 - Top-right: "X" close button (confirms exit)
-- Bottom: [← Back] [Continue →] navigation
+- Bottom: [Back] [Continue] navigation
 - Keyboard: Enter = continue, Escape = back, Arrow keys for sliders
 
-#### Screen 1: Welcome / Opt-In
-```
-┌──────────────────────────────────────────┐
-│                                          │
-│  ◆ ABUNDANCE                             │
-│                                          │
-│  Добре дошъл в                           │
-│  твоята диагностика.                     │
-│                                          │
-│  [Име]        ← text input, gold focus   │
-│  [Имейл]     ← email input              │
-│  [Телефон]   ← tel input (optional)     │
-│                                          │
-│  □ Съгласен съм с обработката           │
-│    на лични данни (GDPR)                 │
-│                                          │
-│            [Започни →]                    │
-└──────────────────────────────────────────┘
-```
+#### Screen 1: Welcome / Opt-In [DONE] — `src/components/quiz/WelcomeScreen.tsx`
+- Name, email, phone (optional), GDPR checkbox
 
-#### Screen 2: Life Audit (7 Areas)
-```
-┌──────────────────────────────────────────┐
-│  ━━━━━━━━━━━━━━━━━━━━ 25%               │
-│                                          │
-│  Оцени живота си в тези 7 сфери.        │
-│  (1 = критично, 10 = отлично)           │
-│                                          │
-│  Финанси         ●━━━━━━━━━━━━━ 7       │
-│  Бизнес          ●━━━━━━━━━━━━━ 5       │
-│  Здраве           ●━━━━━━━━━━━━━ 8       │
-│  Ментално здраве  ●━━━━━━━━━━━━━ 4       │
-│  Романтика       ●━━━━━━━━━━━━━ 6       │
-│  Социален живот  ●━━━━━━━━━━━━━ 7       │
-│  Мисия/Цел       ●━━━━━━━━━━━━━ 3       │
-│                                          │
-│       [← Назад]        [Продължи →]      │
-└──────────────────────────────────────────┘
-```
-- Custom slider components with gold thumb
+#### Screen 2: Life Audit (7 Areas) [DONE] — `src/components/quiz/LifeAuditScreen.tsx`
+- 7 slider components for each life area
 - Number display updates in real-time (JetBrains Mono)
-- Subtle haptic-style feedback on mobile
 
-#### Screen 3: Priorities (Multi-select, max 3)
-- "Кои са ТОП 3 сфери за фокус?"
-- 7 option cards (from areas rated in Screen 2)
-- Gold border on selected, max 3 enforced with toast warning
-- Cards show current score as context
+#### Screen 3: Priorities (Multi-select, max 3) [DONE] — `src/components/quiz/PriorityScreen.tsx`
+- 7 option cards, gold border on selected, max 3 enforced
 
-#### Screen 4: Goals (Conditional)
-- For each of the 3 selected priorities:
-  - "Каква е целта ти за [Финанси] след 90 дни?" (1-10 slider)
-  - Shows current score vs target (before → after visualization)
-- Gold arrow between current and goal score
+#### Screen 4: Goals (Conditional) [DONE] — `src/components/quiz/GoalsScreen.tsx`
+- Per-priority goal sliders with current vs target visualization
 
-#### Screen 5: Core Code (Birth Data)
-- "Разкрий Core Code-а си"
-- Birth date: DD.MM.YYYY (date picker, gold accents)
-- Birth time: HH:MM + toggle "Не знам" (dims the field)
-- City/Country: autocomplete input
-- Subtle cosmic/star background animation
+#### Screen 5: Core Code (Birth Data) [DONE] — `src/components/quiz/BirthDataScreen.tsx`
+- Birth date, time, city/country inputs
 
-#### Screen 6: Commitment Level
-- "Колко си готов да изпълниш плана?"
-- 3 large cards (vertical stack):
-  - 🔥 High (100%) — "Готов съм да действам"
-  - ⚡ Medium — "Нужда от насоки, но мотивиран"
-  - 🔍 Low — "Проучвам, още не съм решил"
-- Gold border on selected
+#### Screen 6: Commitment Level [DONE] — `src/components/quiz/CommitmentScreen.tsx`
+- 3 large choice cards: High / Medium / Low
 
-#### Screen 7: Resources (Income)
-- "Какъв е месечният ти доход?"
-- 5 option pills (horizontal wrap):
-  - Под €1,000 | €1,000-3,000 | €3,000-6,000 | €6,000-10,000 | Над €10,000
-- Gold border on selected
+#### Screen 7: Resources (Income) [DONE] — `src/components/quiz/IncomeScreen.tsx`
+- 5 option pills for income ranges
 
-#### Screen 8: Confirmation
-- "Потвърди информацията си"
-- Shows summary: name, email (editable)
-- "Диагностиката ще бъде изпратена на: email@example.com"
-- [Генерирай Моя Анализ →] — large gold CTA
+#### Screen 8: Confirmation [DONE] — `src/components/quiz/ConfirmationScreen.tsx`
+- Summary + submit CTA
 
-#### Quiz State Management
+#### Quiz State Management [DONE] — `src/components/quiz/QuizContext.tsx`
 - React context for all quiz data
 - Form validation per screen (Zod schemas)
-- Auto-save to localStorage (resume if tab closed)
 - On completion: POST to `/api/webhook/quiz`
 
 ---
 
-### 3.3 Processing Screen (`/[locale]/processing/page.tsx`)
+### 3.3 Processing Screen (`/[locale]/processing/page.tsx`) [DONE]
 
 Cinematic loading experience. 15-20 seconds.
-
-```
-┌──────────────────────────────────────────┐
-│                                          │
-│  Black bg, centered content              │
-│                                          │
-│  ◆                                       │
-│                                          │
-│  Генерираме твоя анализ...              │
-│                                          │
-│  Step 1: ✓ Анализиране на профила       │
-│  Step 2: ✓ Изчисляване на Life Path     │
-│  Step 3: ● Генериране на прозрения...   │  ← pulsing gold dot
-│  Step 4: ○ Създаване на плана           │
-│                                          │
-│  ━━━━━━━━━━━━━━━━━━━━━━ 65%             │
-│                                          │
-│  "Знаеше ли? Хората с твоя профил       │
-│   постигат 3x по-бързо целите си        │
-│   когато имат ясен план."               │  ← rotating tips
-│                                          │
-└──────────────────────────────────────────┘
-```
 
 - Steps appear one by one with checkmark animation
 - Progress bar fills smoothly
@@ -404,161 +347,74 @@ Cinematic loading experience. 15-20 seconds.
 
 ---
 
-### 3.4 Results Preview (`/[locale]/results/[id]/page.tsx`)
+### 3.4 Results Preview (`/[locale]/results/[id]/page.tsx`) [DONE — page exists, some components partial]
 
-The highest-converting page in the funnel. User just invested 7 minutes and is emotionally primed.
+The highest-converting page in the funnel.
 
-```
-┌──────────────────────────────────────────┐
-│  Nav: ◆ ABUNDANCE              [BG/EN]   │
-├──────────────────────────────────────────┤
-│                                          │
-│  ТВОЯТ ПРОФИЛ                ← Gold label│
-│                                          │
-│  Иван, ти си                             │
-│  Генератор 5/1               ← big badge │
-│  Life Path: 8                            │
-│                                          │
-│  ┌──────────────────────────┐            │
-│  │    RADAR CHART            │            │
-│  │    7 areas visualized     │            │
-│  │    Gold lines, animated   │            │
-│  │    countUp scores         │            │
-│  └──────────────────────────┘            │
-│                                          │
-│  КЛЮЧОВИ ПРОЗРЕНИЯ           ← Gold label│
-│                                          │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐   │
-│  │Финанси  │ │Бизнес   │ │🔒Здраве │   │
-│  │Score: 7 │ │Score: 5 │ │ Locked  │   │
-│  │1 insight│ │1 insight│ │ Upgrade │   │
-│  │ visible │ │ visible │ │ to see  │   │
-│  └─────────┘ └─────────┘ └─────────┘   │
-│                                          │
-│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━        │
-│                                          │
-│  🔓 ОТКЛЮЧИ ПЪЛНИЯ АНАЛИЗ              │
-│                                          │
-│  Пълен доклад + 90-дневен план          │
-│  за само €37                             │
-│                                          │
-│  [Отключи Пълния Доклад →]  ← Gold CTA  │
-│                                          │
-│  "или продължи с безплатния"  ← ghost    │
-│                                          │
-└──────────────────────────────────────────┘
-```
-
+- [DONE] Page structure and server-side data fetching
+- [DONE] InsightCard component — `src/components/results/InsightCard.tsx`
+- [PARTIAL] RadarChart — placeholder, needs Recharts spider chart implementation
+- [MISSING] ProfileBadge — HD type display (e.g., "Генератор 5/1")
+- [MISSING] UpgradeSection — standalone pricing CTA component
 - Top 3 priority areas show 1 teaser insight each (visible)
 - Remaining 4 areas are locked/blurred with upgrade prompt
-- Radar chart animates on load with countUp numbers
-- Prominent upgrade section with urgency ("37 души гледат тази страница")
+- Prominent upgrade section with urgency
 - "Continue with free" ghost link → goes to Thank You page
 
 ---
 
-### 3.5 VSL / Thank You (`/[locale]/thank-you/page.tsx`)
+### 3.5 VSL / Thank You (`/[locale]/thank-you/page.tsx`) [DONE]
 
-```
-┌──────────────────────────────────────────┐
-│                                          │
-│  ПОЗДРАВЛЕНИЯ                ← Gold label│
-│                                          │
-│  Диагностиката ти е на       ← heading  │
-│  път към теб.                            │
-│                                          │
-│  ┌──────────────────────────┐            │
-│  │     VIDEO PLAYER          │            │
-│  │     (VSL embed)           │            │
-│  │     16:9 ratio            │            │
-│  └──────────────────────────┘            │
-│                                          │
-│  Провери inbox-а си за [email]           │
-│                                          │
-│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━        │
-│                                          │
-│  ИСКАШ ПОВЕЧЕ?               ← Gold     │
-│                                          │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐   │
-│  │ FREE    │ │ ПЪЛЕН   │ │COACHING │   │
-│  │ Teaser  │ │ ДОКЛАД  │ │ VIP     │   │
-│  │ PDF     │ │ €37     │ │ €697+   │   │
-│  │ ✓ Incl  │ │ Popular │ │ Limited │   │
-│  └─────────┘ └─────────┘ └─────────┘   │
-│                                          │
-│  Enterprise-ui pricing cards pattern     │
-│  Gold "Most Popular" badge on mid-tier   │
-│                                          │
-└──────────────────────────────────────────┘
-```
+- Congratulations section with check inbox message
+- VSL video section
+- 3-tier pricing cards (Free/Full Report/Coaching) — embedded inline
+- Guarantee section
+- Footer
 
 ---
 
-## 4. Database Schema
+## 4. Database Schema [DONE] — `supabase/migrations/001_initial_schema.sql`
 
-### submissions
+### submissions [DONE]
 ```sql
 CREATE TABLE submissions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  -- Contact
   user_name VARCHAR(255) NOT NULL,
   user_email VARCHAR(255) NOT NULL,
   user_phone VARCHAR(50),
   locale VARCHAR(5) DEFAULT 'bg',
-
-  -- Life Audit Scores
-  scores JSONB NOT NULL DEFAULT '{
-    "finances": 0, "business": 0, "health": 0,
-    "mental": 0, "romantic": 0, "social": 0, "mission": 0
-  }',
-
-  -- Priorities & Goals
+  scores JSONB NOT NULL DEFAULT '{"finances": 0, "business": 0, "health": 0, "mental": 0, "romantic": 0, "social": 0, "mission": 0}',
   priority_top3 TEXT[],
   goals JSONB,
-
-  -- Core Code (Birth Data)
   birth_date DATE,
   birth_time TIME,
   birth_time_unknown BOOLEAN DEFAULT false,
   birth_city VARCHAR(255),
   birth_country VARCHAR(255),
-
-  -- Segmentation
   commitment_level VARCHAR(50),
   income_level VARCHAR(50),
-
-  -- UTM Tracking
   utm_source VARCHAR(255),
   utm_medium VARCHAR(255),
   utm_campaign VARCHAR(255),
   referral_code VARCHAR(255),
-
-  -- Processing
   status VARCHAR(50) DEFAULT 'pending',
   analysis_result JSONB,
   pdf_url TEXT,
   email_sent BOOLEAN DEFAULT false,
-
-  -- Value Ladder
   tier VARCHAR(50) DEFAULT 'free',
   payment_status VARCHAR(50),
   stripe_session_id VARCHAR(255),
-
-  -- GDPR
   gdpr_consent BOOLEAN DEFAULT false,
   gdpr_consent_at TIMESTAMP,
-
-  -- Timestamps
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
-
 CREATE INDEX idx_submissions_email ON submissions(user_email);
 CREATE INDEX idx_submissions_status ON submissions(status);
 CREATE INDEX idx_submissions_created ON submissions(created_at);
 ```
 
-### email_logs
+### email_logs [DONE]
 ```sql
 CREATE TABLE email_logs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -571,7 +427,7 @@ CREATE TABLE email_logs (
 );
 ```
 
-### payments
+### payments [DONE]
 ```sql
 CREATE TABLE payments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -590,63 +446,56 @@ CREATE TABLE payments (
 
 ## 5. API Specifications
 
-### POST `/api/webhook/quiz`
+### POST `/api/webhook/quiz` [DONE] — `src/app/api/webhook/quiz/route.ts`
 - Receives quiz submission from frontend
 - Validates with Zod schema
+- Rate limits (50 per 5 min)
 - Saves to Supabase `submissions` table
 - Triggers async processing (analysis + PDF + email)
 - Returns `{ success: true, submissionId: uuid }`
 
-### POST `/api/generate-analysis`
+### POST `/api/generate-analysis` [DONE] — `src/app/api/generate-analysis/route.ts`
 - Input: `{ submission_id: uuid }`
 - Fetches submission data from Supabase
-- Calls OpenAI GPT-4 with structured prompt
-- Expected response JSON:
-  ```json
-  {
-    "hd_type_profile": "Генератор 5/1",
-    "hd_strategy": "Да Откликваш",
-    "life_path_number": "8",
-    "astro_triad": "Слънце в Овен, Луна в Телец, Асцендент Везни",
-    "teaser_insights": {
-      "finances": "One-line teaser for free tier",
-      "business": "One-line teaser",
-      ...
-    },
-    "full_analysis": {
-      "hd_analysis_text": "Full HD analysis (paid)",
-      "life_path_analysis_text": "Full numerology (paid)",
-      "astro_analysis_text": "Full astro (paid)",
-      "area_deep_dives": { ... },
-      "phase1_plan": "Days 1-30 action plan",
-      "phase2_plan": "Days 31-60 action plan",
-      "phase3_plan": "Days 61-90 action plan"
-    }
-  }
-  ```
-- Updates submission with `analysis_result` JSONB
+- Calls OpenAI GPT-4o with structured prompt
+- Updates submission with `analysis_result` JSONB and status: "completed"
+- Triggers `/api/send-email` (welcome email, fire-and-forget)
 
-### POST `/api/generate-pdf`
+### POST `/api/generate-pdf` [DONE] — `src/app/api/generate-pdf/route.ts`
 - Input: `{ submission_id: uuid, tier: 'free' | 'paid' }`
-- Free tier: teaser PDF (profile type + radar chart + 1 insight per area)
-- Paid tier: full PDF (all analysis + 90-day plan)
+- Free tier: teaser PDF (profile type + radar chart + 1 insight per area) — 4 pages
+- Paid tier: full PDF (all analysis + 90-day plan) — 7 pages
 - Generates with @react-pdf/renderer (branded, Bold Luxury themed)
-- Uploads to Cloudinary
 - Updates `pdf_url` in submissions
 
-### POST `/api/send-email`
+### POST `/api/send-email` [DONE] — `src/app/api/send-email/route.ts`
 - Input: `{ submission_id: uuid, email_type: 'welcome' | 'nurture_N' }`
-- SendGrid for transactional (welcome + PDF attachment)
-- Also adds to ConvertKit with tags for automation
+- SendGrid for transactional (welcome + nurture 1-5)
 - Bold Luxury email templates (black bg, gold accents)
+- Logs to `email_logs` table
+
+### POST `/api/create-checkout` [DONE] — `src/app/api/create-checkout/route.ts`
+- Input: `{ submission_id, tier, locale }`
+- Creates Stripe checkout session (low: €37, mid: €147, high: €697)
+- Returns `{ success: true, url: checkoutSessionUrl }`
+
+### POST `/api/webhook/stripe` [DONE] — `src/app/api/webhook/stripe/route.ts`
+- Stripe webhook for payment confirmations
+- Verifies webhook signature
+- Updates submission and inserts payment record
+- Triggers PDF generation
+
+### GET `/api/cron/nurture-emails` [DONE] — `src/app/api/cron/nurture-emails/route.ts`
+- Vercel cron job (daily 9 AM UTC)
+- 5-email nurture sequence with strategic timing
 
 ---
 
-## 6. i18n Strategy
+## 6. i18n Strategy [DONE]
 
 Using `next-intl` with App Router:
 
-### Routing
+### Routing [DONE] — `src/i18n/routing.ts`
 ```
 /bg/             → Bulgarian landing page (default)
 /en/             → English landing page
@@ -654,82 +503,64 @@ Using `next-intl` with App Router:
 /en/diagnose     → English quiz
 ```
 
-### File Structure
+### File Structure [DONE]
 ```
 src/i18n/messages/
   bg.json       → All Bulgarian strings
   en.json       → All English strings
 ```
 
-### Key Namespaces
-```json
-{
-  "nav": { ... },
-  "hero": { ... },
-  "problem": { ... },
-  "howItWorks": { ... },
-  "forWho": { ... },
-  "faq": { ... },
-  "cta": { ... },
-  "footer": { ... },
-  "quiz": { ... },
-  "processing": { ... },
-  "results": { ... },
-  "thankYou": { ... },
-  "emails": { ... },
-  "common": { ... }
-}
-```
+### Navigation [DONE] — `src/i18n/navigation.ts`
+- `Link`, `redirect`, `usePathname`, `useRouter` from `createNavigation(routing)`
 
 ---
 
 ## 7. Component Inventory
 
-### Landing Page Components
-- `Navbar` — sticky black nav with gold CTA
-- `Hero` — full viewport, particles, dual CTAs
-- `SocialProofStrip` — methodology logos
-- `ProblemSection` — 3 pain-point cards
-- `HowItWorks` — 3 gold-numbered steps
-- `ForWho` — 4 tabbed audience cards
-- `FAQ` — accordion with gold chevrons
-- `FinalCTA` — gold gradient section
-- `Footer` — multi-column enterprise footer
+### Landing Page Components [9/9 DONE]
+- [x] `Navbar` — sticky black nav with gold CTA — `src/components/landing/Navbar.tsx`
+- [x] `Hero` — full viewport, particles, dual CTAs — `src/components/landing/Hero.tsx`
+- [x] `SocialProofStrip` — methodology logos — `src/components/landing/SocialProofStrip.tsx`
+- [x] `ProblemSection` — 3 pain-point cards — `src/components/landing/ProblemSection.tsx`
+- [x] `HowItWorks` — 3 gold-numbered steps — `src/components/landing/HowItWorks.tsx`
+- [x] `ForWho` — 4 tabbed audience cards — `src/components/landing/ForWho.tsx`
+- [x] `FAQ` — accordion with gold chevrons — `src/components/landing/FAQ.tsx`
+- [x] `FinalCTA` — gold gradient section — `src/components/landing/FinalCTA.tsx`
+- [x] `Footer` — multi-column enterprise footer — `src/components/landing/Footer.tsx`
 
-### Quiz Components
-- `QuizShell` — full-screen wrapper, progress bar, navigation
-- `QuizProgress` — gold progress bar
-- `WelcomeScreen` — opt-in form
-- `LifeAuditScreen` — 7 sliders
-- `PriorityScreen` — multi-select cards
-- `GoalsScreen` — conditional sliders
-- `BirthDataScreen` — date/time/location inputs
-- `CommitmentScreen` — 3 choice cards
-- `IncomeScreen` — 5 option pills
-- `ConfirmationScreen` — summary + submit
+### Quiz Components [10/10 DONE]
+- [x] `QuizShell` — full-screen wrapper, progress bar, navigation — `src/components/quiz/QuizShell.tsx`
+- [x] `QuizProgress` — gold progress bar — `src/components/quiz/QuizProgress.tsx`
+- [x] `QuizContext` — React context for quiz state — `src/components/quiz/QuizContext.tsx`
+- [x] `WelcomeScreen` — opt-in form — `src/components/quiz/WelcomeScreen.tsx`
+- [x] `LifeAuditScreen` — 7 sliders — `src/components/quiz/LifeAuditScreen.tsx`
+- [x] `PriorityScreen` — multi-select cards — `src/components/quiz/PriorityScreen.tsx`
+- [x] `GoalsScreen` — conditional sliders — `src/components/quiz/GoalsScreen.tsx`
+- [x] `BirthDataScreen` — date/time/location inputs — `src/components/quiz/BirthDataScreen.tsx`
+- [x] `CommitmentScreen` — 3 choice cards — `src/components/quiz/CommitmentScreen.tsx`
+- [x] `IncomeScreen` — 5 option pills — `src/components/quiz/IncomeScreen.tsx`
+- [x] `ConfirmationScreen` — summary + submit — `src/components/quiz/ConfirmationScreen.tsx`
 
-### Results Components
-- `ProfileBadge` — type display (e.g., "Генератор 5/1")
-- `RadarChart` — 7-area spider chart (Recharts)
-- `InsightCard` — single area insight (visible or locked)
-- `UpgradeSection` — pricing + CTA
-- `PricingCard` — enterprise-ui style tier card
+### Results Components [2/5]
+- [ ] `ProfileBadge` — type display (e.g., "Генератор 5/1") — MISSING
+- [~] `RadarChart` — 7-area spider chart — `src/components/results/RadarChart.tsx` — PLACEHOLDER, needs Recharts implementation
+- [x] `InsightCard` — single area insight (visible or locked) — `src/components/results/InsightCard.tsx`
+- [ ] `UpgradeSection` — pricing + CTA — MISSING (logic inline in thank-you page)
+- [~] `PricingCard` — enterprise-ui style tier card — EMBEDDED in thank-you page, not standalone
 
-### Shared Components
-- `Button` — primary/secondary/ghost variants
-- `Card` — dark card with optional gold accent
-- `Section` — label + heading + content wrapper
-- `GoldLabel` — the uppercase gold section label
-- `Slider` — custom range input with gold thumb
-- `LanguageSwitcher` — BG/EN toggle
-- `CookieConsent` — GDPR banner
-- `SEOHead` — meta tags per page
+### Shared Components [5/6]
+- [x] `Button` — primary/secondary/ghost variants — `src/components/shared/Button.tsx`
+- [x] `Card` — dark card with optional gold accent — `src/components/shared/Card.tsx`
+- [x] `Section` — label + heading + content wrapper — `src/components/shared/Section.tsx`
+- [ ] `Slider` — custom range input with gold thumb — MISSING (quiz uses inline slider styles)
+- [x] `LanguageSwitcher` — BG/EN toggle — `src/components/shared/LanguageSwitcher.tsx`
+- [x] `CookieConsent` — GDPR banner — `src/components/shared/CookieConsent.tsx`
 
 ---
 
-## 8. Deployment & Infrastructure
+## 8. Deployment & Infrastructure [DONE]
 
-### Environment Variables
+### Environment Variables [DONE] — `.env.example`
 ```
 # Database
 NEXT_PUBLIC_SUPABASE_URL=
@@ -741,26 +572,32 @@ OPENAI_API_KEY=
 
 # Email
 SENDGRID_API_KEY=
-CONVERTKIT_API_KEY=
+SENDGRID_FROM_EMAIL=
 
-# Storage
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
+# Payments
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
 
-# Tracking
-NEXT_PUBLIC_GA_ID=
-NEXT_PUBLIC_FB_PIXEL_ID=
+# App
+NEXT_PUBLIC_APP_URL=
+NEXT_PUBLIC_SITE_URL=
+NEXT_PUBLIC_DEFAULT_LOCALE=
+
+# Admin CRM
+ADMIN_PASSWORD=
+JWT_SECRET=
 
 # Internal
 INTERNAL_API_KEY=
+CRON_SECRET=
 ```
 
-### Deployment
+### Deployment [DONE]
 - Hosting: Vercel
 - Domain: codeabundance.com
 - SSL: automatic (Vercel)
-- Region: EU (fra1) for GDPR
+- Cron: `vercel.json` with daily nurture-emails schedule
 
 ### Monthly Cost Estimate
 | Service | MVP | Scale (10k users) |
@@ -768,9 +605,48 @@ INTERNAL_API_KEY=
 | Vercel Pro | €20 | €20 |
 | Supabase Pro | €25 | €75 |
 | SendGrid | €0 | €20 |
-| ConvertKit | €29 | €79 |
 | OpenAI API | €10 | €100 |
-| Cloudinary | €0 | €25 |
-| **Total** | **~€84/mo** | **~€319/mo** |
+| **Total** | **~€55/mo** | **~€215/mo** |
 
-Note: Removed Typeform cost (€25/mo) by building custom quiz.
+Note: Architecture is intentionally in-app custom quiz + SendGrid nurture automation + Admin CRM.
+
+---
+
+## 9. Admin CRM Panel (`/admin`) [DONE — bonus, not in original plan]
+
+Password-protected admin panel added post-launch for lead management.
+
+### Auth [DONE]
+- `src/lib/admin-auth.ts` — JWT sign/verify with `jose`, HttpOnly cookie
+- `middleware.ts` — JWT protection for `/admin/*` and `/api/admin/*` routes
+- `POST /api/admin/login` — password validated with `crypto.timingSafeEqual`
+- `POST /api/admin/logout` — cookie clearing
+
+### Pages [DONE]
+- [x] Login — `src/app/admin/login/` (LoginForm.tsx client component)
+- [x] Dashboard — `src/app/admin/page.tsx` + `DashboardContent.tsx`
+  - 6 KPI cards: Total Leads, Leads Today, This Month, Conversion Rate, Revenue, Emails Sent
+  - Status breakdown with colored badges (amber/blue/green/red)
+  - Recent 10 leads mini table
+- [x] Leads Table — `src/app/admin/leads/` (LeadsTable.tsx)
+  - Search, status/tier/locale filters, date range, sortable columns
+  - Pagination (25/page), CSV export button
+  - Clickable rows → lead detail
+- [x] Lead Detail — `src/app/admin/leads/[id]/` (LeadDetail.tsx)
+  - Contact info, life audit scores bar chart, birth data, analysis result
+  - Email timeline, payment history
+  - Actions: re-analyze, resend email, change status
+- [x] Analytics — `src/app/admin/analytics/` (AnalyticsCharts.tsx)
+  - Conversion funnel (horizontal bars)
+  - Revenue over time (area chart, period selector)
+  - Income distribution (bar chart)
+  - Email performance (bar chart per type)
+
+### API Routes [DONE]
+- [x] `GET /api/admin/stats` — dashboard KPIs
+- [x] `GET /api/admin/leads` — paginated list with filters
+- [x] `GET /api/admin/leads/[id]` — single lead + PATCH status
+- [x] `POST /api/admin/leads/[id]/resend-email` — resend via existing send-email
+- [x] `POST /api/admin/leads/[id]/re-analyze` — re-trigger AI analysis
+- [x] `GET /api/admin/leads/export` — CSV download
+- [x] `GET /api/admin/analytics` — chart data with period filtering

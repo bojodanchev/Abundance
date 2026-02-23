@@ -5,7 +5,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Font,
 } from "@react-pdf/renderer";
 import type { AnalysisResult, LifeArea } from "@/lib/schemas";
 
