@@ -4,6 +4,15 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
+  async rewrites() {
+    return [
+      {
+        // Serve the Archive SPA for all /archive/* sub-routes
+        source: "/archive/:path((?!assets|favicon|placeholder|robots).*)",
+        destination: "/archive/index.html",
+      },
+    ];
+  },
   async headers() {
     return [
       {
