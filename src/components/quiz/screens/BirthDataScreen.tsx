@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useQuiz } from "../QuizContext";
+import BirthDatePicker from "../BirthDatePicker";
 
 export default function BirthDataScreen() {
   const { data, updateData, setCanProceed } = useQuiz();
@@ -39,19 +40,12 @@ export default function BirthDataScreen() {
       >
         {/* Birth date */}
         <div>
-          <label htmlFor="birth-date" className="block text-sm text-text-secondary mb-1.5">
+          <label className="block text-sm text-text-secondary mb-1.5">
             Дата на раждане <span className="text-accent">*</span>
           </label>
-          <input
-            id="birth-date"
-            type="date"
+          <BirthDatePicker
             value={data.birthDate}
-            onChange={(e) => updateData({ birthDate: e.target.value })}
-            className="w-full bg-surface-muted border border-border rounded-lg px-4 py-3 text-text-primary focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-colors
-              [&::-webkit-calendar-picker-indicator]:invert
-              [&::-webkit-calendar-picker-indicator]:opacity-50
-              [&::-webkit-calendar-picker-indicator]:hover:opacity-100
-            "
+            onChange={(val) => updateData({ birthDate: val })}
           />
         </div>
 
