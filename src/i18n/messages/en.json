@@ -245,5 +245,19 @@
     "contactTitle": "Contact",
     "contactText": "For questions about these terms, please contact us at:",
     "contactEmail": "support@codeabundance.com"
+  },
+  "bumpOffer": {
+    "label": "SPECIAL OFFER",
+    "title": "Accelerate Your Results",
+    "benefit1": "Priority processing of your analysis",
+    "benefit2": "7-day AI assistant with personalized guidance",
+    "benefit3": "Additional email tips for implementation",
+    "originalPrice": "€29",
+    "price": "€7",
+    "discount": "76% off",
+    "cta": "YES, I WANT IT FOR €7 →",
+    "skip": "No thanks — continue for free →",
+    "trust": "Secure payment via Stripe",
+    "timerLabel": "Offer expires in"
   }
 }

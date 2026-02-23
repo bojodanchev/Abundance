@@ -74,7 +74,7 @@ export default function ConfirmationScreen() {
         /* ignore */
       }
 
-      router.push(`/processing?id=${submissionId}`);
+      router.push(`/bump-offer?id=${submissionId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Нещо се обърка.");
       setIsSubmitting(false);

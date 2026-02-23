@@ -46,6 +46,37 @@ export async function POST(request: Request) {
 
     const supabase = getSupabaseAdmin();
 
+    // Handle bump offer purchase separately
+    if (tier === "bump") {
+      const { error: bumpUpdateError } = await supabase
+        .from("submissions")
+        .update({ bump_accepted: true })
+        .eq("id", submissionId);
+
+      if (bumpUpdateError) {
+        console.error("Failed to update bump_accepted:", bumpUpdateError);
+      }
+
+      // Insert payment record for bump
+      const { error: bumpInsertError } = await supabase.from("payments").insert({
+        submission_id: submissionId,
+        stripe_session_id: session.id,
+        stripe_payment_intent: typeof session.payment_intent === "string"
+          ? session.payment_intent
+          : session.payment_intent?.id ?? null,
+        amount_cents: session.amount_total ?? 0,
+        currency: session.currency ?? "eur",
+        tier,
+        status: "paid",
+      });
+
+      if (bumpInsertError) {
+        console.error("Failed to insert bump payment record:", bumpInsertError);
+      }
+
+      return NextResponse.json({ received: true });
+    }
+
     // Update submission: mark as paid with purchased tier
     const { error: updateError } = await supabase
       .from("submissions")

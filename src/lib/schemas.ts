@@ -133,6 +133,17 @@ export const createCheckoutSchema = z.object({
 export type CreateCheckoutInput = z.infer<typeof createCheckoutSchema>;
 
 // ============================================================
+// Create Bump Checkout Input
+// ============================================================
+
+export const createBumpCheckoutSchema = z.object({
+  submission_id: z.string().uuid(),
+  locale: z.enum(["bg", "en"]).default("bg"),
+});
+
+export type CreateBumpCheckoutInput = z.infer<typeof createBumpCheckoutSchema>;
+
+// ============================================================
 // Analysis Result Shape (from OpenAI)
 // ============================================================
 
