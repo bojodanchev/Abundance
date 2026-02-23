@@ -66,7 +66,21 @@ export default async function AdminDashboardPage() {
   const isAuth = await isAdminAuthenticated();
   if (!isAuth) redirect("/admin/login");
 
-  const stats = await getDashboardStats();
-
-  return <DashboardContent stats={stats} />;
+  try {
+    const stats = await getDashboardStats();
+    return <DashboardContent stats={stats} />;
+  } catch (error) {
+    console.error("Dashboard stats error:", error);
+    const fallbackStats = {
+      totalLeads: 0,
+      leadsToday: 0,
+      leadsThisMonth: 0,
+      conversionRate: 0,
+      totalRevenue: 0,
+      emailsSent: 0,
+      statusBreakdown: { pending: 0, processing: 0, completed: 0, error: 0 },
+      recentLeads: [],
+    };
+    return <DashboardContent stats={fallbackStats} />;
+  }
 }

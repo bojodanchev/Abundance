@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   Users,
@@ -54,6 +54,7 @@ const item = {
 };
 
 export default function DashboardContent({ stats }: { stats: DashboardStats }) {
+  const router = useRouter();
   const kpis = [
     { label: "Total Leads", value: stats.totalLeads.toLocaleString(), icon: Users },
     { label: "Leads Today", value: stats.leadsToday.toLocaleString(), icon: UserPlus },
@@ -137,32 +138,30 @@ export default function DashboardContent({ stats }: { stats: DashboardStats }) {
                 </tr>
               ) : (
                 stats.recentLeads.map((lead) => (
-                  <Link
+                  <tr
                     key={lead.id}
-                    href={`/admin/leads/${lead.id}`}
-                    className="contents"
+                    onClick={() => router.push(`/admin/leads/${lead.id}`)}
+                    className="border-b border-border last:border-b-0 hover:bg-white/[0.03] transition-colors cursor-pointer"
                   >
-                    <tr className="border-b border-border last:border-b-0 hover:bg-white/[0.03] transition-colors cursor-pointer">
-                      <td className="py-3 px-5 font-medium">{lead.user_name}</td>
-                      <td className="py-3 px-5 text-text-secondary">{lead.user_email}</td>
-                      <td className="py-3 px-5">
-                        <span
-                          className={`${statusStyles[lead.status]} rounded-full px-2.5 py-0.5 text-xs font-medium`}
-                        >
-                          {lead.status}
-                        </span>
-                      </td>
-                      <td className="py-3 px-5 text-text-secondary capitalize">{lead.tier}</td>
-                      <td className="py-3 px-5 text-text-secondary">
-                        {new Date(lead.created_at).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </td>
-                    </tr>
-                  </Link>
+                    <td className="py-3 px-5 font-medium">{lead.user_name}</td>
+                    <td className="py-3 px-5 text-text-secondary">{lead.user_email}</td>
+                    <td className="py-3 px-5">
+                      <span
+                        className={`${statusStyles[lead.status]} rounded-full px-2.5 py-0.5 text-xs font-medium`}
+                      >
+                        {lead.status}
+                      </span>
+                    </td>
+                    <td className="py-3 px-5 text-text-secondary capitalize">{lead.tier}</td>
+                    <td className="py-3 px-5 text-text-secondary">
+                      {new Date(lead.created_at).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </td>
+                  </tr>
                 ))
               )}
             </tbody>
