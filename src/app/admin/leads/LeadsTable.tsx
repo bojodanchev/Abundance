@@ -12,7 +12,9 @@ import {
   Download,
   Loader2,
   Users,
+  Plus,
 } from "lucide-react";
+import AddLeadModal from "./AddLeadModal";
 
 type Lead = {
   id: string;
@@ -63,6 +65,7 @@ export default function LeadsTable() {
   const [data, setData] = useState<LeadsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState(false);
 
   // Read state from URL
   const search = searchParams.get("search") || "";
@@ -192,18 +195,27 @@ export default function LeadsTable() {
             Manage and track all submissions
           </p>
         </div>
-        <button
-          onClick={handleExport}
-          disabled={exporting}
-          className="flex items-center gap-2 px-4 py-2 bg-surface-muted border border-border rounded-lg text-sm text-text-secondary hover:text-accent hover:border-accent/30 transition-colors disabled:opacity-50"
-        >
-          {exporting ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Download className="w-4 h-4" />
-          )}
-          Export CSV
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleExport}
+            disabled={exporting}
+            className="flex items-center gap-2 px-4 py-2 bg-surface-muted border border-border rounded-lg text-sm text-text-secondary hover:text-accent hover:border-accent/30 transition-colors disabled:opacity-50"
+          >
+            {exporting ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Download className="w-4 h-4" />
+            )}
+            Export CSV
+          </button>
+          <button
+            onClick={() => setAddModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-accent text-primary rounded-lg text-sm font-display font-semibold hover:bg-accent-dark transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Add Lead
+          </button>
+        </div>
       </div>
 
       {/* Toolbar */}
@@ -402,6 +414,15 @@ export default function LeadsTable() {
           </div>
         )}
       </div>
+
+      {/* Add Lead Modal */}
+      <AddLeadModal
+        open={addModalOpen}
+        onClose={() => setAddModalOpen(false)}
+        onCreated={() => {
+          fetchLeads();
+        }}
+      />
     </div>
   );
 }
