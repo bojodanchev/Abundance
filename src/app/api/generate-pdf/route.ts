@@ -55,13 +55,13 @@ export async function POST(request: Request) {
     };
 
     // --- Generate PDF ---
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const element = React.createElement(AbundanceReport, {
+    const element: React.ReactElement = React.createElement(AbundanceReport, {
       submission: pdfSubmission,
       tier,
-    }) as any;
+    });
 
-    const buffer = await renderToBuffer(element);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const buffer = await renderToBuffer(element as any);
 
     const filename = `abundance-report-${tier}.pdf`;
 

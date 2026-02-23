@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, ArrowLeft, ArrowRight } from "lucide-react";
+import { X, ArrowLeft, ArrowRight, LogOut, Diamond } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useQuiz } from "./QuizContext";
 import WelcomeScreen from "./screens/WelcomeScreen";
@@ -60,6 +60,7 @@ export default function QuizShell() {
   const { step, totalSteps, goNext, goBack, canProceed, isSubmitting } =
     useQuiz();
   const router = useRouter();
+  const [showExitModal, setShowExitModal] = useState(false);
 
   /* Track animation direction */
   const direction =
@@ -80,9 +81,12 @@ export default function QuizShell() {
   }, [step, goBack]);
 
   const handleClose = useCallback(() => {
-    if (window.confirm("Сигурен ли си, че искаш да излезеш? Напредъкът ти е запазен.")) {
-      router.push("/");
-    }
+    setShowExitModal(true);
+  }, []);
+
+  const handleConfirmExit = useCallback(() => {
+    setShowExitModal(false);
+    router.push("/");
   }, [router]);
 
   /* Keyboard shortcuts */
@@ -184,6 +188,71 @@ export default function QuizShell() {
           )}
         </div>
       </div>
+
+      {/* -------- Exit confirmation modal -------- */}
+      <AnimatePresence>
+        {showExitModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm px-5"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowExitModal(false);
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              className="bg-surface-muted border border-border rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden"
+            >
+              {/* Icon + text */}
+              <div className="px-6 pt-8 pb-6 text-center">
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 20,
+                    delay: 0.1,
+                  }}
+                  className="w-14 h-14 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-5"
+                >
+                  <Diamond className="w-6 h-6 text-accent" />
+                </motion.div>
+                <h3 className="font-display font-bold text-lg text-text-primary mb-2">
+                  Искаш ли да излезеш?
+                </h3>
+                <p className="text-text-secondary text-sm leading-relaxed">
+                  Напредъкът ти е запазен. Можеш да се върнеш и да продължиш по
+                  всяко време.
+                </p>
+              </div>
+
+              {/* Actions */}
+              <div className="px-6 pb-6 flex gap-3">
+                <button
+                  onClick={() => setShowExitModal(false)}
+                  className="flex-1 px-4 py-3 rounded-xl text-sm font-display font-semibold text-text-primary bg-white/5 border border-border hover:bg-white/10 transition-colors cursor-pointer"
+                >
+                  Остани
+                </button>
+                <button
+                  onClick={handleConfirmExit}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-display font-semibold text-primary bg-accent hover:bg-accent-dark transition-colors cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Излез
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
