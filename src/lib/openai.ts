@@ -29,7 +29,7 @@ export async function chatCompletion(
       Authorization: `Bearer ${OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: options?.model ?? "gpt-4o-mini",
+      model: options?.model ?? "gpt-5-mini",
       messages,
       temperature: options?.temperature ?? 0.7,
       max_tokens: options?.max_tokens ?? 4000,
