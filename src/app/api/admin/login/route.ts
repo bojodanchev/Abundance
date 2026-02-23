@@ -14,8 +14,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const inputBuf = Buffer.from(String(password));
-    const correctBuf = Buffer.from(adminPassword);
+    const inputBuf = Buffer.from(String(password).trim());
+    const correctBuf = Buffer.from(adminPassword.trim());
 
     if (
       inputBuf.length !== correctBuf.length ||
