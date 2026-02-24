@@ -7,6 +7,8 @@ import { useLocale } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useQuiz, LIFE_AREAS } from "../QuizContext";
 
+const IS_PRELAUNCH = process.env.NEXT_PUBLIC_PRELAUNCH_MODE === "true";
+
 export default function ConfirmationScreen() {
   const { data, updateData, setCanProceed, isSubmitting, setIsSubmitting } =
     useQuiz();
@@ -74,7 +76,11 @@ export default function ConfirmationScreen() {
         /* ignore */
       }
 
-      router.push(`/bump-offer?id=${submissionId}`);
+      if (IS_PRELAUNCH) {
+        router.push(`/spot-reserved?id=${submissionId}&email=${encodeURIComponent(data.email.trim())}`);
+      } else {
+        router.push(`/bump-offer?id=${submissionId}`);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Нещо се обърка.");
       setIsSubmitting(false);
@@ -86,6 +92,8 @@ export default function ConfirmationScreen() {
     (k) => LIFE_AREAS.find((a) => a.key === k)!.label
   );
 
+  const isBg = locale !== "en";
+
   return (
     <div className="space-y-8">
       <motion.div
@@ -94,10 +102,10 @@ export default function ConfirmationScreen() {
         className="space-y-2"
       >
         <p className="text-accent font-mono text-xs tracking-[0.25em] uppercase">
-          Потвърждение
+          {isBg ? "Потвърждение" : "Confirmation"}
         </p>
         <h2 className="font-display font-bold text-2xl sm:text-3xl text-text-primary leading-tight">
-          Потвърди информацията си.
+          {isBg ? "Потвърди информацията си." : "Confirm your information."}
         </h2>
       </motion.div>
 
@@ -110,7 +118,7 @@ export default function ConfirmationScreen() {
       >
         <div>
           <label htmlFor="confirm-name" className="block text-sm text-text-secondary mb-1.5">
-            Име
+            {isBg ? "Име" : "Name"}
           </label>
           <input
             id="confirm-name"
@@ -122,7 +130,7 @@ export default function ConfirmationScreen() {
         </div>
         <div>
           <label htmlFor="confirm-email" className="block text-sm text-text-secondary mb-1.5">
-            Имейл
+            {isBg ? "Имейл" : "Email"}
           </label>
           <input
             id="confirm-email"
@@ -142,20 +150,40 @@ export default function ConfirmationScreen() {
         className="p-5 rounded-xl border border-border bg-surface-muted space-y-3"
       >
         <h3 className="font-display font-semibold text-sm text-text-primary">
-          Какво ще получиш:
+          {IS_PRELAUNCH
+            ? (isBg ? "Какво ще получиш при старта:" : "What you'll receive at launch:")
+            : (isBg ? "Какво ще получиш:" : "What you'll receive:")
+          }
         </h3>
         <ul className="space-y-2">
-          {[
-            "Персонализиран профил базиран на твоите данни",
-            `Анализ на приоритетите ти: ${priorityLabels.join(", ")}`,
-            "Безплатен тийзър PDF с ключови прозрения",
-            "90-дневна пътна карта за действие",
-          ].map((item, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm text-text-secondary">
-              <Check size={14} className="text-accent mt-0.5 flex-shrink-0" />
-              <span>{item}</span>
-            </li>
-          ))}
+          {IS_PRELAUNCH
+            ? [
+                isBg ? "Приоритетно място сред първите потребители" : "Priority spot among first users",
+                isBg
+                  ? `Персонализиран анализ на приоритетите ти: ${priorityLabels.join(", ")}`
+                  : `Personalized analysis of your priorities: ${priorityLabels.join(", ")}`,
+                isBg ? "Пътна Карта 2.0 с Human Design, нумерология и астрология" : "Roadmap 2.0 with Human Design, numerology, and astrology",
+                isBg ? "90-дневен план за действие" : "90-day action plan",
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-text-secondary">
+                  <Check size={14} className="text-accent mt-0.5 flex-shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))
+            : [
+                isBg ? "Персонализиран профил базиран на твоите данни" : "Personalized profile based on your data",
+                isBg
+                  ? `Анализ на приоритетите ти: ${priorityLabels.join(", ")}`
+                  : `Analysis of your priorities: ${priorityLabels.join(", ")}`,
+                isBg ? "Безплатен тийзър PDF с ключови прозрения" : "Free teaser PDF with key insights",
+                isBg ? "90-дневна пътна карта за действие" : "90-day action roadmap",
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-text-secondary">
+                  <Check size={14} className="text-accent mt-0.5 flex-shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))
+          }
         </ul>
       </motion.div>
 
@@ -166,8 +194,16 @@ export default function ConfirmationScreen() {
         transition={{ delay: 0.2 }}
         className="text-sm text-text-secondary text-center"
       >
-        Диагностиката ще бъде изпратена на:{" "}
-        <span className="text-accent">{data.email}</span>
+        {IS_PRELAUNCH
+          ? (isBg
+              ? <>Ще получиш потвърждение и анализа си на: <span className="text-accent">{data.email}</span></>
+              : <>You&apos;ll receive confirmation and your analysis at: <span className="text-accent">{data.email}</span></>
+            )
+          : (isBg
+              ? <>Диагностиката ще бъде изпратена на: <span className="text-accent">{data.email}</span></>
+              : <>Your diagnostic will be sent to: <span className="text-accent">{data.email}</span></>
+            )
+        }
       </motion.p>
 
       {/* Error */}
@@ -189,11 +225,16 @@ export default function ConfirmationScreen() {
           {isSubmitting ? (
             <>
               <Loader2 size={18} className="animate-spin" />
-              Обработване...
+              {isBg ? "Обработване..." : "Processing..."}
+            </>
+          ) : IS_PRELAUNCH ? (
+            <>
+              {isBg ? "Запази Моето Място" : "Reserve My Spot"}
+              <ArrowRight size={18} />
             </>
           ) : (
             <>
-              Генерирай Моя Анализ
+              {isBg ? "Генерирай Моя Анализ" : "Generate My Analysis"}
               <ArrowRight size={18} />
             </>
           )}

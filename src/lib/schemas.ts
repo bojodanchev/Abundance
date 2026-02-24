@@ -110,6 +110,7 @@ export const sendEmailSchema = z.object({
   submission_id: z.string().uuid(),
   email_type: z.enum([
     "welcome",
+    "prelaunch",
     "nurture_1",
     "nurture_2",
     "nurture_3",

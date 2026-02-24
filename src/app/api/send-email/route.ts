@@ -107,6 +107,71 @@ const AREA_LABELS_EN: Record<LifeArea, string> = {
   mission: "Mission",
 };
 
+function buildPrelaunchEmail(submission: Record<string, unknown>) {
+  const locale = (submission.locale as string) ?? "bg";
+  const name = submission.user_name as string;
+  const isBg = locale === "bg";
+
+  const bodyHtml = `
+    <p class="gold-label">${isBg ? "МЯСТОТО ТИ Е ЗАПАЗЕНО" : "YOUR SPOT IS RESERVED"}</p>
+    <h1>${isBg ? `${name}, добре дошъл в CODE: ABUNDANCE!` : `${name}, welcome to CODE: ABUNDANCE!`}</h1>
+    <p>${
+      isBg
+        ? "Благодарим ти, че попълни диагностиката и запази своето място. Ти си сред първите, които ще получат достъп до персонализирания си анализ."
+        : "Thank you for completing your diagnostic and reserving your spot. You're among the first who will receive access to your personalized analysis."
+    }</p>
+
+    <div class="profile-badge">
+      <p class="profile-type">${isBg ? "Ранен Достъп" : "Early Access"}</p>
+      <p class="profile-sub">${isBg ? "Приоритетно място запазено" : "Priority spot reserved"}</p>
+    </div>
+
+    <h2>${isBg ? "Какво следва?" : "What's next?"}</h2>
+
+    <div class="insight-card">
+      <p class="insight-area">${isBg ? "СТЪПКА 1" : "STEP 1"}</p>
+      <p class="insight-text">${
+        isBg
+          ? "Твоите данни са запазени и ще бъдат обработени от нашия AI агент веднага щом стартираме."
+          : "Your data is saved and will be processed by our AI agent as soon as we launch."
+      }</p>
+    </div>
+
+    <div class="insight-card">
+      <p class="insight-area">${isBg ? "СТЪПКА 2" : "STEP 2"}</p>
+      <p class="insight-text">${
+        isBg
+          ? "Ще получиш имейл с персонализирана Пътна Карта 2.0 — пълен доклад с Human Design, нумерология и астрологичен анализ."
+          : "You'll receive an email with your personalized Roadmap 2.0 — a full report with Human Design, numerology, and astrological analysis."
+      }</p>
+    </div>
+
+    <div class="insight-card">
+      <p class="insight-area">${isBg ? "СТЪПКА 3" : "STEP 3"}</p>
+      <p class="insight-text">${
+        isBg
+          ? "Твоят 90-дневен план за действие ще бъде готов, за да започнеш трансформацията си от ден едно."
+          : "Your 90-day action plan will be ready so you can start your transformation from day one."
+      }</p>
+    </div>
+
+    <hr class="divider" />
+    <p>${
+      isBg
+        ? "Стой на линия — ще те уведомим веднага щом твоят анализ е готов. Като ранен потребител, ще получиш приоритетен достъп."
+        : "Stay tuned — we'll notify you as soon as your analysis is ready. As an early user, you'll get priority access."
+    }</p>`;
+
+  return buildEmailHtml({
+    title: isBg ? "Мястото ти е запазено | CODE: ABUNDANCE" : "Your Spot is Reserved | CODE: ABUNDANCE",
+    preheader: isBg
+      ? `${name}, ти си сред първите! Скоро ще получиш своя анализ.`
+      : `${name}, you're among the first! Your analysis is coming soon.`,
+    bodyHtml,
+    locale,
+  });
+}
+
 function buildWelcomeEmail(
   submission: Record<string, unknown>,
   analysis: AnalysisResult,
@@ -288,7 +353,12 @@ export async function POST(request: Request) {
         ? `https://${process.env.VERCEL_URL}`
         : "http://localhost:3000");
 
-    if (email_type === "welcome") {
+    if (email_type === "prelaunch") {
+      subject = isBg
+        ? `${submission.user_name}, мястото ти е запазено! ✦`
+        : `${submission.user_name}, your spot is reserved! ✦`;
+      html = buildPrelaunchEmail(submission);
+    } else if (email_type === "welcome") {
       const analysis = submission.analysis_result as AnalysisResult | null;
       if (!analysis) {
         return NextResponse.json(

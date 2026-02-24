@@ -73,7 +73,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // --- Trigger async analysis generation ---
     const internalApiKey = process.env.INTERNAL_API_KEY;
     const baseUrl =
       process.env.NEXT_PUBLIC_SITE_URL ??
@@ -81,21 +80,42 @@ export async function POST(request: Request) {
         ? `https://${process.env.VERCEL_URL}`
         : "http://localhost:3000");
 
-    // Fire-and-forget: don't await, let it run in the background
-    fetch(`${baseUrl}/api/generate-analysis`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(internalApiKey && { "x-internal-key": internalApiKey }),
-      },
-      body: JSON.stringify({ submission_id: submission.id }),
-    }).catch((err) => {
-      console.error("Failed to trigger analysis generation:", err);
-    });
+    const isPrelaunch = process.env.NEXT_PUBLIC_PRELAUNCH_MODE === "true";
+
+    if (isPrelaunch) {
+      // --- Pre-launch mode: send confirmation email, skip AI analysis ---
+      fetch(`${baseUrl}/api/send-email`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(internalApiKey && { "x-internal-key": internalApiKey }),
+        },
+        body: JSON.stringify({
+          submission_id: submission.id,
+          email_type: "prelaunch",
+        }),
+      }).catch((err) => {
+        console.error("Failed to send pre-launch email:", err);
+      });
+    } else {
+      // --- Trigger async analysis generation ---
+      // Fire-and-forget: don't await, let it run in the background
+      fetch(`${baseUrl}/api/generate-analysis`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(internalApiKey && { "x-internal-key": internalApiKey }),
+        },
+        body: JSON.stringify({ submission_id: submission.id }),
+      }).catch((err) => {
+        console.error("Failed to trigger analysis generation:", err);
+      });
+    }
 
     return NextResponse.json({
       success: true,
       submissionId: submission.id,
+      prelaunch: isPrelaunch,
     });
   } catch (error) {
     console.error("Quiz webhook error:", error);
