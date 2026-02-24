@@ -4,7 +4,7 @@ import luxuryYacht from "@/assets/luxury-yacht.jpg";
 
 const TheChaos = () => {
   const handleDiagnostic = () => {
-    window.location.href = '/bg/diagnose';
+    window.location.href = '/archive/diagnostic';
   };
 
   return (

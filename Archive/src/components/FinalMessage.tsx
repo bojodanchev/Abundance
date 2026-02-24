@@ -3,11 +3,11 @@ import { ArrowRight, Calendar, Users } from "lucide-react";
 
 const FinalMessage = () => {
   const handleStrategyCall = () => {
-    window.location.href = '/bg/diagnose';
+    window.location.href = '/archive/diagnostic';
   };
 
   const handleJoinMovement = () => {
-    window.location.href = '/bg/diagnose';
+    window.location.href = '/archive/diagnostic';
   };
 
   return (

@@ -1,0 +1,7 @@
+project_id = "vmiqcmyeqzkwsckcumck"
+
+[functions.abundance-diagnostic]
+verify_jwt = false
+
+[functions.process-diagnostic]
+verify_jwt = false

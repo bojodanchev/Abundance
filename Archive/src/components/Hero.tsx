@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/luxury-office.jpg";
 const Hero = () => {
   const scrollToPrograms = () => {
-    window.location.href = '/bg/diagnose';
+    window.location.href = '/archive/diagnostic';
   };
   return <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden py-20">
       {/* Background Image with Overlay */}

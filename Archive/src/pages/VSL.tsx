@@ -89,12 +89,12 @@ const VSL = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg px-8" asChild>
-              <a href="/bg/diagnose">
+              <a href="/archive/diagnostic">
                 Получи безплатната диагностика
               </a>
             </Button>
             <Button size="lg" variant="outline" className="text-lg px-8" asChild>
-              <a href="/bg/diagnose">
+              <a href="/archive/diagnostic">
                 Запази 1:1 разговор
               </a>
             </Button>

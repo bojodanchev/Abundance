@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 45 90% 55%;
+    --primary-foreground: 0 0% 10%;
+
+    --secondary: 45 75% 45%;
+    --secondary-foreground: 0 0% 10%;
+
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 45 95% 60%;
+    --accent-foreground: 0 0% 10%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 45 90% 55%;
+
+    --radius: 0.25rem;
+    
+    /* Custom design tokens */
+    --gold: 45 90% 55%;
+    --violet: 270 60% 50%;
+    --deep-black: 0 0% 0%;
+    
+    /* Gradients - Black and Gold */
+    --gradient-primary: linear-gradient(135deg, hsl(45 90% 55%) 0%, hsl(40 80% 45%) 100%);
+    --gradient-dark: linear-gradient(180deg, hsl(0 0% 0%) 0%, hsl(0 5% 8%) 100%);
+    --gradient-glow: radial-gradient(circle at center, hsl(45 90% 55% / 0.15) 0%, transparent 70%);
+    
+    /* Shadows - Gold glow */
+    --shadow-gold: 0 8px 32px hsl(45 90% 55% / 0.35);
+    --shadow-violet: 0 8px 32px hsl(270 60% 50% / 0.3);
+    --shadow-elegant: 0 16px 48px hsl(0 0% 0% / 0.6);
+    
+    /* Transitions - More controlled */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-elegant: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cinzel', serif;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .glow-gold {
+    box-shadow: var(--shadow-gold);
+  }
+  
+  .glow-violet {
+    box-shadow: var(--shadow-violet);
+  }
+  
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+  
+  .transition-elegant {
+    transition: var(--transition-elegant);
+  }
+}

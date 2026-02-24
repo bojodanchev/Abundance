@@ -114,7 +114,7 @@ const SevenSteps = () => {
           {/* CTA */}
           <div className="text-center mt-12">
             <button
-              onClick={() => window.location.href = '/bg/diagnose'}
+              onClick={() => window.location.href = '/archive/diagnostic'}
               className="inline-flex items-center justify-center px-8 py-4 text-lg font-black bg-gradient-to-r from-primary to-gold text-background rounded-lg hover:scale-105 transition-transform shadow-glow"
             >
               НАПРАВИ АНАЛИЗ
