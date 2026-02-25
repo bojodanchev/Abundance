@@ -134,7 +134,7 @@ Generate a full diagnostic analysis including Human Design type, Life Path numbe
       {
         model: "gpt-5-mini",
         temperature: 0.7,
-        max_tokens: 4000,
+        max_completion_tokens: 4000,
         response_format: { type: "json_object" },
       }
     );

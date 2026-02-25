@@ -31,7 +31,7 @@ const scoreSchema = z.object({
 });
 
 const goalSchema = z.record(
-  z.enum(LIFE_AREAS),
+  z.string(),
   z.number().min(1).max(10)
 );
 

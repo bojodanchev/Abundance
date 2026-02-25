@@ -18,7 +18,7 @@ export async function chatCompletion(
   options?: {
     model?: string;
     temperature?: number;
-    max_tokens?: number;
+    max_completion_tokens?: number;
     response_format?: { type: "json_object" | "text" };
   }
 ): Promise<string> {
@@ -32,7 +32,7 @@ export async function chatCompletion(
       model: options?.model ?? "gpt-5-mini",
       messages,
       temperature: options?.temperature ?? 0.7,
-      max_tokens: options?.max_tokens ?? 4000,
+      max_completion_tokens: options?.max_completion_tokens ?? 4000,
       ...(options?.response_format && {
         response_format: options.response_format,
       }),
