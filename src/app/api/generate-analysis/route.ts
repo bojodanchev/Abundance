@@ -3,7 +3,7 @@ import { getSupabaseAdmin } from "@/lib/supabase";
 import { chatCompletion } from "@/lib/openai";
 import { generateAnalysisSchema, type AnalysisResult } from "@/lib/schemas";
 
-export const maxDuration = 60; // Allow up to 60s for OpenAI response
+export const maxDuration = 300; // Allow up to 5min for OpenAI response
 
 export async function POST(request: Request) {
   try {
