@@ -133,16 +133,21 @@ Generate a full diagnostic analysis including Human Design type, Life Path numbe
       ],
       {
         model: "gpt-5-mini",
-        max_completion_tokens: 4000,
+        max_completion_tokens: 16000,
         response_format: { type: "json_object" },
       }
     );
 
     let analysisResult: AnalysisResult;
     try {
-      analysisResult = JSON.parse(responseText);
+      // Strip markdown code fences if present (e.g. ```json ... ```)
+      let cleanText = responseText.trim();
+      if (cleanText.startsWith("```")) {
+        cleanText = cleanText.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
+      }
+      analysisResult = JSON.parse(cleanText);
     } catch {
-      console.error("Failed to parse OpenAI response:", responseText);
+      console.error("Failed to parse OpenAI response:", responseText.slice(0, 500));
       await getSupabaseAdmin()
         .from("submissions")
         .update({ status: "error" })
