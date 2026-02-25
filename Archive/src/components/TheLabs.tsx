@@ -1,98 +1,94 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { DollarSign, Heart, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 import luxuryMansion from "@/assets/luxury-mansion.jpg";
 
+const labs = [
+  {
+    icon: <DollarSign className="w-10 h-10" />,
+    title: "Wealth Systems Lab",
+    subtitle: "Финансови системи и бизнес архитектура",
+    description: "Изгради фундамента на финансовата си свобода с доказани бизнес модели, маркетинг стратегии и AI автоматизации.",
+    color: "text-gold",
+    borderColor: "border-gold/30",
+    bgGradient: "from-gold/10 to-gold/5",
+    hoverBorder: "hover:border-gold"
+  },
+  {
+    icon: <Heart className="w-10 h-10" />,
+    title: "Health Systems Lab",
+    subtitle: "Здраве, енергия и био-оптимизация",
+    description: "Оптимизирай физическото и менталното си здраве за максимална производителност и енергия.",
+    color: "text-primary",
+    borderColor: "border-primary/30",
+    bgGradient: "from-primary/10 to-primary/5",
+    hoverBorder: "hover:border-primary"
+  },
+  {
+    icon: <Sparkles className="w-10 h-10" />,
+    title: "Prosperity Lab",
+    subtitle: "Личностно развитие и духовен растеж",
+    description: "Познай себе си чрез Human Design, развий лидерски умения и създай живот с цел и посока.",
+    color: "text-violet",
+    borderColor: "border-violet/30",
+    bgGradient: "from-violet/10 to-violet/5",
+    hoverBorder: "hover:border-violet"
+  }
+];
+
 const TheLabs = () => {
-  const scrollToPrograms = () => {
-    const element = document.getElementById('levels');
+  const scrollToModules = () => {
+    const element = document.getElementById('modules');
     if (element) element.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <section id="system" className="py-16 md:py-24 bg-gradient-to-b from-background/50 to-background relative overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <img 
-          src={luxuryMansion} 
-          alt="Luxury Mansion" 
-          className="w-full h-full object-cover"
-        />
+        <img src={luxuryMansion} alt="Luxury Mansion" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/94 via-background/92 to-background"></div>
       </div>
       <div className="absolute inset-0 bg-gradient-glow opacity-20"></div>
-      
+
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-10 leading-tight">
-              <span className="text-gradient">ГОТОВ ЛИ СИ ЗА ИСТИНАТА?</span>
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-black mb-6 leading-tight">
+              <span className="text-gradient">3 СФЕРИ → 90 ДНИ → НОВА РЕАЛНОСТ</span>
             </h2>
-            <p className="text-2xl md:text-3xl text-foreground font-black mb-6 leading-relaxed max-w-4xl mx-auto">
-              Не ти трябват "тайни" нито "хакове" за успех. Нужно е да диагностицираш фундаменталния проблем, който те държи в застой..
-            </p>
-            <p className="text-xl md:text-2xl text-primary font-black leading-relaxed max-w-4xl mx-auto mb-8">
-              Именно хаосът, объркването и разпиляната енергия.
-            </p>
-            <p className="text-lg md:text-xl text-foreground/90 leading-relaxed max-w-4xl mx-auto font-medium">
-              Тук получаваш: <span className="text-gold font-bold">Персонализиран анализ</span>, базиран на твоя Human Design, (система за самопознание, която комбинира древна мъдрост и модерна наука) както и стратегия за 7-те сфери на живота (основните житейски съставни части, за да видим къде има растеж и къде има дупка)
+            <p className="text-xl md:text-2xl text-foreground/80 font-medium max-w-3xl mx-auto">
+              Три лаборатории, всяка фокусирана върху критична сфера от живота ти
             </p>
           </div>
 
-          {/* Tabs Section */}
-          <div className="mb-12">
-            <h3 className="text-3xl md:text-4xl font-black mb-8 text-center">За кого е КОД: ИЗОБИЛИЕ?</h3>
-            <Tabs defaultValue="beginners" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-8">
-                <TabsTrigger value="beginners" className="text-lg md:text-xl font-black">
-                  Новостартиращи
-                </TabsTrigger>
-                <TabsTrigger value="entrepreneurs" className="text-lg md:text-xl font-black">
-                  Опитни предприемачи
-                </TabsTrigger>
-                <TabsTrigger value="creators" className="text-lg md:text-xl font-black">
-                  Създатели
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="beginners" className="mt-8">
-                <div className="p-8 md:p-10 bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-xl">
-                  <h4 className="text-2xl md:text-3xl font-black mb-5 text-primary leading-tight">Стартирай своя път на личностно развитие и предприемачество</h4>
-                  <p className="text-lg md:text-xl text-foreground/90 leading-relaxed font-medium">
-                    Идеално за хора, които искат да стартират своя бизнес или да подобрят финансовата си ситуация.
-                  </p>
+          {/* Lab Cards */}
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8 mb-12">
+            {labs.map((lab, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.2 }}
+                onClick={scrollToModules}
+                className={`group relative p-8 rounded-xl border ${lab.borderColor} ${lab.hoverBorder} bg-gradient-to-br ${lab.bgGradient} cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-elegant`}
+              >
+                <div className={`${lab.color} mb-6`}>{lab.icon}</div>
+                <h3 className={`text-2xl font-black mb-2 ${lab.color}`}>{lab.title}</h3>
+                <p className="text-base text-foreground font-semibold mb-4">{lab.subtitle}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{lab.description}</p>
+                <div className={`mt-6 text-sm font-bold ${lab.color} opacity-0 group-hover:opacity-100 transition-opacity`}>
+                  Виж модулите →
                 </div>
-              </TabsContent>
-
-              <TabsContent value="entrepreneurs" className="mt-8">
-                <div className="p-8 md:p-10 bg-gradient-to-br from-gold/10 to-gold/5 border border-gold/20 rounded-xl">
-                  <h4 className="text-2xl md:text-3xl font-black mb-5 text-gold leading-tight">Създай 6-цифрен бизнес и скалирай своите проекти на следващото ниво</h4>
-                  <p className="text-lg md:text-xl text-foreground/90 leading-relaxed font-medium">
-                    За тези, които вече имат бизнес и искат да го скалират към 6-цифрени печалби.
-                  </p>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="creators" className="mt-8">
-                <div className="p-8 md:p-10 bg-gradient-to-br from-violet/10 to-violet/5 border border-violet/20 rounded-xl">
-                  <h4 className="text-2xl md:text-3xl font-black mb-5 text-violet leading-tight">Изгради, монетизирай и автоматизирай своята лоялна аудитория и екипите си</h4>
-                  <p className="text-lg md:text-xl text-foreground/90 leading-relaxed font-medium">
-                    Създатели на съдържание и лидери, които искат да монетизират своята аудитория.
-                  </p>
-                </div>
-              </TabsContent>
-            </Tabs>
+              </motion.div>
+            ))}
           </div>
 
-          {/* CTA Section */}
-          <div className="text-center mt-12">
-            <p className="text-2xl md:text-3xl text-foreground font-black mb-6 leading-tight max-w-4xl mx-auto">
-              Открий архитектурата, която подрежда живота ти и изгражда ИЗОБИЛИЕ!
-            </p>
-            <p className="text-xl md:text-2xl text-primary font-black mb-10">
-              ∞ ЛИЧНОСТНО + ФИНАНСОВО + ЕНЕРГИЙНО ∞
-            </p>
-            <Button variant="hero" size="xl" onClick={scrollToPrograms}>
-              ЗАПОЧНИ СЕГА
+          {/* CTA */}
+          <div className="text-center">
+            <Button variant="hero" size="xl" onClick={scrollToModules}>
+              Виж всички модули
             </Button>
           </div>
         </div>

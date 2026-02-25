@@ -1,15 +1,17 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import VideoSection from "@/components/VideoSection";
 import TheLabs from "@/components/TheLabs";
-import TheWhy from "@/components/TheWhy";
+import Philosophy from "@/components/Philosophy";
 import AccessLevels from "@/components/AccessLevels";
 import WhoIsThisFor from "@/components/WhoIsThisFor";
-import TheChaos from "@/components/TheChaos";
+import DreamToReality from "@/components/DreamToReality";
 import SevenSteps from "@/components/SevenSteps";
 import FounderStory from "@/components/FounderStory";
+import ModulesAccordion from "@/components/ModulesAccordion";
 import FAQ from "@/components/FAQ";
 import FinalCTA from "@/components/FinalCTA";
+import Testimonials from "@/components/Testimonials";
+import PlatformCommunity from "@/components/PlatformCommunity";
 import { TelegramChat } from "@/components/TelegramChat";
 import Footer from "@/components/Footer";
 import CookieConsent from "@/components/CookieConsent";
@@ -34,7 +36,7 @@ const Index = () => {
         const lastClosed = localStorage.getItem("popupLastClosed");
         if (lastClosed) {
           const timeSinceClosed = Date.now() - parseInt(lastClosed);
-          if (timeSinceClosed < 3600000) { // 1 hour in milliseconds
+          if (timeSinceClosed < 3600000) {
             return;
           }
         }
@@ -53,17 +55,19 @@ const Index = () => {
       <Header />
       <main>
         <Hero />
-        <VideoSection />
         <TheLabs />
-        <TheWhy />
+        <Philosophy />
         <AccessLevels />
         <WhoIsThisFor />
-        <TheChaos />
+        <DreamToReality />
         <SevenSteps />
         <FounderStory />
+        <ModulesAccordion />
         <FAQ />
-        <TelegramChat />
         <FinalCTA />
+        <Testimonials />
+        <PlatformCommunity />
+        <TelegramChat />
       </main>
       <Footer />
       <CookieConsent />

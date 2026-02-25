@@ -1,12 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { AlertCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import luxuryBuilding from "@/assets/luxury-building.jpg";
 
 const FinalCTA = () => {
-  const handleDiagnostic = () => {
-    window.location.href = '/archive/diagnostic';
-  };
-
+  const navigate = useNavigate();
   return (
     <section id="contact" className="py-16 md:py-24 bg-gradient-to-b from-background/50 to-background relative overflow-hidden">
       <div className="absolute inset-0 z-0">
@@ -56,11 +54,13 @@ const FinalCTA = () => {
           <Button 
             variant="hero" 
             size="xl"
-            onClick={handleDiagnostic}
+            onClick={() => navigate('/diagnostic')}
             className="group shadow-glow text-lg px-8 py-6 md:px-12 md:py-8"
           >
             СТАРТИРАЙ СВОЯТА БЕЗПЛАТНА ДИАГНОСТИКА НА УСПЕХА
           </Button>
+
+          <p className="text-sm text-muted-foreground/60 mt-4 italic">(или остани на същото място където си)</p>
 
           <p className="text-sm md:text-base text-muted-foreground mt-6 font-medium">
             Abundance Diagnostic™ — твоят пръв шаг от хаоса към структурата

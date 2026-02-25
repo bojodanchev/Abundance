@@ -1,11 +1,20 @@
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
-import { useState } from "react";
-import { FreeAnalysisDialog } from "./FreeAnalysisDialog";
+import { Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -16,7 +25,13 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-b border-border/50">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-background/95 backdrop-blur-xl border-b border-border/50"
+          : "bg-transparent border-b border-transparent"
+      }`}
+    >
       <div className="container mx-auto px-4 md:px-6 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -46,20 +61,25 @@ const Header = () => {
             </button>
           </nav>
 
-          {/* CTA Button */}
+          {/* Desktop CTA Button */}
           <div className="hidden md:block">
-            <Button variant="hero" size="lg" onClick={() => setIsAnalysisOpen(true)}>
-              Безплатен Анализ
+            <Button variant="hero" size="lg" onClick={() => navigate('/diagnostic')}>
+              БЕЗПЛАТЕН АНАЛИЗ
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-foreground"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <Menu size={24} />
-          </button>
+          {/* Mobile: CTA + Hamburger always visible */}
+          <div className="flex items-center gap-3 md:hidden">
+            <Button variant="hero" size="sm" onClick={() => navigate('/diagnostic')}>
+              БЕЗПЛАТЕН АНАЛИЗ
+            </Button>
+            <button
+              className="text-foreground"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
@@ -83,16 +103,9 @@ const Header = () => {
             <button onClick={() => scrollToSection('contact')} className="text-left text-muted-foreground hover:text-foreground transition-smooth">
               Контакти
             </button>
-            <Button variant="hero" size="lg" onClick={() => {
-              setIsAnalysisOpen(true);
-              setIsMenuOpen(false);
-            }} className="w-full">
-              Безплатен Анализ
-            </Button>
           </nav>
         )}
       </div>
-      <FreeAnalysisDialog isOpen={isAnalysisOpen} onOpenChange={setIsAnalysisOpen} />
     </header>
   );
 };

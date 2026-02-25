@@ -1,8 +1,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "./ui/button";
 import { Rocket, Building2, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const WhoIsThisFor = () => {
+  const navigate = useNavigate();
   return (
     <section className="py-24 bg-background">
       <div className="container mx-auto px-6">
@@ -121,7 +123,7 @@ const WhoIsThisFor = () => {
           </Tabs>
 
           <div className="mt-12 text-center">
-            <Button size="lg" variant="hero" onClick={() => window.location.href = '/archive/diagnostic'}>
+            <Button size="lg" variant="hero" onClick={() => navigate('/diagnostic')}>
               Открий Архитектурата на Изобилието
             </Button>
           </div>

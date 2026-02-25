@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { ChevronDown, TrendingUp, Users, Briefcase, DollarSign } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import seanPortrait from "@/assets/sean-portrait.jpg";
 
 const timelineData = [
@@ -157,7 +158,9 @@ const timelineData = [
 ];
 
 const FounderStory = () => {
+  const navigate = useNavigate();
   const [expandedItems, setExpandedItems] = useState<number[]>([]);
+  const [showAll, setShowAll] = useState(false);
 
   const toggleItem = (id: number) => {
     setExpandedItems(prev =>
@@ -238,91 +241,62 @@ const FounderStory = () => {
               ВИЖ <span className="text-gradient">ПЪТЯ НА ШОН ИСА</span>
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-              {/* Left Column (1-8) */}
-              <div className="space-y-4">
-                {timelineData.slice(0, 8).map((item, index) => (
-                  <div
-                    key={item.id}
-                    className="bg-card/50 backdrop-blur-sm border border-border rounded-xl overflow-hidden hover:border-primary/50 transition-all"
-                  >
-                    <button
-                      onClick={() => toggleItem(item.id)}
-                      className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-card/50 transition-all"
+            {(() => {
+              const visibleItems = showAll ? timelineData : timelineData.slice(0, 5);
+              return (
+                <div className="space-y-4">
+                  {visibleItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="bg-card/50 backdrop-blur-sm border border-border rounded-xl overflow-hidden hover:border-primary/50 transition-all"
                     >
-                      <div className="flex items-center gap-4 flex-1">
-                        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <span className="text-primary font-black text-lg">{item.id}</span>
+                      <button
+                        onClick={() => toggleItem(item.id)}
+                        className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-card/50 transition-all"
+                      >
+                        <div className="flex items-center gap-4 flex-1">
+                          <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <span className="text-primary font-black text-lg">{item.id}</span>
+                          </div>
+                          <div className="flex-1">
+                            <div className="text-sm text-primary font-semibold mb-1">{item.phase}</div>
+                            <div className="text-base md:text-lg font-bold text-foreground">{item.title}</div>
+                          </div>
                         </div>
-                        <div className="flex-1">
-                          <div className="text-sm text-primary font-semibold mb-1">{item.phase}</div>
-                          <div className="text-base md:text-lg font-bold text-foreground">{item.title}</div>
-                        </div>
-                      </div>
-                      <ChevronDown
-                        className={`w-6 h-6 text-muted-foreground transition-transform flex-shrink-0 ${expandedItems.includes(item.id) ? 'rotate-180' : ''
-                          }`}
-                      />
-                    </button>
+                        <ChevronDown
+                          className={`w-6 h-6 text-muted-foreground transition-transform flex-shrink-0 ${expandedItems.includes(item.id) ? 'rotate-180' : ''
+                            }`}
+                        />
+                      </button>
 
-                    {expandedItems.includes(item.id) && (
-                      <div className="px-6 pb-6 pt-2 border-t border-border/50">
-                        <ul className="space-y-3">
-                          {item.points.map((point, idx) => (
-                            <li key={idx} className="flex items-start gap-3">
-                              <span className="text-primary mt-1">•</span>
-                              <span className="text-muted-foreground leading-relaxed">{point}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {/* Right Column (9-15) */}
-              <div className="space-y-4">
-                {timelineData.slice(8).map((item, index) => (
-                  <div
-                    key={item.id}
-                    className="bg-card/50 backdrop-blur-sm border border-border rounded-xl overflow-hidden hover:border-primary/50 transition-all"
-                  >
-                    <button
-                      onClick={() => toggleItem(item.id)}
-                      className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-card/50 transition-all"
-                    >
-                      <div className="flex items-center gap-4 flex-1">
-                        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <span className="text-primary font-black text-lg">{item.id}</span>
+                      {expandedItems.includes(item.id) && (
+                        <div className="px-6 pb-6 pt-2 border-t border-border/50">
+                          <ul className="space-y-3">
+                            {item.points.map((point, idx) => (
+                              <li key={idx} className="flex items-start gap-3">
+                                <span className="text-primary mt-1">•</span>
+                                <span className="text-muted-foreground leading-relaxed">{point}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
-                        <div className="flex-1">
-                          <div className="text-sm text-primary font-semibold mb-1">{item.phase}</div>
-                          <div className="text-base md:text-lg font-bold text-foreground">{item.title}</div>
-                        </div>
-                      </div>
-                      <ChevronDown
-                        className={`w-6 h-6 text-muted-foreground transition-transform flex-shrink-0 ${expandedItems.includes(item.id) ? 'rotate-180' : ''
-                          }`}
-                      />
-                    </button>
+                      )}
+                    </div>
+                  ))}
 
-                    {expandedItems.includes(item.id) && (
-                      <div className="px-6 pb-6 pt-2 border-t border-border/50">
-                        <ul className="space-y-3">
-                          {item.points.map((point, idx) => (
-                            <li key={idx} className="flex items-start gap-3">
-                              <span className="text-primary mt-1">•</span>
-                              <span className="text-muted-foreground leading-relaxed">{point}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
+                  {!showAll && timelineData.length > 5 && (
+                    <div className="text-center mt-6">
+                      <button
+                        onClick={() => setShowAll(true)}
+                        className="text-primary font-bold hover:underline transition-all"
+                      >
+                        Виж цялата история ({timelineData.length - 5} още)
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
           </div>
 
           {/* CTA */}
@@ -341,9 +315,9 @@ const FounderStory = () => {
                 size="lg"
                 variant="default"
                 className="bg-background text-primary hover:bg-background/90"
-                onClick={() => window.location.href = '/archive/diagnostic'}
+                onClick={() => navigate('/diagnostic')}
               >
-                🔥 ВИЖ КАК ЩЕ РАБОТИ ЗА ТЕБ
+                ВИЖ КАК ЩЕ РАБОТИ ЗА ТЕБ
               </Button>
             </div>
           </div>

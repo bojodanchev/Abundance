@@ -5,12 +5,23 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
   async rewrites() {
+    return {
+      beforeFiles: [
+        { source: "/", destination: "/archive/index.html" },
+        { source: "/diagnostic", destination: "/archive/index.html" },
+        { source: "/vsl", destination: "/archive/index.html" },
+        { source: "/abundance", destination: "/archive/index.html" },
+        { source: "/privacy", destination: "/archive/index.html" },
+        { source: "/terms", destination: "/archive/index.html" },
+      ],
+    };
+  },
+  async redirects() {
     return [
-      {
-        // Serve the Archive SPA for all /archive/* sub-routes
-        source: "/archive/:path((?!assets|favicon|placeholder|robots).*)",
-        destination: "/archive/index.html",
-      },
+      { source: "/archive", destination: "/", permanent: true },
+      { source: "/archive/:path*", destination: "/:path*", permanent: true },
+      // Old Next.js app accessible at /new
+      { source: "/new", destination: "/bg", permanent: false },
     ];
   },
   async headers() {

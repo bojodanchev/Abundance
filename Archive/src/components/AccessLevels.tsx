@@ -1,23 +1,24 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const levels = [
   // Entry Level (1-4)
-  { level: 1, name: "Welcome", description: "Диагностика", tier: "entry" },
-  { level: 2, name: "Foundation", description: "Основи и подредба", tier: "entry" },
-  { level: 3, name: "Awakening", description: "Пробуждане на потенциала", tier: "entry" },
-  { level: 4, name: "Clarity", description: "Ясна визия и цели", tier: "entry" },
-  
+  { level: 1, name: "Welcome", description: "Персонализиран анализ на твоя Human Design и 7 сфери", tier: "entry" },
+  { level: 2, name: "Foundation", description: "Фундаментални системи за живот и бизнес", tier: "entry" },
+  { level: 3, name: "Awakening", description: "Активиране на скрития потенциал", tier: "entry" },
+  { level: 4, name: "Clarity", description: "Дефиниране на цели и стратегия", tier: "entry" },
+
   // Core Level (5-8)
-  { level: 5, name: "Builder", description: "Изграждане на системи", tier: "core" },
-  { level: 6, name: "Accelerator", description: "Ускорение и растеж", tier: "core" },
-  { level: 7, name: "Authority", description: "Авторитет и влияние", tier: "core" },
-  { level: 8, name: "Mastery", description: "Владеене на уменията", tier: "core" },
-  
+  { level: 5, name: "Builder", description: "Системи за бизнес и доход", tier: "core" },
+  { level: 6, name: "Accelerator", description: "Скалиране и растеж", tier: "core" },
+  { level: 7, name: "Authority", description: "Позициониране и влияние", tier: "core" },
+  { level: 8, name: "Mastery", description: "Мастърство над уменията", tier: "core" },
+
   // Elite Level (9-12)
   { level: 9, name: "Empire", description: "Изграждане на империя", tier: "elite" },
-  { level: 10, name: "Legacy", description: "Наследство и мисия", tier: "elite" },
+  { level: 10, name: "Legacy", description: "Мисия и legacy", tier: "elite" },
   { level: 11, name: "Visionary", description: "Визионерско лидерство", tier: "elite" },
   { level: 12, name: "Exclusive Partner", description: "Стратегическо партньорство", tier: "elite" }
 ];
@@ -29,7 +30,7 @@ const tierConfig = {
     textColor: "text-primary"
   },
   core: {
-    title: "CORE LEVEL", 
+    title: "CORE LEVEL",
     gradient: "from-accent/20 to-accent/10",
     textColor: "text-accent"
   },
@@ -41,9 +42,54 @@ const tierConfig = {
 };
 
 const AccessLevels = () => {
+  const navigate = useNavigate();
   const [hoveredLevel, setHoveredLevel] = useState<number | null>(null);
-  
+  const [revealedCards, setRevealedCards] = useState<number[]>([]);
+
   const getTierLevels = (tier: string) => levels.filter(l => l.tier === tier);
+
+  const toggleReveal = (level: number) => {
+    setRevealedCards(prev =>
+      prev.includes(level) ? prev.filter(l => l !== level) : [...prev, level]
+    );
+  };
+
+  const isRevealed = (level: number) => revealedCards.includes(level);
+
+  const renderCard = (item: typeof levels[0], tierKey: keyof typeof tierConfig, delayOffset: number) => {
+    const revealed = isRevealed(item.level);
+    const config = tierConfig[tierKey];
+
+    return (
+      <motion.div
+        key={item.level}
+        initial={{ filter: "blur(6px)", opacity: 0.5 }}
+        whileInView={{ filter: "blur(6px)", opacity: 0.7 }}
+        whileHover={{ filter: "blur(0px)", opacity: 1, scale: 1.05 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: (item.level - delayOffset) * 0.1 }}
+        onMouseEnter={() => setHoveredLevel(item.level)}
+        onMouseLeave={() => setHoveredLevel(null)}
+        onClick={() => toggleReveal(item.level)}
+        style={revealed ? { filter: "blur(0px)", opacity: 1 } : undefined}
+        className={`relative p-6 rounded-xl border transition-all duration-300 cursor-pointer ${
+          hoveredLevel === item.level || revealed
+            ? `bg-gradient-to-br ${config.gradient} border-${tierKey === 'entry' ? 'primary' : tierKey === 'core' ? 'accent' : 'gold'} shadow-elegant`
+            : 'bg-card/30 border-border hover:border-' + (tierKey === 'entry' ? 'primary' : tierKey === 'core' ? 'accent' : 'gold') + '/50'
+        }`}
+      >
+        <div className={`text-5xl font-black mb-4 ${config.textColor} opacity-20`}>
+          {item.level}
+        </div>
+        <h4 className="font-display text-xl font-bold mb-2 text-foreground">
+          {item.name}
+        </h4>
+        <p className="text-sm text-muted-foreground">
+          {item.description}
+        </p>
+      </motion.div>
+    );
+  };
 
   return (
     <section id="levels" className="py-24 bg-gradient-dark relative overflow-hidden">
@@ -67,32 +113,7 @@ const AccessLevels = () => {
               {tierConfig.entry.title}
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {getTierLevels('entry').map((item) => (
-                <motion.div
-                  key={item.level}
-                  initial={{ filter: "blur(10px)", opacity: 0.3 }}
-                  whileInView={{ filter: "blur(0px)", opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: item.level * 0.1 }}
-                  onMouseEnter={() => setHoveredLevel(item.level)}
-                  onMouseLeave={() => setHoveredLevel(null)}
-                  className={`relative p-6 rounded-xl border transition-all duration-300 cursor-pointer ${
-                    hoveredLevel === item.level
-                      ? `bg-gradient-to-br ${tierConfig.entry.gradient} border-primary shadow-elegant`
-                      : 'bg-card/30 border-border hover:border-primary/50'
-                  }`}
-                >
-                  <div className={`text-5xl font-black mb-4 ${tierConfig.entry.textColor} opacity-20`}>
-                    {item.level}
-                  </div>
-                  <h4 className="font-display text-xl font-bold mb-2 text-foreground">
-                    {item.name}
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    {item.description}
-                  </p>
-                </motion.div>
-              ))}
+              {getTierLevels('entry').map((item) => renderCard(item, 'entry', 0))}
             </div>
           </div>
 
@@ -102,32 +123,7 @@ const AccessLevels = () => {
               {tierConfig.core.title}
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {getTierLevels('core').map((item) => (
-                <motion.div
-                  key={item.level}
-                  initial={{ filter: "blur(10px)", opacity: 0.3 }}
-                  whileInView={{ filter: "blur(0px)", opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: (item.level - 5) * 0.1 }}
-                  onMouseEnter={() => setHoveredLevel(item.level)}
-                  onMouseLeave={() => setHoveredLevel(null)}
-                  className={`relative p-6 rounded-xl border transition-all duration-300 cursor-pointer ${
-                    hoveredLevel === item.level
-                      ? `bg-gradient-to-br ${tierConfig.core.gradient} border-accent shadow-elegant`
-                      : 'bg-card/30 border-border hover:border-accent/50'
-                  }`}
-                >
-                  <div className={`text-5xl font-black mb-4 ${tierConfig.core.textColor} opacity-20`}>
-                    {item.level}
-                  </div>
-                  <h4 className="font-display text-xl font-bold mb-2 text-foreground">
-                    {item.name}
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    {item.description}
-                  </p>
-                </motion.div>
-              ))}
+              {getTierLevels('core').map((item) => renderCard(item, 'core', 4))}
             </div>
           </div>
 
@@ -137,40 +133,15 @@ const AccessLevels = () => {
               {tierConfig.elite.title}
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {getTierLevels('elite').map((item) => (
-                <motion.div
-                  key={item.level}
-                  initial={{ filter: "blur(10px)", opacity: 0.3 }}
-                  whileInView={{ filter: "blur(0px)", opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: (item.level - 9) * 0.1 }}
-                  onMouseEnter={() => setHoveredLevel(item.level)}
-                  onMouseLeave={() => setHoveredLevel(null)}
-                  className={`relative p-6 rounded-xl border transition-all duration-300 cursor-pointer ${
-                    hoveredLevel === item.level
-                      ? `bg-gradient-to-br ${tierConfig.elite.gradient} border-gold shadow-elegant`
-                      : 'bg-card/30 border-border hover:border-gold/50'
-                  }`}
-                >
-                  <div className={`text-5xl font-black mb-4 ${tierConfig.elite.textColor} opacity-20`}>
-                    {item.level}
-                  </div>
-                  <h4 className="font-display text-xl font-bold mb-2 text-foreground">
-                    {item.name}
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    {item.description}
-                  </p>
-                </motion.div>
-              ))}
+              {getTierLevels('elite').map((item) => renderCard(item, 'elite', 8))}
             </div>
           </div>
 
           <div className="mt-16 text-center">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               variant="hero"
-              onClick={() => window.location.href = '/archive/diagnostic'}
+              onClick={() => navigate('/diagnostic')}
             >
               СТАРТИРАЙ С НИВО 1 "ДИАГНОСТИКА"
             </Button>

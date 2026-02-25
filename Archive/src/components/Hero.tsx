@@ -1,24 +1,32 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/luxury-office.jpg";
+
 const Hero = () => {
-  const scrollToPrograms = () => {
-    window.location.href = '/archive/diagnostic';
-  };
-  return <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden py-20">
+  const navigate = useNavigate();
+
+  // Countdown: start at 20, decrement 1 per day from Feb 25 2026, min 1
+  const spotsLeft = Math.max(1, 20 - Math.floor((Date.now() - new Date('2026-02-25').getTime()) / 86400000));
+
+  return (
+    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden py-20">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img src={heroImage} alt="Luxury Office Background" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/90 to-background/95"></div>
       </div>
       <div className="absolute inset-0 bg-gradient-glow opacity-40"></div>
-      
+
       {/* Content */}
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="max-w-6xl mx-auto text-center">
-          {/* Limited Places Badge */}
+          {/* Limited Places Badge with Counter */}
           <div className="inline-block mb-8">
-            <div className="px-6 py-3 bg-gold/20 border border-gold/40 rounded-full">
+            <div className="px-6 py-3 bg-gold/20 border border-gold/40 rounded-full flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-gold/30 flex items-center justify-center">
+                <span className="text-gold font-black text-sm">{spotsLeft}</span>
+              </div>
               <p className="text-sm md:text-base font-black text-gold uppercase tracking-wider">
                 ЛИМИТИРАНИ МЕСТА
               </p>
@@ -26,24 +34,32 @@ const Hero = () => {
           </div>
 
           {/* Headline */}
-          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl font-black mb-8 leading-tight tracking-tight lg:text-6xl">
-            <span className="text-foreground">Как да </span>
-            <span className="text-gradient">пренапишеш финансовата си реалност</span>
+          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-8 leading-tight tracking-tight">
+            <span className="text-gradient">Пренапиши финансовата си реалност</span>
             <br />
-            <span className="text-foreground">и да активираш вътрешния си </span>
-            <span className="text-gradient">потенциал за 90 дни</span>
+            <span className="text-foreground">и активирай вътрешния си </span>
+            <span className="text-gradient">потенциал.</span>
           </h1>
 
           {/* Sub-headline */}
-          <p className="text-xl sm:text-2xl md:text-3xl text-foreground/90 mb-10 md:mb-12 max-w-5xl mx-auto leading-relaxed font-bold">
+          <p className="text-2xl sm:text-3xl md:text-4xl text-foreground/90 mb-6 max-w-4xl mx-auto leading-relaxed font-bold">
+            Как да създадеш нов стандарт на живот за 90 дни
+          </p>
+
+          {/* Description */}
+          <p className="text-lg md:text-xl text-foreground/80 mb-10 md:mb-12 max-w-4xl mx-auto leading-relaxed font-medium">
             Това е двигателят за предприемачество през 2026-та година. <span className="text-primary">Доказаната обучителна система</span> за личностно и бизнес развитие в България, която ти дава инструментите и средата да <span className="text-gold">трансформираш живота си на следващото ниво</span>
           </p>
 
           {/* CTA Button */}
-          <Button variant="hero" size="xl" onClick={scrollToPrograms} className="group shadow-glow text-lg px-10 py-7 md:px-14 md:py-9">
-            ПОЛУЧИ БЕЗПЛАТНИЯ АНАЛИЗ НА УСПЕХА
+          <Button variant="hero" size="xl" onClick={() => navigate('/diagnostic')} className="group shadow-glow text-lg px-10 py-7 md:px-14 md:py-9">
+            ПОЛУЧИ БЕЗПЛАТЕН АНАЛИЗ
             <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
+
+          <p className="text-sm md:text-base text-muted-foreground mt-4 font-medium">
+            (Abundance Diagnostic)
+          </p>
         </div>
       </div>
 
@@ -53,6 +69,8 @@ const Hero = () => {
           <div className="w-1 h-3 bg-primary rounded-full"></div>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default Hero;

@@ -1,149 +1,80 @@
 import { Button } from "@/components/ui/button";
-import { Brain, Sparkles, Coins, Scale, MessageCircle, Lightbulb, Heart } from "lucide-react";
-import { ArrowRight } from "lucide-react";
-
-const coreCodes = [
-  {
-    number: "01",
-    title: "Mindset & Discipline",
-    description: "Master your mind, master your reality",
-    icon: Brain,
-    color: "primary"
-  },
-  {
-    number: "02",
-    title: "Spiritual Alignment",
-    description: "Connect to purpose beyond profit",
-    icon: Sparkles,
-    color: "secondary"
-  },
-  {
-    number: "03",
-    title: "Financial Freedom",
-    description: "Build systems that generate wealth",
-    icon: Coins,
-    color: "primary"
-  },
-  {
-    number: "04",
-    title: "Masculine & Feminine Balance",
-    description: "Integrate strength with wisdom",
-    icon: Scale,
-    color: "secondary"
-  },
-  {
-    number: "05",
-    title: "Communication & Leadership",
-    description: "Influence through clarity and vision",
-    icon: MessageCircle,
-    color: "primary"
-  },
-  {
-    number: "06",
-    title: "Creation & Wealth",
-    description: "Transform ideas into empire",
-    icon: Lightbulb,
-    color: "secondary"
-  },
-  {
-    number: "07",
-    title: "Service & Legacy",
-    description: "Build beyond yourself",
-    icon: Heart,
-    color: "primary"
-  }
-];
+import { useNavigate } from "react-router-dom";
+import { Book, Crown, Heart } from "lucide-react";
+import luxuryBoardroom from "@/assets/luxury-boardroom.jpg";
 
 const Philosophy = () => {
+  const navigate = useNavigate();
+
   return (
-    <section id="philosophy" className="py-16 md:py-32 bg-gradient-dark relative overflow-hidden">
-      {/* Decorative Background Elements */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-primary rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-secondary rounded-full blur-3xl"></div>
+    <section id="philosophy" className="py-16 md:py-24 bg-gradient-to-b from-background/50 to-background relative overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <img src={luxuryBoardroom} alt="Luxury Boardroom" className="w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/94 via-background/92 to-background"></div>
       </div>
-      
+      <div className="absolute inset-0 bg-gradient-glow opacity-20"></div>
+
       <div className="container mx-auto px-4 md:px-6 relative z-10">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-12 md:mb-20">
-            <div className="inline-block mb-4 md:mb-6 px-3 md:px-4 py-1.5 md:py-2 border border-primary/20 bg-card/30 backdrop-blur-sm">
-              <span className="text-xs md:text-sm font-medium tracking-[0.15em] md:tracking-[0.2em] uppercase text-primary/90">
-                The Movement
-              </span>
-            </div>
-            
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-6 md:mb-8 leading-tight px-4">
-              The Code of <span className="text-gradient">Abundance</span>
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-10 leading-tight">
+              <span className="text-gradient">ГОТОВ ЛИ СИ ЗА ИСТИНАТА?</span>
             </h2>
-            
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 md:mb-12 px-4">
-              Seven pillars that transform chaos into power, scarcity into abundance, 
-              and potential into legacy.
+            <p className="text-2xl md:text-3xl text-foreground font-black mb-6 leading-relaxed max-w-4xl mx-auto">
+              Не ти трябват "тайни" нито "хакове" за успех. Нужно е да диагностицираш фундаменталния проблем, който те държи в застой..
+            </p>
+            <p className="text-xl md:text-2xl text-primary font-black leading-relaxed max-w-4xl mx-auto mb-8">
+              Именно хаосът, объркването и разпиляната енергия.
+            </p>
+            <p className="text-lg md:text-xl text-foreground/90 leading-relaxed max-w-4xl mx-auto font-medium">
+              Тук получаваш: <span className="text-gold font-bold">Персонализиран анализ</span>, базиран на твоя Human Design, (система за самопознание, която комбинира древна мъдрост и модерна наука) както и стратегия за 7-те сфери на живота
             </p>
           </div>
 
-          {/* Core Codes Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-12 md:mb-16">
-            {coreCodes.map((code, index) => {
-              const Icon = code.icon;
-              const isLastOdd = coreCodes.length % 3 === 1 && index === coreCodes.length - 1;
-              
-              return (
-                <div
-                  key={index}
-                  className={`group relative p-6 md:p-8 rounded-xl md:rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm hover:border-${code.color}/50 transition-all duration-500 hover:scale-105 hover:shadow-elegant ${
-                    isLastOdd ? 'lg:col-start-2' : ''
-                  }`}
-                >
-                  {/* Code Number */}
-                  <div className="absolute top-3 md:top-4 right-3 md:right-4 font-display text-4xl md:text-6xl font-black text-${code.color}/5 group-hover:text-${code.color}/10 transition-smooth">
-                    {code.number}
-                  </div>
-                  
-                  {/* Icon */}
-                  <div className={`inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-lg md:rounded-xl bg-${code.color}/10 mb-4 md:mb-6 group-hover:bg-${code.color}/20 transition-smooth`}>
-                    <Icon className={`text-${code.color}`} size={24} />
-                  </div>
-                  
-                  {/* Content */}
-                  <h3 className="font-display text-lg md:text-xl lg:text-2xl font-bold mb-2 md:mb-3 leading-tight">
-                    {code.title}
-                  </h3>
-                  
-                  <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-                    {code.description}
-                  </p>
-                  
-                  {/* Hover Line */}
-                  <div className={`absolute bottom-0 left-0 w-full h-1 bg-gradient-primary transform scale-x-0 group-hover:scale-x-100 transition-elegant origin-left`}></div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* CTA Section */}
-          <div className="text-center relative px-4">
-            <div className="inline-block p-6 md:p-12 rounded-xl md:rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-sm w-full max-w-2xl">
-              <div className="max-w-2xl">
-                <p className="font-quote text-lg md:text-xl lg:text-2xl italic text-muted-foreground mb-6 md:mb-8">
-                  "The code isn't learned. It's remembered."
+          {/* Quotes Grid */}
+          <div className="p-8 md:p-10 bg-gradient-to-br from-primary/5 to-violet/5 border border-primary/20 rounded-xl mb-8">
+            <div className="grid md:grid-cols-2 gap-6 md:gap-8 mb-6">
+              <div className="flex gap-4">
+                <Book className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
+                <p className="text-base md:text-lg text-foreground/90 leading-relaxed font-bold">
+                  Древните гърци са казали: <span className="font-black text-primary">"Познай себе си."</span> (Това е фундаментът на всяко величие).
                 </p>
-                
-                <Button 
-                  variant="premium" 
-                  size="xl"
-                  className="group shadow-gold w-full sm:w-auto min-h-[48px]"
-                  onClick={() => {
-                    const element = document.getElementById('programs');
-                    if (element) element.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  Enter the Code
-                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
+              </div>
+              <div className="flex gap-4">
+                <Crown className="w-8 h-8 text-gold flex-shrink-0 mt-1" />
+                <p className="text-base md:text-lg text-foreground/90 leading-relaxed font-bold">
+                  Цар Соломон е добавил: <span className="font-black text-gold">"Пази сърцето си, защото от него са изворите на живота."</span>
+                </p>
               </div>
             </div>
+
+            <div className="p-6 bg-background/50 rounded-lg border border-primary/10">
+              <div className="flex gap-3 mb-3">
+                <Heart className="w-6 h-6 text-primary flex-shrink-0" />
+                <h3 className="text-xl md:text-2xl font-black">Ключов Извод:</h3>
+              </div>
+              <p className="text-base md:text-lg text-foreground/90 leading-relaxed font-medium">
+                Твоите непреодолими трудности всъщност не са проблеми. Те са алармиращ симптом, че не познаваш своя автентичен Аз. Системата на CODE ABUNDANCE не е просто "съвет". Тя е безкомпромисно прилагане на един вечно работещ закон.
+              </p>
+            </div>
+          </div>
+
+          {/* Blockquote */}
+          <div className="text-center mb-12">
+            <p className="text-2xl md:text-3xl text-gold/90 italic font-bold">
+              "Ключът към изобилието е себепознанието."
+            </p>
+          </div>
+
+          {/* CTA */}
+          <div className="text-center">
+            <Button variant="hero" size="xl" onClick={() => navigate('/diagnostic')} className="group">
+              ВИЖ СВОЯ АНАЛИЗ
+            </Button>
+            <p className="text-xs md:text-sm text-muted-foreground mt-4">
+              Разбери точно къде губиш енергия и пари
+            </p>
           </div>
         </div>
       </div>

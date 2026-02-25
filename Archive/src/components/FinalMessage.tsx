@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const FinalMessage = () => {
+  const navigate = useNavigate();
   const handleStrategyCall = () => {
-    window.location.href = '/archive/diagnostic';
+    navigate('/diagnostic');
   };
 
   const handleJoinMovement = () => {
-    window.location.href = '/archive/diagnostic';
+    navigate('/diagnostic');
   };
 
   return (

@@ -1,76 +1,65 @@
-import { Star, Quote } from "lucide-react";
-
 const testimonials = [
   {
-    name: "Alexander M.",
-    role: "Entrepreneur",
-    content: "Sean's framework completely transformed how I approach business and life. Within 3 months, I doubled my revenue and found clarity I never thought possible.",
+    name: "Георги К.",
+    role: "Предприемач",
+    quote: "CODE: ABUNDANCE™ ми даде яснота и структура. За 90 дни удвоих бизнеса си и най-важното - намерих баланс.",
     rating: 5
   },
   {
-    name: "Maria K.",
-    role: "Executive Coach",
-    content: "The Abundance Path isn't just another course—it's a complete system for reality itself. The mindset shifts alone were worth 10x the investment.",
+    name: "Мария С.",
+    role: "Създател на съдържание",
+    quote: "Персонализираният анализ промени изцяло подхода ми към бизнеса. Системата работи.",
     rating: 5
   },
   {
-    name: "David R.",
-    role: "Investor",
-    content: "I've invested in many programs. This is the only one that actually delivered results. Sean's mentorship changed everything for me.",
+    name: "Александър П.",
+    role: "Стартиращ бизнес",
+    quote: "Най-доброто решение, което взех тази година. Средата и менторството са безценни.",
     rating: 5
   }
 ];
 
 const Testimonials = () => {
   return (
-    <section className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-glow opacity-30"></div>
-      
-      <div className="container mx-auto px-6 relative z-10">
+    <section className="py-24 bg-background">
+      <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto">
-          {/* Section Header */}
           <div className="text-center mb-16">
             <h2 className="font-display text-4xl md:text-5xl font-bold mb-6">
-              Proven <span className="text-gradient">Results</span>
+              Какво казват <span className="text-gradient">нашите members</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Real transformations from individuals who committed to the system.
+            <p className="text-lg text-muted-foreground">
+              Реални резултати от реални хора
             </p>
           </div>
 
-          {/* Testimonials Grid */}
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div 
-                key={index}
-                className="p-8 bg-card border border-border rounded-xl hover:border-primary/50 transition-smooth hover:shadow-gold relative"
-              >
-                {/* Quote Icon */}
-                <div className="absolute top-6 right-6 opacity-10">
-                  <Quote size={48} className="text-primary" />
+          <div className="grid md:grid-cols-3 gap-6">
+            {testimonials.map((t, i) => (
+              <div key={i} className="p-6 bg-card/50 backdrop-blur-sm border border-border rounded-xl space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center">
+                    <span className="text-primary font-bold text-lg">{t.name[0]}</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-foreground">{t.name}</p>
+                    <p className="text-sm text-muted-foreground">{t.role}</p>
+                  </div>
                 </div>
-
-                {/* Rating */}
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} size={16} className="fill-primary text-primary" />
-                  ))}
-                </div>
-
-                {/* Content */}
-                <p className="font-quote text-muted-foreground mb-6 leading-relaxed relative z-10 italic">
-                  "{testimonial.content}"
+                <p className="text-muted-foreground italic leading-relaxed">
+                  "{t.quote}"
                 </p>
-
-                {/* Author */}
-                <div className="border-t border-border pt-4">
-                  <div className="font-semibold text-foreground">{testimonial.name}</div>
-                  <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                <div className="flex gap-1">
+                  {Array.from({ length: t.rating }).map((_, idx) => (
+                    <span key={idx} className="text-yellow-500">★</span>
+                  ))}
                 </div>
               </div>
             ))}
           </div>
 
+          <p className="text-center text-sm text-muted-foreground mt-8">
+            Повече отзиви скоро...
+          </p>
         </div>
       </div>
     </section>

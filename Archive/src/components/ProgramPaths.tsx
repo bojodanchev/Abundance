@@ -1,7 +1,9 @@
 import { Crown, Flame, Rocket, Brain, Gem, Zap, Wrench, Flag, FileText, Eye, Gift, Key } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import luxuryJet from "@/assets/luxury-jet.jpg";
 
 const ProgramPaths = () => {
+  const navigate = useNavigate();
   const programs = {
     elite: [
       {
@@ -237,7 +239,7 @@ const ProgramPaths = () => {
               НЕ ЗНАЕШ ОТ КЪДЕ ДА ЗАПОЧНЕШ?
             </p>
             <button
-              onClick={() => window.location.href = '/archive/diagnostic'}
+              onClick={() => navigate('/diagnostic')}
               className="text-primary font-bold text-lg hover:text-gold transition-colors underline"
             >
               СТАРТИРАЙ С ДИАГНОСТИКА (№1)

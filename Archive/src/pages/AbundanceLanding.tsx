@@ -57,7 +57,7 @@ const AbundanceLanding = () => {
             <Button
               size="lg"
               className="text-xl px-12 py-8 bg-primary hover:bg-primary/90 shadow-xl hover:shadow-2xl transition-all"
-              onClick={() => window.location.href = '/archive/diagnostic'}
+              onClick={() => navigate('/diagnostic')}
             >
               <Sparkles className="mr-3 h-6 w-6" />
               ДАЙ МИ МОЯТА ДИАГНОСТИКА (БЕЗПЛАТНО)
@@ -154,7 +154,7 @@ const AbundanceLanding = () => {
           <Button
             size="lg"
             className="text-xl px-12 py-8 bg-primary hover:bg-primary/90"
-            onClick={() => window.location.href = '/archive/diagnostic'}
+            onClick={() => navigate('/diagnostic')}
           >
             <Sparkles className="mr-3 h-6 w-6" />
             ЗАПОЧНИ СЕГА
