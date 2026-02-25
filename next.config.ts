@@ -18,8 +18,13 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Redirect old archive SPA routes to new root paths (NOT assets)
       { source: "/archive", destination: "/", permanent: true },
-      { source: "/archive/:path*", destination: "/:path*", permanent: true },
+      { source: "/archive/diagnostic", destination: "/diagnostic", permanent: true },
+      { source: "/archive/vsl", destination: "/vsl", permanent: true },
+      { source: "/archive/abundance", destination: "/abundance", permanent: true },
+      { source: "/archive/privacy", destination: "/privacy", permanent: true },
+      { source: "/archive/terms", destination: "/terms", permanent: true },
       // Old Next.js app accessible at /new
       { source: "/new", destination: "/bg", permanent: false },
     ];
