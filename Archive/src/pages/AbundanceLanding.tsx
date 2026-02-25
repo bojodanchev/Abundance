@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { TelegramChat } from "@/components/TelegramChat";
 
 const AbundanceLanding = () => {
   const navigate = useNavigate();
@@ -136,6 +137,9 @@ const AbundanceLanding = () => {
           </div>
         </div>
       </section>
+
+      {/* Telegram Chat */}
+      <TelegramChat />
 
       {/* Final CTA */}
       <section className="py-20 px-4">
