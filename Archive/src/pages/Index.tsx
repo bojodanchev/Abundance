@@ -10,6 +10,7 @@ import SevenSteps from "@/components/SevenSteps";
 import FounderStory from "@/components/FounderStory";
 import FAQ from "@/components/FAQ";
 import FinalCTA from "@/components/FinalCTA";
+import { TelegramChat } from "@/components/TelegramChat";
 import Footer from "@/components/Footer";
 import CookieConsent from "@/components/CookieConsent";
 import { useEffect, useState, useRef } from "react";
@@ -61,6 +62,7 @@ const Index = () => {
         <SevenSteps />
         <FounderStory />
         <FAQ />
+        <TelegramChat />
         <FinalCTA />
       </main>
       <Footer />
