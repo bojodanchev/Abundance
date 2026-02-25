@@ -21,20 +21,39 @@ const StrategySession = () => {
     outcome: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Track form submission
     trackEvent('form_submit', {
       form_name: 'strategy_session',
       ...formData
     });
 
-    // Here you would integrate with GHL or your CRM
-    console.log('Strategy Session Request:', {
-      ...formData,
-      utm: getUTMFormFields()
-    });
+    // Capture lead in CRM
+    const utm = getUTMFormFields();
+    try {
+      await fetch("/api/lead-capture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_name: formData.fullName,
+          user_email: formData.email,
+          user_phone: formData.phone,
+          source: "archive-strategy-session",
+          locale: "bg",
+          message: `Challenge: ${formData.challenge}\nDesired Outcome: ${formData.outcome}`,
+          extra: {
+            city: formData.city,
+            country: formData.country,
+            age: formData.age,
+            ...utm,
+          },
+        }),
+      });
+    } catch {
+      // still show success to user
+    }
 
     toast({
       title: "Request Received",

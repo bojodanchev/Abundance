@@ -237,7 +237,7 @@ const ProgramPaths = () => {
               НЕ ЗНАЕШ ОТ КЪДЕ ДА ЗАПОЧНЕШ?
             </p>
             <button
-              onClick={() => window.open('https://your-typeform-url.com', '_blank')}
+              onClick={() => window.location.href = '/archive/diagnostic'}
               className="text-primary font-bold text-lg hover:text-gold transition-colors underline"
             >
               СТАРТИРАЙ С ДИАГНОСТИКА (№1)

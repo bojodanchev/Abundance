@@ -26,6 +26,18 @@ export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogP
         // Save to sessionStorage for the diagnostic form to pick up
         sessionStorage.setItem("freeAnalysisData", JSON.stringify({ name, email }));
 
+        // Capture lead in CRM
+        fetch("/api/lead-capture", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                user_name: name,
+                user_email: email,
+                source: "archive-free-analysis",
+                locale: "bg",
+            }),
+        }).catch(() => {}); // fire-and-forget
+
         onOpenChange(false);
         toast.success("Пренасочване към диагностиката...");
 

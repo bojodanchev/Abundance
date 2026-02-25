@@ -13,9 +13,26 @@ const Contact = () => {
     message: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real implementation, this would send to a backend/CRM
+
+    try {
+      await fetch("/api/lead-capture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_name: formData.name,
+          user_email: formData.email,
+          source: "archive-contact",
+          locale: "bg",
+          message: formData.message,
+          extra: { inquiry: formData.inquiry },
+        }),
+      });
+    } catch {
+      // still show success to user
+    }
+
     toast({
       title: "Message sent",
       description: "We'll get back to you within 24 hours.",

@@ -11,8 +11,11 @@ export const DiagnosticFinal = ({ submissionResult }: DiagnosticFinalProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (submissionResult?.prelaunch) {
+    if (!submissionResult) return;
+    if (submissionResult.prelaunch) {
       window.location.href = `/bg/spot-reserved?id=${submissionResult.submissionId}`;
+    } else {
+      window.location.href = `/bg/bump-offer?id=${submissionResult.submissionId}`;
     }
   }, [submissionResult]);
 

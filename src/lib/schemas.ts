@@ -145,6 +145,22 @@ export const createBumpCheckoutSchema = z.object({
 export type CreateBumpCheckoutInput = z.infer<typeof createBumpCheckoutSchema>;
 
 // ============================================================
+// Lead Capture Input
+// ============================================================
+
+export const leadCaptureSchema = z.object({
+  user_name: z.string().min(1).max(255),
+  user_email: z.string().email().max(255),
+  user_phone: z.string().max(50).optional(),
+  locale: z.enum(["bg", "en"]).default("bg"),
+  source: z.string().max(100), // e.g. "archive-free-analysis", "archive-contact", "archive-strategy"
+  message: z.string().max(5000).optional(), // free-text from contact/strategy forms
+  extra: z.record(z.string(), z.unknown()).optional(), // any additional metadata
+});
+
+export type LeadCaptureInput = z.infer<typeof leadCaptureSchema>;
+
+// ============================================================
 // Analysis Result Shape (from OpenAI)
 // ============================================================
 
