@@ -56,23 +56,26 @@ const AccessLevels = () => {
 
   const isRevealed = (level: number) => revealedCards.includes(level);
 
-  const renderCard = (item: typeof levels[0], tierKey: keyof typeof tierConfig, delayOffset: number) => {
+  const renderCard = (item: typeof levels[0], tierKey: keyof typeof tierConfig, indexInTier: number) => {
     const revealed = isRevealed(item.level);
     const config = tierConfig[tierKey];
 
     return (
       <motion.div
         key={item.level}
-        initial={{ filter: "blur(6px)", opacity: 0.5 }}
-        whileInView={{ filter: "blur(6px)", opacity: 0.7 }}
-        whileHover={{ filter: "blur(0px)", opacity: 1, scale: 1.05 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: (item.level - delayOffset) * 0.1 }}
+        initial={{ filter: "blur(8px)", opacity: 0, y: 30, scale: 0.95 }}
+        whileInView={{ filter: "blur(0px)", opacity: 1, y: 0, scale: 1 }}
+        whileHover={{ scale: 1.06, y: -4 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{
+          duration: 0.6,
+          delay: indexInTier * 0.18,
+          ease: [0.25, 0.46, 0.45, 0.94],
+        }}
         onMouseEnter={() => setHoveredLevel(item.level)}
         onMouseLeave={() => setHoveredLevel(null)}
         onClick={() => toggleReveal(item.level)}
-        style={revealed ? { filter: "blur(0px)", opacity: 1 } : undefined}
-        className={`relative p-6 rounded-xl border transition-all duration-300 cursor-pointer ${
+        className={`relative p-6 rounded-xl border transition-colors duration-300 cursor-pointer ${
           hoveredLevel === item.level || revealed
             ? `bg-gradient-to-br ${config.gradient} border-${tierKey === 'entry' ? 'primary' : tierKey === 'core' ? 'accent' : 'gold'} shadow-elegant`
             : 'bg-card/30 border-border hover:border-' + (tierKey === 'entry' ? 'primary' : tierKey === 'core' ? 'accent' : 'gold') + '/50'
@@ -109,31 +112,49 @@ const AccessLevels = () => {
 
           {/* Entry Level */}
           <div className="mb-12">
-            <h3 className={`text-center text-2xl font-bold mb-8 ${tierConfig.entry.textColor}`}>
+            <motion.h3
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className={`text-center text-2xl font-bold mb-8 ${tierConfig.entry.textColor}`}
+            >
               {tierConfig.entry.title}
-            </h3>
+            </motion.h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {getTierLevels('entry').map((item) => renderCard(item, 'entry', 0))}
+              {getTierLevels('entry').map((item, i) => renderCard(item, 'entry', i))}
             </div>
           </div>
 
           {/* Core Level */}
           <div className="mb-12">
-            <h3 className={`text-center text-2xl font-bold mb-8 ${tierConfig.core.textColor}`}>
+            <motion.h3
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className={`text-center text-2xl font-bold mb-8 ${tierConfig.core.textColor}`}
+            >
               {tierConfig.core.title}
-            </h3>
+            </motion.h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {getTierLevels('core').map((item) => renderCard(item, 'core', 4))}
+              {getTierLevels('core').map((item, i) => renderCard(item, 'core', i))}
             </div>
           </div>
 
           {/* Elite Level */}
           <div>
-            <h3 className={`text-center text-2xl font-bold mb-8 ${tierConfig.elite.textColor}`}>
+            <motion.h3
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className={`text-center text-2xl font-bold mb-8 ${tierConfig.elite.textColor}`}
+            >
               {tierConfig.elite.title}
-            </h3>
+            </motion.h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {getTierLevels('elite').map((item) => renderCard(item, 'elite', 8))}
+              {getTierLevels('elite').map((item, i) => renderCard(item, 'elite', i))}
             </div>
           </div>
 
