@@ -50,6 +50,7 @@ type PricingTier = {
   checkoutTier?: CheckoutTier;
   header: string;
   price: string;
+  originalPrice?: string;
   priceSuffix?: string;
   badge?: string;
   badgeStyle?: "included" | "popular" | "limited";
@@ -64,6 +65,7 @@ const tiers: PricingTier[] = [
     id: "free",
     header: "Безплатен",
     price: "€0",
+    originalPrice: "€9.99",
     badge: "Включен",
     badgeStyle: "included",
     features: [
@@ -78,7 +80,8 @@ const tiers: PricingTier[] = [
     id: "full",
     checkoutTier: "low",
     header: "Пълен Доклад",
-    price: "€37",
+    price: "€35",
+    originalPrice: "€99",
     badge: "Най-популярен",
     badgeStyle: "popular",
     features: [
@@ -97,7 +100,8 @@ const tiers: PricingTier[] = [
     id: "vip",
     checkoutTier: "high",
     header: "VIP Coaching",
-    price: "€697+",
+    price: "€395",
+    originalPrice: "€999",
     badge: "Ограничени места",
     badgeStyle: "limited",
     features: [
@@ -196,13 +200,25 @@ function PricingCard({
 
         {/* Price */}
         <div className="mt-4 mb-6">
-          <span
-            className={`font-display font-extrabold text-4xl sm:text-5xl tracking-tight ${
-              isPopular ? "text-accent" : "text-text-primary"
-            }`}
-          >
-            {tier.price}
-          </span>
+          <div className="flex items-baseline gap-3">
+            <span
+              className={`font-display font-extrabold text-4xl sm:text-5xl tracking-tight ${
+                isPopular ? "text-accent" : "text-text-primary"
+              }`}
+            >
+              {tier.price}
+            </span>
+            {tier.originalPrice && (
+              <span className="text-text-secondary/50 text-lg sm:text-xl font-semibold line-through decoration-red-500/70 decoration-2">
+                {tier.originalPrice}
+              </span>
+            )}
+          </div>
+          {tier.originalPrice && (
+            <span className="inline-block mt-2 text-[10px] font-bold tracking-[0.15em] uppercase px-2.5 py-1 rounded bg-accent/10 text-accent border border-accent/20">
+              Launch цена
+            </span>
+          )}
           {tier.priceSuffix && (
             <span className="text-text-secondary text-sm ml-1">
               {tier.priceSuffix}

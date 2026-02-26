@@ -4,9 +4,9 @@ import { getStripe } from "@/lib/stripe";
 import { createCheckoutSchema } from "@/lib/schemas";
 
 const TIER_PRICES: Record<string, { amount: number; name: string }> = {
-  low: { amount: 3700, name: "Пълен Доклад — CODE: ABUNDANCE" },
+  low: { amount: 3500, name: "Пълен Доклад — CODE: ABUNDANCE" },
   mid: { amount: 14700, name: "Премиум Доклад — CODE: ABUNDANCE" },
-  high: { amount: 69700, name: "VIP Coaching — CODE: ABUNDANCE" },
+  high: { amount: 39500, name: "VIP Coaching — CODE: ABUNDANCE" },
 };
 
 export async function POST(request: Request) {

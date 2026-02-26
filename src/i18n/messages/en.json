@@ -139,7 +139,7 @@
     "locked": "Unlock with the full report",
     "upgradeTitle": "Unlock Your Full Analysis",
     "upgradeDesc": "Complete report + 90-day action plan",
-    "upgradePrice": "for just €37",
+    "upgradePrice": "for just €35",
     "upgradeCta": "Unlock Full Report →",
     "continueFree": "or continue with the free version"
   },
@@ -151,10 +151,10 @@
     "tierFree": "Free",
     "tierFreeDesc": "Teaser PDF",
     "tierFull": "Full Report",
-    "tierFullPrice": "€37",
+    "tierFullPrice": "€35",
     "tierFullDesc": "Complete analysis + 90-day plan",
     "tierCoaching": "VIP Coaching",
-    "tierCoachingPrice": "€697+",
+    "tierCoachingPrice": "€395",
     "tierCoachingDesc": "1-on-1 sessions + personalized roadmap",
     "popular": "Most popular"
   },

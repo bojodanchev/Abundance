@@ -139,7 +139,7 @@
     "locked": "Отключи с пълния доклад",
     "upgradeTitle": "Отключи Пълния Анализ",
     "upgradeDesc": "Пълен доклад + 90-дневен план за действие",
-    "upgradePrice": "за само €37",
+    "upgradePrice": "за само €35",
     "upgradeCta": "Отключи Пълния Доклад →",
     "continueFree": "или продължи с безплатния"
   },
@@ -151,10 +151,10 @@
     "tierFree": "Безплатен",
     "tierFreeDesc": "Teaser PDF",
     "tierFull": "Пълен Доклад",
-    "tierFullPrice": "€37",
+    "tierFullPrice": "€35",
     "tierFullDesc": "Пълен анализ + 90-дневен план",
     "tierCoaching": "VIP Coaching",
-    "tierCoachingPrice": "€697+",
+    "tierCoachingPrice": "€395",
     "tierCoachingDesc": "1-on-1 сесии + персонализиран roadmap",
     "popular": "Най-популярен"
   },
