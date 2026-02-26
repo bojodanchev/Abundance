@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { chatCompletion } from "@/lib/openai";
 import { generateAnalysisSchema, type AnalysisResult } from "@/lib/schemas";
+import { buildSystemPrompt, buildUserPrompt } from "@/lib/diagnostic-knowledge";
 
 export const maxDuration = 300; // Allow up to 5min for OpenAI response
 
@@ -52,78 +53,14 @@ export async function POST(request: Request) {
       .update({ status: "processing" })
       .eq("id", submission_id);
 
-    // --- Build OpenAI prompt ---
+    // --- Build specialist prompts with pre-calculated data ---
     const scores = submission.scores as Record<string, number>;
     const priorities = (submission.priority_top3 as string[]) ?? [];
     const goals = (submission.goals as Record<string, number>) ?? {};
     const locale = submission.locale ?? "bg";
 
-    const scoresSummary = Object.entries(scores)
-      .map(([area, score]) => `- ${area}: ${score}/10`)
-      .join("\n");
-
-    const prioritiesSummary = priorities.join(", ");
-    const goalsSummary = Object.entries(goals)
-      .map(([area, target]) => `- ${area}: current ${scores[area] ?? "?"}/10 → goal ${target}/10`)
-      .join("\n");
-
-    const birthInfo = [
-      `Date of birth: ${submission.birth_date ?? "unknown"}`,
-      submission.birth_time_unknown
-        ? "Birth time: unknown"
-        : `Birth time: ${submission.birth_time ?? "not provided"}`,
-      `Birth city: ${submission.birth_city ?? "not provided"}`,
-      `Birth country: ${submission.birth_country ?? "not provided"}`,
-    ].join("\n");
-
-    const systemPrompt = `You are CODE: ABUNDANCE AI Diagnostic Agent. Generate a comprehensive personal analysis combining Human Design type, Life Path numerology, and astrological insights. The user speaks ${locale === "bg" ? "Bulgarian" : "English"}. Respond in that language.
-
-You MUST respond with valid JSON matching this exact structure:
-{
-  "hd_type_profile": "e.g. Generator 5/1",
-  "hd_strategy": "e.g. To Respond",
-  "life_path_number": "e.g. 8",
-  "astro_triad": "e.g. Sun in Aries, Moon in Taurus, Ascendant Libra",
-  "teaser_insights": {
-    "finances": "One compelling teaser sentence about their financial pattern",
-    "business": "One compelling teaser sentence about their business potential",
-    "health": "One compelling teaser sentence about their health blueprint",
-    "mental": "One compelling teaser sentence about their mental wellbeing",
-    "romantic": "One compelling teaser sentence about their relationship dynamics",
-    "social": "One compelling teaser sentence about their social connections",
-    "mission": "One compelling teaser sentence about their life mission"
-  },
-  "full_analysis": {
-    "hd_analysis_text": "Detailed Human Design analysis (3-4 paragraphs)",
-    "life_path_analysis_text": "Detailed numerology analysis (3-4 paragraphs)",
-    "astro_analysis_text": "Detailed astrological analysis (3-4 paragraphs)",
-    "phase1_plan": "Days 1-30 action plan with specific steps",
-    "phase2_plan": "Days 31-60 action plan with specific steps",
-    "phase3_plan": "Days 61-90 action plan with specific steps"
-  }
-}
-
-Make each teaser insight intriguing enough to motivate upgrading to the full report. The full analysis should be thorough, personalized, and actionable. The 90-day plan phases should directly address the user's top 3 priorities.`;
-
-    const userPrompt = `Analyze this person:
-
-Name: ${submission.user_name}
-
-LIFE AUDIT SCORES (1-10):
-${scoresSummary}
-
-TOP 3 PRIORITIES: ${prioritiesSummary}
-
-GOALS (90-day targets):
-${goalsSummary || "Not specified"}
-
-BIRTH DATA:
-${birthInfo}
-
-COMMITMENT LEVEL: ${submission.commitment_level}
-INCOME LEVEL: ${submission.income_level}
-
-Generate a full diagnostic analysis including Human Design type, Life Path number, astrological triad, teaser insights for all 7 areas, full detailed analysis texts, and a 3-phase 90-day action plan.`;
+    const systemPrompt = buildSystemPrompt(locale);
+    const userPrompt = buildUserPrompt(submission, scores, priorities, goals);
 
     // --- Call OpenAI ---
     const responseText = await chatCompletion(
