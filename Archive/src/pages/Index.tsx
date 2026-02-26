@@ -15,39 +15,22 @@ import PlatformCommunity from "@/components/PlatformCommunity";
 import { TelegramChat } from "@/components/TelegramChat";
 import Footer from "@/components/Footer";
 import CookieConsent from "@/components/CookieConsent";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { FreeAnalysisDialog } from "@/components/FreeAnalysisDialog";
 
 const Index = () => {
   const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
-  const hasTriggered = useRef(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (hasTriggered.current) return;
+    // Max 2 popups per user ever
+    const popupCount = parseInt(localStorage.getItem("popupShownCount") ?? "0", 10);
+    if (popupCount >= 2) return;
 
-      const scrollPosition = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
+    const timer = setTimeout(() => {
+      setIsAnalysisOpen(true);
+    }, 5000);
 
-      const scrollPercentage = (scrollPosition + windowHeight) / documentHeight;
-
-      if (scrollPercentage > 0.4) {
-        const lastClosed = localStorage.getItem("popupLastClosed");
-        if (lastClosed) {
-          const timeSinceClosed = Date.now() - parseInt(lastClosed);
-          if (timeSinceClosed < 3600000) {
-            return;
-          }
-        }
-
-        setIsAnalysisOpen(true);
-        hasTriggered.current = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -76,7 +59,8 @@ const Index = () => {
         onOpenChange={(open) => {
           setIsAnalysisOpen(open);
           if (!open) {
-            localStorage.setItem("popupLastClosed", Date.now().toString());
+            const count = parseInt(localStorage.getItem("popupShownCount") ?? "0", 10);
+            localStorage.setItem("popupShownCount", String(count + 1));
           }
         }}
       />
