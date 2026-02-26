@@ -335,6 +335,7 @@
   "founderStory.introText": "He is not a theorist. He is an <strong class=\"text-foreground\">entrepreneur at heart</strong> and a former <strong class=\"text-foreground\">national athlete for Bulgaria</strong>. Every strategy, business model, and concept has been personally battle-tested in real life, and the proven practices are delivered here ready-made for every student.",
   "founderStory.portraitAlt": "Sean Issa",
   "founderStory.quote": "\"I wasn\u2019t born with advantages. I built everything after a decade of work, testing, successes, and failures. I paid the price so you don\u2019t have to.\"",
+  "founderStory.showMore": "Show {{count}} more steps ↓",
   "founderStory.statBusiness": "international businesses",
   "founderStory.statRevenue": "figure revenue",
   "founderStory.statTeam": "people in teams",

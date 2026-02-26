@@ -335,6 +335,7 @@
   "founderStory.introText": "Той не е теоретик. Той е <strong class=\"text-foreground\">предприемач по душа</strong> и бивш <strong class=\"text-foreground\">национален състезател за България</strong>. Всяка една стратегия, бизнес модел и концепция е лично тествана на бойното поле в живота и са извадени работещите практики тук наготово за всеки студент.",
   "founderStory.portraitAlt": "Шон Иса",
   "founderStory.quote": "\"Не съм роден с предимства. Изградих всичко след десетилетие труд, тестове, успехи и фалити. Платих цената, за да не се налага да я плащаш и ти.\"",
+  "founderStory.showMore": "Покажи още {{count}} стъпки ↓",
   "founderStory.statBusiness": "бизнеса международно",
   "founderStory.statRevenue": "цифрени суми оборот",
   "founderStory.statTeam": "души в екипи",
