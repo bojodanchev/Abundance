@@ -11,6 +11,7 @@ interface PhoneInputProps {
   disabled?: boolean;
   className?: string;
   id?: string;
+  error?: boolean;
 }
 
 export const PhoneInput = ({
@@ -22,6 +23,7 @@ export const PhoneInput = ({
   disabled = false,
   className = "",
   id,
+  error = false,
 }: PhoneInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -83,7 +85,7 @@ export const PhoneInput = ({
         onChange={(e) => onChangeNumber(e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
-        className="flex-1"
+        className={`flex-1 ${error ? 'border-red-500 focus:border-red-500' : ''}`}
       />
     </div>
   );

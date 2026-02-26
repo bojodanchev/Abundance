@@ -3,11 +3,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "@/components/PhoneInput";
 import { validateName, validateEmail, validatePhone, formatPhone } from "@/lib/validation";
 import { useTranslation } from 'react-i18next';
+import { toast } from "sonner";
 
 interface FreeAnalysisDialogProps {
     isOpen: boolean;
@@ -20,28 +20,24 @@ export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogP
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [countryCode, setCountryCode] = useState("+359");
+    const [errors, setErrors] = useState<{ name?: string; email?: string; phone?: string }>({});
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const nameError = validateName(name);
-        if (nameError) {
-            toast.error(nameError);
-            return;
-        }
-
         const emailError = validateEmail(email);
-        if (emailError) {
-            toast.error(emailError);
-            return;
-        }
-
         const phoneError = validatePhone(phoneNumber, countryCode);
-        if (phoneError) {
-            toast.error(phoneError);
-            return;
-        }
+
+        const newErrors: typeof errors = {};
+        if (nameError) newErrors.name = t(nameError);
+        if (emailError) newErrors.email = t(emailError);
+        if (phoneError) newErrors.phone = t(phoneError);
+
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length > 0) return;
 
         const fullPhone = formatPhone(phoneNumber, countryCode);
 
@@ -80,39 +76,43 @@ export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogP
                         {t('freeAnalysis.description')}
                     </DialogDescription>
                 </DialogHeader>
-                <form onSubmit={handleSubmit} className="space-y-6 mt-4">
-                    <div className="space-y-2">
+                <form onSubmit={handleSubmit} className="space-y-5 mt-4">
+                    <div className="space-y-1.5">
                         <Label htmlFor="name" className="text-foreground/80">{t('freeAnalysis.nameLabel')}</Label>
                         <Input
                             id="name"
                             value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={(e) => { setName(e.target.value); if (errors.name) setErrors(prev => ({ ...prev, name: undefined })); }}
                             placeholder={t('freeAnalysis.namePlaceholder')}
-                            className="bg-background/50 border-gold/20 focus:border-gold/50"
+                            className={`bg-background/50 ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-gold/20 focus:border-gold/50'}`}
                         />
+                        {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1.5">
                         <Label htmlFor="email" className="text-foreground/80">{t('freeAnalysis.emailLabel')}</Label>
                         <Input
                             id="email"
                             type="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => { setEmail(e.target.value); if (errors.email) setErrors(prev => ({ ...prev, email: undefined })); }}
                             placeholder={t('freeAnalysis.emailPlaceholder')}
-                            className="bg-background/50 border-gold/20 focus:border-gold/50"
+                            className={`bg-background/50 ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-gold/20 focus:border-gold/50'}`}
                         />
+                        {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1.5">
                         <Label htmlFor="phone" className="text-foreground/80">{t('freeAnalysis.phoneLabel')}</Label>
                         <PhoneInput
                             id="phone"
                             value={phoneNumber}
                             countryCode={countryCode}
-                            onChangeNumber={setPhoneNumber}
+                            onChangeNumber={(v) => { setPhoneNumber(v); if (errors.phone) setErrors(prev => ({ ...prev, phone: undefined })); }}
                             onChangeCountryCode={setCountryCode}
                             placeholder="888 123 456"
                             className="bg-background/50"
+                            error={!!errors.phone}
                         />
+                        {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                     </div>
                     <Button
                         type="submit"
