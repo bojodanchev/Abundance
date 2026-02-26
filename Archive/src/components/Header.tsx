@@ -41,7 +41,7 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-10">
-            <button onClick={() => scrollToSection('about')} className="text-sm text-muted-foreground/70 hover:text-foreground transition-smooth font-medium tracking-wide">
+            <button onClick={() => scrollToSection('philosophy')} className="text-sm text-muted-foreground/70 hover:text-foreground transition-smooth font-medium tracking-wide">
               Философия
             </button>
             <button onClick={() => scrollToSection('levels')} className="text-sm text-muted-foreground/70 hover:text-foreground transition-smooth font-medium tracking-wide">
@@ -85,7 +85,7 @@ const Header = () => {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <nav className="md:hidden mt-4 flex flex-col gap-4 pb-4">
-            <button onClick={() => scrollToSection('about')} className="text-left text-muted-foreground hover:text-foreground transition-smooth">
+            <button onClick={() => scrollToSection('philosophy')} className="text-left text-muted-foreground hover:text-foreground transition-smooth">
               Философия
             </button>
             <button onClick={() => scrollToSection('levels')} className="text-left text-muted-foreground hover:text-foreground transition-smooth">
