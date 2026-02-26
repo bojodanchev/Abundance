@@ -1,13 +1,15 @@
 import { MessageCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const TELEGRAM_USER = "alexshon7";
-const TEMPLATE_MESSAGE = encodeURIComponent(
-  "Здравейте! Интересувам се от CODE: ABUNDANCE™ и искам да разбера повече за персонализираната диагностика и 90-дневния план. Кога мога да говоря с вас?"
-);
-const TELEGRAM_URL = `https://t.me/${TELEGRAM_USER}?text=${TEMPLATE_MESSAGE}`;
 
 export const TelegramChat = () => {
+  const { t } = useTranslation();
+
+  const TEMPLATE_MESSAGE = encodeURIComponent(t('telegramChat.templateMessage'));
+  const TELEGRAM_URL = `https://t.me/${TELEGRAM_USER}?text=${TEMPLATE_MESSAGE}`;
+
   return (
     <>
       {/* Chat Section */}
@@ -15,19 +17,18 @@ export const TelegramChat = () => {
         <div className="max-w-3xl mx-auto text-center space-y-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#229ED9]/10 to-[#229ED9]/5 border border-[#229ED9]/20 rounded-full text-sm font-medium backdrop-blur-sm">
             <MessageCircle className="w-4 h-4 text-[#229ED9]" />
-            <span className="text-[#229ED9]">Директен контакт</span>
+            <span className="text-[#229ED9]">{t('telegramChat.directContact')}</span>
           </div>
 
           <h2 className="text-3xl md:text-5xl font-bold">
-            Имаш въпроси?{" "}
+            {t('telegramChat.headlinePart1')}{" "}
             <span className="bg-gradient-to-r from-[#229ED9] to-[#229ED9]/70 bg-clip-text text-transparent">
-              Пиши ни в Telegram
+              {t('telegramChat.headlineHighlight')}
             </span>
           </h2>
 
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Получи бърз отговор на всеки въпрос относно диагностиката,
-            програмата или твоя персонализиран план.
+            {t('telegramChat.description')}
           </p>
 
           <Button
@@ -36,12 +37,12 @@ export const TelegramChat = () => {
             onClick={() => window.open(TELEGRAM_URL, "_blank")}
           >
             <MessageCircle className="mr-3 h-5 w-5" />
-            Напиши в Telegram
+            {t('telegramChat.cta')}
             <ArrowRight className="ml-3 h-5 w-5" />
           </Button>
 
           <p className="text-sm text-muted-foreground">
-            Обикновено отговаряме в рамките на няколко часа
+            {t('telegramChat.responseTime')}
           </p>
         </div>
       </section>

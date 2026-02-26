@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "@/components/PhoneInput";
 import { validateName, validateEmail, validatePhone, formatPhone } from "@/lib/validation";
+import { useTranslation } from 'react-i18next';
 
 interface FreeAnalysisDialogProps {
     isOpen: boolean;
@@ -14,6 +15,7 @@ interface FreeAnalysisDialogProps {
 }
 
 export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogProps) => {
+    const { t } = useTranslation();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -60,7 +62,7 @@ export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogP
         }).catch(() => {}); // fire-and-forget
 
         onOpenChange(false);
-        toast.success("Пренасочване към диагностиката...");
+        toast.success(t('freeAnalysis.redirectToast'));
 
         setTimeout(() => {
             navigate("/diagnostic");
@@ -72,36 +74,36 @@ export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogP
             <DialogContent className="sm:max-w-[425px] bg-background/95 backdrop-blur-xl border-gold/20">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-display font-bold text-center text-gradient">
-                        Безплатен Анализ
+                        {t('freeAnalysis.title')}
                     </DialogTitle>
                     <DialogDescription className="text-center text-muted-foreground">
-                        Попълнете данните си, за да започнете своя персонален анализ.
+                        {t('freeAnalysis.description')}
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-6 mt-4">
                     <div className="space-y-2">
-                        <Label htmlFor="name" className="text-foreground/80">Име</Label>
+                        <Label htmlFor="name" className="text-foreground/80">{t('freeAnalysis.nameLabel')}</Label>
                         <Input
                             id="name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            placeholder="Вашето име"
+                            placeholder={t('freeAnalysis.namePlaceholder')}
                             className="bg-background/50 border-gold/20 focus:border-gold/50"
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="email" className="text-foreground/80">Имейл</Label>
+                        <Label htmlFor="email" className="text-foreground/80">{t('freeAnalysis.emailLabel')}</Label>
                         <Input
                             id="email"
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="vashiat@email.com"
+                            placeholder={t('freeAnalysis.emailPlaceholder')}
                             className="bg-background/50 border-gold/20 focus:border-gold/50"
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-foreground/80">Телефон</Label>
+                        <Label htmlFor="phone" className="text-foreground/80">{t('freeAnalysis.phoneLabel')}</Label>
                         <PhoneInput
                             id="phone"
                             value={phoneNumber}
@@ -116,7 +118,7 @@ export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogP
                         type="submit"
                         className="w-full bg-gold hover:bg-gold/90 text-black font-bold"
                     >
-                        Започни Анализ
+                        {t('freeAnalysis.submitButton')}
                     </Button>
                 </form>
             </DialogContent>

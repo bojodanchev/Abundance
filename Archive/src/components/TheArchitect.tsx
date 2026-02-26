@@ -6,43 +6,46 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useTranslation } from 'react-i18next';
 import luxuryPattern from "@/assets/luxury-pattern.jpg";
 
 const TheArchitect = () => {
+  const { t } = useTranslation();
+
   const timeline = [
     {
       icon: Book,
-      age: "НА 15",
-      title: "УЛИЦАТА БЕШЕ МОЯТ ОФИС",
-      detail: "Докато другите играеха игри, аз продавах книги на улицата. Там научих урок за изобилието: Ако не можеш да продаваш, си мъртъв. Отхвърлянето не ме спря, то ме каляваше всеки ден.",
+      age: t('theArchitect.age1'),
+      title: t('theArchitect.title1'),
+      detail: t('theArchitect.detail1'),
       color: "primary"
     },
     {
       icon: Trophy,
-      age: "НАЦИОНАЛНО НИВО",
-      title: "ДИСЦИПЛИНАТА",
-      detail: "Спортът ме научи, че тялото е машина. Няма 'не мога', има 'не искам'. Тази дисциплина сега е в основата модулите.",
+      age: t('theArchitect.age2'),
+      title: t('theArchitect.title2'),
+      detail: t('theArchitect.detail2'),
       color: "gold"
     },
     {
       icon: Flame,
-      age: "НА 17",
-      title: "ЛИДЕРСТВО ПОД ОГЪН",
-      detail: "Ръководих екипи от хора, по-възрастни от мен. Научих се да нося отговорност не само за себе си, а за резултатите на другите.",
+      age: t('theArchitect.age3'),
+      title: t('theArchitect.title3'),
+      detail: t('theArchitect.detail3'),
       color: "violet"
     },
     {
       icon: TrendingDown,
-      age: "ПАДАНЕ И ВЪЗХОД",
-      title: "ЦЕНАТА НА ХАОСА",
-      detail: "Инвестирах. Печелих много. Губих всичко. Падах и ставах. Разбрах по трудния начин, че парите без структура са просто пясък който се изплъзва между пръстите.",
+      age: t('theArchitect.age4'),
+      title: t('theArchitect.title4'),
+      detail: t('theArchitect.detail4'),
       color: "gold"
     },
     {
       icon: Building,
-      age: "СЕГА",
-      title: "СЪЗДАТЕЛ",
-      detail: "Побеждавах себе си отново и отново, за да създам този Код.",
+      age: t('theArchitect.age5'),
+      title: t('theArchitect.title5'),
+      detail: t('theArchitect.detail5'),
       color: "primary"
     }
   ];
@@ -50,45 +53,43 @@ const TheArchitect = () => {
   return (
     <section id="architect" className="py-16 md:py-24 bg-gradient-to-b from-background to-background/50 relative overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <img 
-          src={luxuryPattern} 
-          alt="Luxury Pattern" 
+        <img
+          src={luxuryPattern}
+          alt="Luxury Pattern"
           className="w-full h-full object-cover opacity-30"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/94 via-background/92 to-background"></div>
       </div>
       <div className="absolute inset-0 bg-gradient-glow opacity-20"></div>
-      
+
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-8 leading-tight">
-              НЕ СЪМ РОДЕН С <span className="text-gradient">ПРЕДИМСТВА.</span>
-              <br />
-              ИЗГРАДИХ ВСИЧКО САМ.
-            </h2>
+            <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-8 leading-tight"
+              dangerouslySetInnerHTML={{ __html: t('theArchitect.heading') }}
+            />
             <p className="text-xl md:text-2xl text-muted-foreground font-semibold">
-              ШОН. Архитектът зад CODE: ABUNDANCE™.
+              {t('theArchitect.subtitle')}
             </p>
           </div>
 
           {/* Intro */}
           <div className="mb-12 p-8 md:p-10 bg-gradient-to-br from-primary/10 to-violet/10 border border-primary/30 rounded-xl text-center">
             <p className="text-lg md:text-2xl text-foreground/90 leading-relaxed font-semibold">
-              "Аз не съм теоретик от университет. Аз съм продукт на собствената си система. Всичко, което виждаш в CODE: ABUNDANCE™, е тествано не в лаборатория, а на бойното поле на живота."
+              {t('theArchitect.introQuote')}
             </p>
           </div>
 
           {/* Timeline */}
           <div className="mb-12">
-            <h3 className="text-2xl md:text-3xl font-black mb-8 text-center">THE TIMELINE</h3>
-            
+            <h3 className="text-2xl md:text-3xl font-black mb-8 text-center">{t('theArchitect.timelineTitle')}</h3>
+
             <Accordion type="single" collapsible className="space-y-4">
               {timeline.map((item, idx) => {
                 const Icon = item.icon;
                 const colorClass = item.color === "gold" ? "gold" : item.color === "violet" ? "violet" : "primary";
-                
+
                 return (
                   <AccordionItem
                     key={idx}
@@ -112,7 +113,7 @@ const TheArchitect = () => {
                     </AccordionTrigger>
                     <AccordionContent className="px-6 pb-4">
                       <p className="text-sm md:text-base text-muted-foreground leading-relaxed pl-16">
-                        <span className="font-semibold">Детайл:</span> {item.detail}
+                        <span className="font-semibold">{t('theArchitect.detailLabel')}:</span> {item.detail}
                       </p>
                     </AccordionContent>
                   </AccordionItem>
@@ -123,23 +124,23 @@ const TheArchitect = () => {
 
           {/* Key Message */}
           <div className="p-6 md:p-10 bg-gradient-to-br from-primary/10 to-gold/10 border-2 border-primary/30 rounded-xl text-center mb-8">
-            <h3 className="text-xl md:text-2xl font-black mb-4">KEY MESSAGE:</h3>
+            <h3 className="text-xl md:text-2xl font-black mb-4">{t('theArchitect.keyMessageTitle')}</h3>
             <p className="text-sm md:text-base text-foreground/90 leading-relaxed mb-4">
-              CODE: ABUNDANCE™ е структурираният резултат от тези уроци. Аз вече платих цената с години време, грешки и болка.
+              {t('theArchitect.keyMessageText')}
             </p>
             <p className="text-base md:text-lg font-bold text-primary">
-              Ти не трябва да плащаш тази цена. Ти можеш да вземеш готовия план сега.
+              {t('theArchitect.keyMessageHighlight')}
             </p>
           </div>
 
           {/* CTA */}
           <div className="text-center">
-            <Button 
-              variant="hero" 
+            <Button
+              variant="hero"
               size="xl"
               onClick={() => document.getElementById('programs')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              ВИЖ КАК ЩЕ РАБОТИ ЗА ТЕБ
+              {t('theArchitect.ctaButton')}
             </Button>
           </div>
         </div>

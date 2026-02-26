@@ -1,23 +1,25 @@
 import { Button } from "@/components/ui/button";
 import { AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import luxuryBuilding from "@/assets/luxury-building.jpg";
 
 const FinalCTA = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   return (
     <section id="contact" className="py-16 md:py-24 bg-gradient-to-b from-background/50 to-background relative overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <img 
-          src={luxuryBuilding} 
-          alt="Luxury Building" 
+        <img
+          src={luxuryBuilding}
+          alt="Luxury Building"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/94 via-background/92 to-background"></div>
       </div>
       <div className="absolute inset-0 bg-gradient-primary opacity-10"></div>
       <div className="absolute inset-0 bg-gradient-glow opacity-30"></div>
-      
+
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Icon */}
@@ -29,56 +31,56 @@ const FinalCTA = () => {
 
           {/* Headline */}
           <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-10 leading-tight">
-            <span className="text-gradient">ЛИПСАТА Е ИЗБОР.</span>
+            <span className="text-gradient">{t('finalCTA.headlinePart1')}</span>
             <br />
-            <span className="text-foreground">ИЗОБИЛИЕТО СЪЩО.</span>
+            <span className="text-foreground">{t('finalCTA.headlinePart2')}</span>
           </h2>
 
           {/* Copy */}
           <div className="mb-12 space-y-8">
             <p className="text-2xl md:text-3xl text-foreground font-black leading-relaxed">
-              Ти вече видя СИСТЕМАТА. Нямаш повече оправдания. Време е да вземеш твоя стратегически самоанализ.
+              {t('finalCTA.mainCopy')}
             </p>
-            
+
             <div className="p-8 md:p-10 bg-gradient-to-br from-gold/10 to-primary/10 border border-gold/30 rounded-xl">
               <p className="text-xl md:text-2xl text-foreground font-black leading-relaxed mb-4">
-                Помни математиката на успеха:
+                {t('finalCTA.mathTitle')}
               </p>
               <p className="text-2xl md:text-4xl text-primary font-black mt-2 leading-tight">
-                Всеки ден колебание днес = 1 седмица изгубен потенциал утре.
+                {t('finalCTA.mathFormula')}
               </p>
             </div>
           </div>
 
           {/* CTA Button */}
-          <Button 
-            variant="hero" 
+          <Button
+            variant="hero"
             size="xl"
             onClick={() => navigate('/diagnostic')}
             className="group shadow-glow text-lg px-8 py-6 md:px-12 md:py-8"
           >
-            СТАРТИРАЙ СВОЯТА БЕЗПЛАТНА ДИАГНОСТИКА НА УСПЕХА
+            {t('finalCTA.cta')}
           </Button>
 
-          <p className="text-sm text-muted-foreground/60 mt-4 italic">(или остани на същото място където си)</p>
+          <p className="text-sm text-muted-foreground/60 mt-4 italic">{t('finalCTA.ctaAlternative')}</p>
 
           <p className="text-sm md:text-base text-muted-foreground mt-6 font-medium">
-            Abundance Diagnostic™ — твоят пръв шаг от хаоса към структурата
+            {t('finalCTA.ctaSubtext')}
           </p>
 
           {/* Stats */}
           <div className="mt-12 grid grid-cols-3 gap-4 max-w-2xl mx-auto">
             <div className="p-4 bg-gradient-to-br from-primary/5 to-violet/5 border border-primary/20 rounded-lg">
-              <div className="text-2xl md:text-3xl font-black text-primary mb-1">∞</div>
-              <div className="text-xs text-muted-foreground uppercase">Потенциал</div>
+              <div className="text-2xl md:text-3xl font-black text-primary mb-1">{'\u221E'}</div>
+              <div className="text-xs text-muted-foreground uppercase">{t('finalCTA.statPotential')}</div>
             </div>
             <div className="p-4 bg-gradient-to-br from-gold/5 to-primary/5 border border-gold/20 rounded-lg">
               <div className="text-2xl md:text-3xl font-black text-gold mb-1">90</div>
-              <div className="text-xs text-muted-foreground uppercase">Дни</div>
+              <div className="text-xs text-muted-foreground uppercase">{t('finalCTA.statDays')}</div>
             </div>
             <div className="p-4 bg-gradient-to-br from-violet/5 to-primary/5 border border-violet/20 rounded-lg">
               <div className="text-2xl md:text-3xl font-black text-violet mb-1">1</div>
-              <div className="text-xs text-muted-foreground uppercase">Решение</div>
+              <div className="text-xs text-muted-foreground uppercase">{t('finalCTA.statDecision')}</div>
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@ import { Slider } from "@/components/ui/slider";
 import { DiagnosticFormData } from "@/pages/Diagnostic";
 import { useEffect } from "react";
 import { Target } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 interface DiagnosticGoalsProps {
   data: DiagnosticFormData;
@@ -27,6 +28,8 @@ export const DiagnosticGoals = ({
   onNext,
   onBack,
 }: DiagnosticGoalsProps) => {
+  const { t } = useTranslation();
+
   useEffect(() => {
     if (data.priority_top3 && data.priority_top3.length === 3) {
       if (!data.goal_sphere_values || data.goal_sphere_values.length !== 3) {
@@ -50,13 +53,13 @@ export const DiagnosticGoals = ({
     <div className="space-y-6 sm:space-y-8 animate-fade-in">
       <div className="text-center space-y-3 sm:space-y-4 px-4">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-500/10 to-amber-500/10 border border-yellow-500/20 rounded-full text-sm backdrop-blur-sm">
-          <span className="text-yellow-600">Стъпка 3 от 7</span>
+          <span className="text-yellow-600">{t('diagnosticGoals.step')}</span>
         </div>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 bg-clip-text text-transparent">
-          Каква е целта ти след 90 дни?
+          {t('diagnosticGoals.title')}
         </h2>
         <p className="text-base sm:text-lg text-muted-foreground">
-          Определи целта си (до 10) за всяка от твоите Топ 3 сфери
+          {t('diagnosticGoals.subtitle')}
         </p>
       </div>
 
@@ -101,10 +104,10 @@ export const DiagnosticGoals = ({
 
       <div className="flex flex-col sm:flex-row justify-between gap-4 pt-6 sm:pt-8 px-4">
         <Button variant="outline" onClick={onBack} className="w-full sm:w-auto order-2 sm:order-1">
-          ← Назад
+          {t('common.back')}
         </Button>
         <Button onClick={onNext} className="w-full sm:w-auto bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 text-white order-1 sm:order-2">
-          Напред →
+          {t('common.next')}
         </Button>
       </div>
     </div>

@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import heroImage from "@/assets/luxury-office.jpg";
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Countdown: start at 20, decrement 1 per day from Feb 25 2026, min 1
   const spotsLeft = Math.max(1, 20 - Math.floor((Date.now() - new Date('2026-02-25').getTime()) / 86400000));
@@ -28,37 +30,37 @@ const Hero = () => {
                 <span className="text-gold font-black text-sm">{spotsLeft}</span>
               </div>
               <p className="text-sm md:text-base font-black text-gold uppercase tracking-wider">
-                ЛИМИТИРАНИ МЕСТА
+                {t('hero.limitedSpots')}
               </p>
             </div>
           </div>
 
           {/* Headline */}
           <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-8 leading-tight tracking-tight">
-            <span className="text-gradient">Пренапиши финансовата си реалност</span>
+            <span className="text-gradient">{t('hero.headlinePart1')}</span>
             <br />
-            <span className="text-foreground">и активирай вътрешния си </span>
-            <span className="text-gradient">потенциал.</span>
+            <span className="text-foreground">{t('hero.headlinePart2')} </span>
+            <span className="text-gradient">{t('hero.headlinePart3')}</span>
           </h1>
 
           {/* Sub-headline */}
           <p className="text-2xl sm:text-3xl md:text-4xl text-foreground/90 mb-6 max-w-4xl mx-auto leading-relaxed font-bold">
-            Как да създадеш нов стандарт на живот за 90 дни
+            {t('hero.subheadline')}
           </p>
 
           {/* Description */}
           <p className="text-lg md:text-xl text-foreground/80 mb-10 md:mb-12 max-w-4xl mx-auto leading-relaxed font-medium">
-            Това е двигателят за предприемачество през 2026-та година. <span className="text-primary">Доказаната обучителна система</span> за личностно и бизнес развитие в България, която ти дава инструментите и средата да <span className="text-gold">трансформираш живота си на следващото ниво</span>
+            {t('hero.descriptionPart1')} <span className="text-primary">{t('hero.descriptionHighlight1')}</span> {t('hero.descriptionPart2')} <span className="text-gold">{t('hero.descriptionHighlight2')}</span>
           </p>
 
           {/* CTA Button */}
           <Button variant="hero" size="xl" onClick={() => navigate('/diagnostic')} className="group shadow-glow text-lg px-10 py-7 md:px-14 md:py-9">
-            ПОЛУЧИ БЕЗПЛАТЕН АНАЛИЗ
+            {t('hero.cta')}
             <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
 
           <p className="text-sm md:text-base text-muted-foreground mt-4 font-medium">
-            (Abundance Diagnostic)
+            {t('hero.ctaSubtext')}
           </p>
         </div>
       </div>

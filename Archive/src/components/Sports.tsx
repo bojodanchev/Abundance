@@ -1,41 +1,44 @@
 import { Trophy, Waves, Target, Dumbbell } from "lucide-react";
-
-const achievements = [
-  {
-    sport: "Ice Hockey",
-    role: "National Player",
-    achievement: "Goal Maker",
-    values: ["Discipline", "Team Precision", "Under Pressure"],
-    icon: Target,
-    year: "2010-2015"
-  },
-  {
-    sport: "Canoe Kayak",
-    role: "Medalist",
-    achievement: "National Champion",
-    values: ["Balance", "Endurance", "Control"],
-    icon: Waves,
-    year: "2012-2016"
-  },
-  {
-    sport: "Basketball",
-    role: "Team Captain",
-    achievement: "Leadership",
-    values: ["Teamwork", "Strategy", "Coordination"],
-    icon: Trophy,
-    year: "2008-2014"
-  },
-  {
-    sport: "Swimming",
-    role: "Competitor",
-    achievement: "Endurance",
-    values: ["Perseverance", "Focus", "Consistency"],
-    icon: Dumbbell,
-    year: "2009-2013"
-  }
-];
+import { useTranslation } from 'react-i18next';
 
 const Sports = () => {
+  const { t } = useTranslation();
+
+  const achievements = [
+    {
+      sport: t('sports.sport1Name'),
+      role: t('sports.sport1Role'),
+      achievement: t('sports.sport1Achievement'),
+      values: [t('sports.sport1Value1'), t('sports.sport1Value2'), t('sports.sport1Value3')],
+      icon: Target,
+      year: "2010-2015"
+    },
+    {
+      sport: t('sports.sport2Name'),
+      role: t('sports.sport2Role'),
+      achievement: t('sports.sport2Achievement'),
+      values: [t('sports.sport2Value1'), t('sports.sport2Value2'), t('sports.sport2Value3')],
+      icon: Waves,
+      year: "2012-2016"
+    },
+    {
+      sport: t('sports.sport3Name'),
+      role: t('sports.sport3Role'),
+      achievement: t('sports.sport3Achievement'),
+      values: [t('sports.sport3Value1'), t('sports.sport3Value2'), t('sports.sport3Value3')],
+      icon: Trophy,
+      year: "2008-2014"
+    },
+    {
+      sport: t('sports.sport4Name'),
+      role: t('sports.sport4Role'),
+      achievement: t('sports.sport4Achievement'),
+      values: [t('sports.sport4Value1'), t('sports.sport4Value2'), t('sports.sport4Value3')],
+      icon: Dumbbell,
+      year: "2009-2013"
+    }
+  ];
+
   return (
     <section id="sports" className="py-32 bg-background relative">
       <div className="container mx-auto px-6">
@@ -45,17 +48,17 @@ const Sports = () => {
             <div className="inline-flex items-center gap-3 mb-6 px-4 py-2 border border-secondary/20 bg-card/30 backdrop-blur-sm">
               <Trophy className="text-secondary" size={20} />
               <span className="text-sm font-medium tracking-[0.2em] uppercase text-secondary/90">
-                Forged in Competition
+                {t('sports.badge')}
               </span>
             </div>
-            
-            <h2 className="font-display text-4xl md:text-6xl font-bold mb-8 leading-tight">
-              Sports & <span className="text-gradient">Discipline</span>
-            </h2>
-            
+
+            <h2 className="font-display text-4xl md:text-6xl font-bold mb-8 leading-tight"
+              dangerouslySetInnerHTML={{ __html: t('sports.heading') }}
+            />
+
             <div className="relative inline-block">
               <p className="font-quote text-3xl md:text-4xl italic text-foreground relative z-10">
-                "Discipline is the muscle behind destiny."
+                {t('sports.quote')}
               </p>
               <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-primary"></div>
             </div>
@@ -65,14 +68,14 @@ const Sports = () => {
           <div className="relative">
             {/* Vertical Line */}
             <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-primary via-secondary to-primary/20"></div>
-            
+
             <div className="space-y-16">
               {achievements.map((achievement, index) => {
                 const Icon = achievement.icon;
                 const isLeft = index % 2 === 0;
-                
+
                 return (
-                  <div 
+                  <div
                     key={index}
                     className={`relative grid md:grid-cols-2 gap-8 items-center ${
                       isLeft ? '' : 'md:text-right'
@@ -87,7 +90,7 @@ const Sports = () => {
                         }`}>
                           <Icon className="text-secondary" size={32} />
                         </div>
-                        
+
                         {/* Sport Info */}
                         <div className="mb-4">
                           <div className="text-sm font-semibold text-secondary mb-2 tracking-widest">
@@ -103,11 +106,11 @@ const Sports = () => {
                             {achievement.achievement}
                           </div>
                         </div>
-                        
+
                         {/* Values */}
                         <div className={`flex flex-wrap gap-2 ${isLeft ? '' : 'md:justify-end'}`}>
                           {achievement.values.map((value, idx) => (
-                            <span 
+                            <span
                               key={idx}
                               className="px-3 py-1 text-xs font-medium bg-secondary/10 text-secondary border border-secondary/20 rounded-full"
                             >
@@ -115,15 +118,15 @@ const Sports = () => {
                             </span>
                           ))}
                         </div>
-                        
+
                         {/* Decorative Element */}
                         <div className={`absolute top-0 ${isLeft ? 'left-0' : 'right-0'} w-1 h-full bg-gradient-to-b from-secondary to-transparent opacity-50`}></div>
                       </div>
                     </div>
-                    
+
                     {/* Timeline Dot */}
                     <div className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-secondary border-4 border-background shadow-violet"></div>
-                    
+
                     {/* Medal/Photo Placeholder */}
                     <div className={`${isLeft ? 'md:col-start-2' : 'md:col-start-1 md:row-start-1'}`}>
                       <div className={`aspect-square rounded-xl overflow-hidden border border-border/50 bg-gradient-to-br from-secondary/20 to-primary/10 flex items-center justify-center ${

@@ -1,42 +1,45 @@
 import { Button } from "@/components/ui/button";
 import { DollarSign, Heart, Sparkles } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import luxuryMansion from "@/assets/luxury-mansion.jpg";
 
-const labs = [
-  {
-    icon: <DollarSign className="w-10 h-10" />,
-    title: "Wealth Systems Lab",
-    subtitle: "Финансови системи и бизнес архитектура",
-    description: "Изгради фундамента на финансовата си свобода с доказани бизнес модели, маркетинг стратегии и AI автоматизации.",
-    color: "text-gold",
-    borderColor: "border-gold/30",
-    bgGradient: "from-gold/10 to-gold/5",
-    hoverBorder: "hover:border-gold"
-  },
-  {
-    icon: <Heart className="w-10 h-10" />,
-    title: "Health Systems Lab",
-    subtitle: "Здраве, енергия и био-оптимизация",
-    description: "Оптимизирай физическото и менталното си здраве за максимална производителност и енергия.",
-    color: "text-primary",
-    borderColor: "border-primary/30",
-    bgGradient: "from-primary/10 to-primary/5",
-    hoverBorder: "hover:border-primary"
-  },
-  {
-    icon: <Sparkles className="w-10 h-10" />,
-    title: "Prosperity Lab",
-    subtitle: "Личностно развитие и духовен растеж",
-    description: "Познай себе си чрез Human Design, развий лидерски умения и създай живот с цел и посока.",
-    color: "text-violet",
-    borderColor: "border-violet/30",
-    bgGradient: "from-violet/10 to-violet/5",
-    hoverBorder: "hover:border-violet"
-  }
-];
-
 const TheLabs = () => {
+  const { t } = useTranslation();
+
+  const labs = [
+    {
+      icon: <DollarSign className="w-10 h-10" />,
+      title: t('theLabs.lab1Title'),
+      subtitle: t('theLabs.lab1Subtitle'),
+      description: t('theLabs.lab1Description'),
+      color: "text-gold",
+      borderColor: "border-gold/30",
+      bgGradient: "from-gold/10 to-gold/5",
+      hoverBorder: "hover:border-gold"
+    },
+    {
+      icon: <Heart className="w-10 h-10" />,
+      title: t('theLabs.lab2Title'),
+      subtitle: t('theLabs.lab2Subtitle'),
+      description: t('theLabs.lab2Description'),
+      color: "text-primary",
+      borderColor: "border-primary/30",
+      bgGradient: "from-primary/10 to-primary/5",
+      hoverBorder: "hover:border-primary"
+    },
+    {
+      icon: <Sparkles className="w-10 h-10" />,
+      title: t('theLabs.lab3Title'),
+      subtitle: t('theLabs.lab3Subtitle'),
+      description: t('theLabs.lab3Description'),
+      color: "text-violet",
+      borderColor: "border-violet/30",
+      bgGradient: "from-violet/10 to-violet/5",
+      hoverBorder: "hover:border-violet"
+    }
+  ];
+
   const scrollToModules = () => {
     const element = document.getElementById('modules');
     if (element) element.scrollIntoView({ behavior: 'smooth' });
@@ -55,10 +58,10 @@ const TheLabs = () => {
           {/* Header */}
           <div className="text-center mb-12 md:mb-16">
             <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-black mb-6 leading-tight">
-              <span className="text-gradient">3 СФЕРИ → 90 ДНИ → НОВА РЕАЛНОСТ</span>
+              <span className="text-gradient">{t('theLabs.headline')}</span>
             </h2>
             <p className="text-xl md:text-2xl text-foreground/80 font-medium max-w-3xl mx-auto">
-              Три лаборатории, всяка фокусирана върху критична сфера от живота ти
+              {t('theLabs.subheadline')}
             </p>
           </div>
 
@@ -79,7 +82,7 @@ const TheLabs = () => {
                 <p className="text-base text-foreground font-semibold mb-4">{lab.subtitle}</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">{lab.description}</p>
                 <div className={`mt-6 text-sm font-bold ${lab.color} opacity-0 group-hover:opacity-100 transition-opacity`}>
-                  Виж модулите →
+                  {t('theLabs.seeModules')}
                 </div>
               </motion.div>
             ))}
@@ -88,7 +91,7 @@ const TheLabs = () => {
           {/* CTA */}
           <div className="text-center">
             <Button variant="hero" size="xl" onClick={scrollToModules}>
-              Виж всички модули
+              {t('theLabs.cta')}
             </Button>
           </div>
         </div>

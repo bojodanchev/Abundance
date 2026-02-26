@@ -2,56 +2,58 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import luxuryPenthouse from "@/assets/luxury-penthouse.jpg";
-
-const steps = [
-  {
-    number: "1",
-    title: "РАДИКАЛНО ПРОБУЖДАНЕ",
-    subtitle: "Диагноза",
-    description: "Край на посредствеността. Безмилостен одит на твоята идентичност, финанси и дефицити."
-  },
-  {
-    number: "2",
-    title: "СТРАТЕГИЧЕСКО ПОДРЕЖДАНЕ",
-    subtitle: "Системи",
-    description: "Премахване на парализиращия хаос и страхове. Инсталиране на нови, железни навици и продуктивно мислене."
-  },
-  {
-    number: "3",
-    title: "ЕЛИТНИ УМЕНИЯ",
-    subtitle: "Инструменти",
-    description: "Овладяване на високодоходни механизми като финанси, продажби, дисциплина и влияние."
-  },
-  {
-    number: "4",
-    title: "АГРЕСИВНО ПРИЛОЖЕНИЕ",
-    subtitle: "Действие",
-    description: "Преход от теория към масирани реални действия и измерим, видим растеж."
-  },
-  {
-    number: "5",
-    title: "СИСТЕМНА ИНТЕГРАЦИЯ",
-    subtitle: "Автоматизация",
-    description: "Новият висок стандарт става твой автоматичен режим. Усилието изчезва, резултатът остава."
-  },
-  {
-    number: "6",
-    title: "МАЩАБНО РАЗШИРЯВАНЕ",
-    subtitle: "Влияние",
-    description: "Тук играта се променя. Вече не говорим за оцеляване, а за доминантна пазарна позиция."
-  },
-  {
-    number: "7",
-    title: "АБСОЛЮТНО ИЗДИГАНЕ",
-    subtitle: "Изобилие",
-    description: "Реалността е пренаписана. Достигаш ниво на авторитет, за което другите само мечтаят."
-  }
-];
 
 const SevenSteps = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [expandedSteps, setExpandedSteps] = useState<number[]>([]);
+
+  const steps = [
+    {
+      number: "1",
+      title: t('sevenSteps.step1Title'),
+      subtitle: t('sevenSteps.step1Subtitle'),
+      description: t('sevenSteps.step1Description')
+    },
+    {
+      number: "2",
+      title: t('sevenSteps.step2Title'),
+      subtitle: t('sevenSteps.step2Subtitle'),
+      description: t('sevenSteps.step2Description')
+    },
+    {
+      number: "3",
+      title: t('sevenSteps.step3Title'),
+      subtitle: t('sevenSteps.step3Subtitle'),
+      description: t('sevenSteps.step3Description')
+    },
+    {
+      number: "4",
+      title: t('sevenSteps.step4Title'),
+      subtitle: t('sevenSteps.step4Subtitle'),
+      description: t('sevenSteps.step4Description')
+    },
+    {
+      number: "5",
+      title: t('sevenSteps.step5Title'),
+      subtitle: t('sevenSteps.step5Subtitle'),
+      description: t('sevenSteps.step5Description')
+    },
+    {
+      number: "6",
+      title: t('sevenSteps.step6Title'),
+      subtitle: t('sevenSteps.step6Subtitle'),
+      description: t('sevenSteps.step6Description')
+    },
+    {
+      number: "7",
+      title: t('sevenSteps.step7Title'),
+      subtitle: t('sevenSteps.step7Subtitle'),
+      description: t('sevenSteps.step7Description')
+    }
+  ];
 
   const toggleStep = (idx: number) => {
     setExpandedSteps(prev =>
@@ -72,10 +74,10 @@ const SevenSteps = () => {
           {/* Header */}
           <div className="text-center mb-12 md:mb-16">
             <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-black mb-6 leading-tight">
-              <span className="text-gradient">Последователност на 90-дневната трансформация</span>
+              <span className="text-gradient">{t('sevenSteps.headline')}</span>
             </h2>
             <p className="text-xl md:text-2xl text-primary font-black">
-              (Твоят Боен План)
+              {t('sevenSteps.subheadline')}
             </p>
           </div>
 
@@ -116,7 +118,7 @@ const SevenSteps = () => {
           {/* CTA */}
           <div className="text-center mt-12">
             <Button variant="hero" size="xl" onClick={() => navigate('/diagnostic')}>
-              НАПРАВИ ДИАГНОСТИКАТА
+              {t('sevenSteps.cta')}
             </Button>
           </div>
         </div>

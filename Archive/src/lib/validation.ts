@@ -1,5 +1,6 @@
 // ============================================================
 // Shared validation for name, email, phone
+// Returns translation keys instead of hardcoded strings
 // ============================================================
 
 export const COUNTRY_CODES = [
@@ -22,14 +23,14 @@ export type CountryCode = (typeof COUNTRY_CODES)[number];
 
 /**
  * Name must be at least 2 characters.
- * e.g. "Alex" ✓, "Alex Ivanov" ✓, "a" ✗
+ * Returns a translation key or null.
  */
 export function validateName(name: string): string | null {
   const trimmed = name.trim();
-  if (!trimmed) return "Моля, въведи името си";
+  if (!trimmed) return "validation.nameRequired";
 
   if (trimmed.length < 2) {
-    return "Името трябва да е поне 2 символа";
+    return "validation.nameMinLength";
   }
 
   return null;
@@ -37,14 +38,15 @@ export function validateName(name: string): string | null {
 
 /**
  * Standard email regex check.
+ * Returns a translation key or null.
  */
 export function validateEmail(email: string): string | null {
   const trimmed = email.trim();
-  if (!trimmed) return "Моля, въведи имейл адрес";
+  if (!trimmed) return "validation.emailRequired";
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   if (!emailRegex.test(trimmed)) {
-    return "Моля, въведи валиден имейл адрес";
+    return "validation.emailInvalid";
   }
 
   return null;
@@ -52,7 +54,7 @@ export function validateEmail(email: string): string | null {
 
 /**
  * Validates phone number digits for a given country code.
- * Strips spaces, dashes, and leading zero from the local part.
+ * Returns a translation key or null.
  */
 export function validatePhone(
   localNumber: string,
@@ -61,20 +63,20 @@ export function validatePhone(
   // Strip non-digit characters
   const digits = localNumber.replace(/[\s\-()]/g, "").replace(/^0+/, "");
 
-  if (!digits) return "Моля, въведи телефонен номер";
+  if (!digits) return "validation.phoneRequired";
 
   const country = COUNTRY_CODES.find((c) => c.code === countryCode);
-  if (!country) return "Моля, избери код на държава";
+  if (!country) return "validation.countryCodeRequired";
 
   if (!/^\d+$/.test(digits)) {
-    return "Телефонният номер трябва да съдържа само цифри";
+    return "validation.phoneDigitsOnly";
   }
 
   if (digits.length < country.minDigits || digits.length > country.maxDigits) {
     if (country.minDigits === country.maxDigits) {
-      return `Номерът трябва да е ${country.minDigits} цифри за ${country.label}`;
+      return "validation.phoneExactDigits";
     }
-    return `Номерът трябва да е ${country.minDigits}-${country.maxDigits} цифри за ${country.label}`;
+    return "validation.phoneRangeDigits";
   }
 
   return null;

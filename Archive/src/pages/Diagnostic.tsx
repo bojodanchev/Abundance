@@ -11,6 +11,7 @@ import { DiagnosticContact } from "@/components/diagnostic/DiagnosticContact";
 import { DiagnosticFinal } from "@/components/diagnostic/DiagnosticFinal";
 import { mapDiagnosticToQuiz } from "@/lib/mapDiagnosticToQuiz";
 import { toast } from "sonner";
+import { useTranslation } from 'react-i18next';
 
 export interface DiagnosticFormData {
   // Ratings (Screen 2)
@@ -43,6 +44,7 @@ export interface DiagnosticFormData {
 }
 
 const Diagnostic = () => {
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionResult, setSubmissionResult] = useState<{ submissionId: string; prelaunch: boolean } | null>(null);
@@ -84,7 +86,7 @@ const Diagnostic = () => {
             user_email: parsed.email || prev.user_email,
             user_phone: parsed.phone || prev.user_phone,
           }));
-          // Optional: Clear storage so it doesn't persist forever? 
+          // Optional: Clear storage so it doesn't persist forever?
           // Keeping it for now in case they refresh.
         }
       } catch (e) {
@@ -120,11 +122,11 @@ const Diagnostic = () => {
       }
 
       setSubmissionResult({ submissionId: result.submissionId, prelaunch: result.prelaunch });
-      toast.success("Диагностиката е изпратена успешно!");
+      toast.success(t('diagnostic.submitSuccess'));
       handleNext();
     } catch (error) {
       console.error("Error submitting diagnostic:", error);
-      toast.error("Грешка при изпращане. Моля, опитай отново.");
+      toast.error(t('diagnostic.submitError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -193,7 +195,7 @@ const Diagnostic = () => {
           <div className="mb-8">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm text-muted-foreground">
-                Стъпка {currentStep} от 7
+                {t('diagnostic.stepOf', { current: currentStep, total: 7 })}
               </span>
               <span className="text-sm font-medium">
                 {Math.round((currentStep / 7) * 100)}%

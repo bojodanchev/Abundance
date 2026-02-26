@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const FinalMessage = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const handleStrategyCall = () => {
     navigate('/diagnostic');
   };
@@ -31,46 +33,45 @@ const FinalMessage = () => {
             </div>
 
             <h2 className="font-display text-5xl md:text-7xl lg:text-8xl font-black mb-8 leading-[0.95]">
-              This Is Just the
+              {t('finalMessage.headlinePart1')}
               <br />
-              <span className="text-gradient">Beginning</span>
+              <span className="text-gradient">{t('finalMessage.headlineHighlight')}</span>
             </h2>
 
             <div className="max-w-3xl mx-auto mb-12">
               <p className="font-quote text-3xl md:text-4xl italic text-muted-foreground mb-8">
-                "You don't rise by luck. You rise by code."
+                {t('finalMessage.quote')}
               </p>
-              
+
               <div className="w-32 h-1 bg-gradient-primary mx-auto mb-8"></div>
-              
+
               <p className="text-lg text-muted-foreground/80 leading-relaxed">
-                Every transformation starts with a decision. Every empire begins with a single choice. 
-                Every legend is written by those who refuse to settle for ordinary.
+                {t('finalMessage.description')}
               </p>
             </div>
           </div>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-            <Button 
-              variant="premium" 
+            <Button
+              variant="premium"
               size="xl"
               onClick={handleStrategyCall}
               className="group shadow-gold min-w-[280px]"
             >
               <Calendar className="mr-2" size={20} />
-              Book a Strategy Call
+              {t('finalMessage.strategyCta')}
               <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
-            
-            <Button 
-              variant="outline" 
+
+            <Button
+              variant="outline"
               size="xl"
               onClick={handleJoinMovement}
               className="group min-w-[280px]"
             >
               <Users className="mr-2" size={20} />
-              Join the Movement
+              {t('finalMessage.joinCta')}
             </Button>
           </div>
 

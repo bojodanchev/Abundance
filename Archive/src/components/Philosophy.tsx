@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Book, Crown, Heart } from "lucide-react";
 import luxuryBoardroom from "@/assets/luxury-boardroom.jpg";
 
 const Philosophy = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <section id="philosophy" className="py-16 md:py-24 bg-gradient-to-b from-background/50 to-background relative overflow-hidden">
@@ -19,16 +21,16 @@ const Philosophy = () => {
           {/* Header */}
           <div className="text-center mb-12 md:mb-16">
             <h2 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-10 leading-tight">
-              <span className="text-gradient">ГОТОВ ЛИ СИ ЗА ИСТИНАТА?</span>
+              <span className="text-gradient">{t('philosophy.headline')}</span>
             </h2>
             <p className="text-2xl md:text-3xl text-foreground font-black mb-6 leading-relaxed max-w-4xl mx-auto">
-              Не ти трябват "тайни" нито "хакове" за успех. Нужно е да диагностицираш фундаменталния проблем, който те държи в застой..
+              {t('philosophy.subheadline')}
             </p>
             <p className="text-xl md:text-2xl text-primary font-black leading-relaxed max-w-4xl mx-auto mb-8">
-              Именно хаосът, объркването и разпиляната енергия.
+              {t('philosophy.chaosLine')}
             </p>
             <p className="text-lg md:text-xl text-foreground/90 leading-relaxed max-w-4xl mx-auto font-medium">
-              Тук получаваш: <span className="text-gold font-bold">Персонализиран анализ</span>, базиран на твоя Human Design, (система за самопознание, която комбинира древна мъдрост и модерна наука) както и стратегия за 7-те сфери на живота
+              {t('philosophy.descriptionPart1')} <span className="text-gold font-bold">{t('philosophy.descriptionHighlight')}</span>{t('philosophy.descriptionPart2')}
             </p>
           </div>
 
@@ -38,13 +40,13 @@ const Philosophy = () => {
               <div className="flex gap-4">
                 <Book className="w-8 h-8 text-primary flex-shrink-0 mt-1" />
                 <p className="text-base md:text-lg text-foreground/90 leading-relaxed font-bold">
-                  Древните гърци са казали: <span className="font-black text-primary">"Познай себе си."</span> (Това е фундаментът на всяко величие).
+                  {t('philosophy.greekQuotePart1')} <span className="font-black text-primary">{t('philosophy.greekQuoteHighlight')}</span> {t('philosophy.greekQuotePart2')}
                 </p>
               </div>
               <div className="flex gap-4">
                 <Crown className="w-8 h-8 text-gold flex-shrink-0 mt-1" />
                 <p className="text-base md:text-lg text-foreground/90 leading-relaxed font-bold">
-                  Цар Соломон е добавил: <span className="font-black text-gold">"Пази сърцето си, защото от него са изворите на живота."</span>
+                  {t('philosophy.solomonQuotePart1')} <span className="font-black text-gold">{t('philosophy.solomonQuoteHighlight')}</span>
                 </p>
               </div>
             </div>
@@ -52,10 +54,10 @@ const Philosophy = () => {
             <div className="p-6 bg-background/50 rounded-lg border border-primary/10">
               <div className="flex gap-3 mb-3">
                 <Heart className="w-6 h-6 text-primary flex-shrink-0" />
-                <h3 className="text-xl md:text-2xl font-black">Ключов Извод:</h3>
+                <h3 className="text-xl md:text-2xl font-black">{t('philosophy.keyTakeawayTitle')}</h3>
               </div>
               <p className="text-base md:text-lg text-foreground/90 leading-relaxed font-medium">
-                Твоите непреодолими трудности всъщност не са проблеми. Те са алармиращ симптом, че не познаваш своя автентичен Аз. Системата на CODE ABUNDANCE не е просто "съвет". Тя е безкомпромисно прилагане на един вечно работещ закон.
+                {t('philosophy.keyTakeawayText')}
               </p>
             </div>
           </div>
@@ -63,17 +65,17 @@ const Philosophy = () => {
           {/* Blockquote */}
           <div className="text-center mb-12">
             <p className="text-2xl md:text-3xl text-gold/90 italic font-bold">
-              "Ключът към изобилието е себепознанието."
+              {t('philosophy.blockquote')}
             </p>
           </div>
 
           {/* CTA */}
           <div className="text-center">
             <Button variant="hero" size="xl" onClick={() => navigate('/diagnostic')} className="group">
-              ВИЖ СВОЯ АНАЛИЗ
+              {t('philosophy.cta')}
             </Button>
             <p className="text-xs md:text-sm text-muted-foreground mt-4">
-              Разбери точно къде губиш енергия и пари
+              {t('philosophy.ctaSubtext')}
             </p>
           </div>
         </div>

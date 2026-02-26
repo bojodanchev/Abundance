@@ -2,32 +2,34 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "./ui/button";
 import { Rocket, Building2, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const WhoIsThisFor = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   return (
     <section className="py-24 bg-background">
       <div className="container mx-auto px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="font-display text-4xl md:text-5xl font-bold mb-6">
-              За кого е <span className="text-gradient">КОД: ИЗОБИЛИЕ™</span>?
+              {t('whoIsThisFor.headlinePart1')} <span className="text-gradient">{t('whoIsThisFor.headlineHighlight')}</span>?
             </h2>
             <p className="text-lg text-muted-foreground">
-              Независимо на кой етап си, имаме точния път за теб
+              {t('whoIsThisFor.subheadline')}
             </p>
           </div>
 
           <Tabs defaultValue="beginners" className="w-full">
             <TabsList className="grid w-full grid-cols-3 mb-12">
               <TabsTrigger value="beginners" className="text-sm md:text-base">
-                Новостартиращи
+                {t('whoIsThisFor.tabBeginners')}
               </TabsTrigger>
               <TabsTrigger value="experienced" className="text-sm md:text-base">
-                Опитни
+                {t('whoIsThisFor.tabExperienced')}
               </TabsTrigger>
               <TabsTrigger value="creators" className="text-sm md:text-base">
-                Създатели
+                {t('whoIsThisFor.tabCreators')}
               </TabsTrigger>
             </TabsList>
 
@@ -38,24 +40,24 @@ const WhoIsThisFor = () => {
                     <Rocket className="w-8 h-8 text-primary" />
                   </div>
                   <h3 className="font-display text-2xl md:text-3xl font-bold">
-                    Новостартиращи предприемачи
+                    {t('whoIsThisFor.beginnersTitle')}
                   </h3>
                 </div>
                 <p className="text-lg text-muted-foreground mb-8">
-                  Стартирай своя личен път с ясна стратегия и структурирана рамка.
+                  {t('whoIsThisFor.beginnersDescription')}
                 </p>
                 <div className="space-y-4 text-muted-foreground">
                   <p>
-                    ✓ Получаваш <strong className="text-foreground">стъпка по стъпка система</strong> за изграждане на първия си бизнес
+                    ✓ {t('whoIsThisFor.beginnersItem1Part1')} <strong className="text-foreground">{t('whoIsThisFor.beginnersItem1Bold')}</strong> {t('whoIsThisFor.beginnersItem1Part2')}
                   </p>
                   <p>
-                    ✓ Учиш се от <strong className="text-foreground">реални примери</strong> и battle-tested методи
+                    ✓ {t('whoIsThisFor.beginnersItem2Part1')} <strong className="text-foreground">{t('whoIsThisFor.beginnersItem2Bold')}</strong> {t('whoIsThisFor.beginnersItem2Part2')}
                   </p>
                   <p>
-                    ✓ Избягваш <strong className="text-foreground">скъпите грешки</strong>, които другите правят
+                    ✓ {t('whoIsThisFor.beginnersItem3Part1')} <strong className="text-foreground">{t('whoIsThisFor.beginnersItem3Bold')}</strong>{t('whoIsThisFor.beginnersItem3Part2')}
                   </p>
                   <p>
-                    ✓ Имаш <strong className="text-foreground">менторска подкрепа</strong> и общност от единомишленици
+                    ✓ {t('whoIsThisFor.beginnersItem4Part1')} <strong className="text-foreground">{t('whoIsThisFor.beginnersItem4Bold')}</strong> {t('whoIsThisFor.beginnersItem4Part2')}
                   </p>
                 </div>
               </div>
@@ -68,24 +70,24 @@ const WhoIsThisFor = () => {
                     <Building2 className="w-8 h-8 text-accent" />
                   </div>
                   <h3 className="font-display text-2xl md:text-3xl font-bold">
-                    Опитни предприемачи / Основатели
+                    {t('whoIsThisFor.experiencedTitle')}
                   </h3>
                 </div>
                 <p className="text-lg text-muted-foreground mb-8">
-                  Скалирай проектите си до 6-цифрени резултати с battle-tested системи.
+                  {t('whoIsThisFor.experiencedDescription')}
                 </p>
                 <div className="space-y-4 text-muted-foreground">
                   <p>
-                    ✓ <strong className="text-foreground">Оптимизирай процесите</strong> си за максимална ефективност
+                    ✓ <strong className="text-foreground">{t('whoIsThisFor.experiencedItem1Bold')}</strong> {t('whoIsThisFor.experiencedItem1Text')}
                   </p>
                   <p>
-                    ✓ <strong className="text-foreground">Автоматизирай</strong> бизнеса си с AI и системи
+                    ✓ <strong className="text-foreground">{t('whoIsThisFor.experiencedItem2Bold')}</strong> {t('whoIsThisFor.experiencedItem2Text')}
                   </p>
                   <p>
-                    ✓ <strong className="text-foreground">Скалирай</strong> до следващото ниво с проверени стратегии
+                    ✓ <strong className="text-foreground">{t('whoIsThisFor.experiencedItem3Bold')}</strong> {t('whoIsThisFor.experiencedItem3Text')}
                   </p>
                   <p>
-                    ✓ <strong className="text-foreground">Изгради екип</strong> и делегирай с увереност
+                    ✓ <strong className="text-foreground">{t('whoIsThisFor.experiencedItem4Bold')}</strong> {t('whoIsThisFor.experiencedItem4Text')}
                   </p>
                 </div>
               </div>
@@ -98,24 +100,24 @@ const WhoIsThisFor = () => {
                     <Users className="w-8 h-8 text-gold" />
                   </div>
                   <h3 className="font-display text-2xl md:text-3xl font-bold">
-                    Създатели на съдържание и лидери
+                    {t('whoIsThisFor.creatorsTitle')}
                   </h3>
                 </div>
                 <p className="text-lg text-muted-foreground mb-8">
-                  Монетизирай, автоматизирай, изграждай influence и екипи.
+                  {t('whoIsThisFor.creatorsDescription')}
                 </p>
                 <div className="space-y-4 text-muted-foreground">
                   <p>
-                    ✓ <strong className="text-foreground">Монетизирай</strong> аудиторията си с дигитални продукти
+                    ✓ <strong className="text-foreground">{t('whoIsThisFor.creatorsItem1Bold')}</strong> {t('whoIsThisFor.creatorsItem1Text')}
                   </p>
                   <p>
-                    ✓ <strong className="text-foreground">Изгради личен бранд</strong>, който привлича възможности
+                    ✓ <strong className="text-foreground">{t('whoIsThisFor.creatorsItem2Bold')}</strong>{t('whoIsThisFor.creatorsItem2Text')}
                   </p>
                   <p>
-                    ✓ <strong className="text-foreground">Създай общност</strong>, която те подкрепя и расте с теб
+                    ✓ <strong className="text-foreground">{t('whoIsThisFor.creatorsItem3Bold')}</strong>{t('whoIsThisFor.creatorsItem3Text')}
                   </p>
                   <p>
-                    ✓ <strong className="text-foreground">Системни доходи</strong> от membership модели
+                    ✓ <strong className="text-foreground">{t('whoIsThisFor.creatorsItem4Bold')}</strong> {t('whoIsThisFor.creatorsItem4Text')}
                   </p>
                 </div>
               </div>
@@ -124,7 +126,7 @@ const WhoIsThisFor = () => {
 
           <div className="mt-12 text-center">
             <Button size="lg" variant="hero" onClick={() => navigate('/diagnostic')}>
-              Открий Архитектурата на Изобилието
+              {t('whoIsThisFor.cta')}
             </Button>
           </div>
         </div>

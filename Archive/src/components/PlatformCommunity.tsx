@@ -1,48 +1,27 @@
 import { Button } from "@/components/ui/button";
 import { Monitor, RefreshCcw, Users, Lock } from "lucide-react";
-
-const cards = [
-  {
-    icon: <Monitor className="w-8 h-8" />,
-    title: "Ексклузивна платформа",
-    description: "Достъп до затворена образователна платформа с всички модули, уроци и материали.",
-    color: "text-primary",
-    borderColor: "border-primary/20"
-  },
-  {
-    icon: <RefreshCcw className="w-8 h-8" />,
-    title: "Постоянна еволюция",
-    description: "Седмични обновления, нови модули и стратегии, базирани на реални резултати.",
-    color: "text-gold",
-    borderColor: "border-gold/20"
-  },
-  {
-    icon: <Users className="w-8 h-8" />,
-    title: "Подкрепа",
-    description: "Активна общност и менторска подкрепа на всяка стъпка от пътя ти.",
-    color: "text-violet",
-    borderColor: "border-violet/20"
-  },
-  {
-    icon: <Lock className="w-8 h-8" />,
-    title: "Ограничени места",
-    description: "Лимитиран брой участници за качествено преживяване и персонално внимание.",
-    color: "text-accent",
-    borderColor: "border-accent/20"
-  }
-];
+import { useTranslation } from 'react-i18next';
 
 const PlatformCommunity = () => {
+  const { t } = useTranslation();
+
+  const cards = [
+    { icon: <Monitor className="w-8 h-8" />, title: t('platformCommunity.card1Title'), description: t('platformCommunity.card1Desc'), color: "text-primary", borderColor: "border-primary/20" },
+    { icon: <RefreshCcw className="w-8 h-8" />, title: t('platformCommunity.card2Title'), description: t('platformCommunity.card2Desc'), color: "text-gold", borderColor: "border-gold/20" },
+    { icon: <Users className="w-8 h-8" />, title: t('platformCommunity.card3Title'), description: t('platformCommunity.card3Desc'), color: "text-violet", borderColor: "border-violet/20" },
+    { icon: <Lock className="w-8 h-8" />, title: t('platformCommunity.card4Title'), description: t('platformCommunity.card4Desc'), color: "text-accent", borderColor: "border-accent/20" }
+  ];
+
   return (
     <section className="py-24 bg-gradient-dark relative overflow-hidden">
       <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="font-display text-4xl md:text-5xl font-bold mb-6">
-              С нас <span className="text-gradient">към върха</span>
-            </h2>
+            <h2 className="font-display text-4xl md:text-5xl font-bold mb-6"
+              dangerouslySetInnerHTML={{ __html: t('platformCommunity.heading') }}
+            />
             <p className="text-lg text-muted-foreground">
-              Всичко, от което се нуждаеш, на едно място
+              {t('platformCommunity.subheading')}
             </p>
           </div>
 
@@ -58,10 +37,10 @@ const PlatformCommunity = () => {
 
           <div className="text-center mt-12">
             <Button variant="hero" size="lg" onClick={() => window.open('#', '_blank')}>
-              ВИЖ SPACE CIRCLE
+              {t('platformCommunity.ctaButton')}
             </Button>
             <p className="text-xs text-muted-foreground mt-3">
-              Линкът ще бъде наличен скоро
+              {t('platformCommunity.ctaNote')}
             </p>
           </div>
         </div>

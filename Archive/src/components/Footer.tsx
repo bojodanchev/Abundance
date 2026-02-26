@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Instagram, MessageSquare, Youtube, Music2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
@@ -21,14 +23,14 @@ const Footer = () => {
         <div className="max-w-6xl mx-auto">
           {/* Contact Form */}
           <div className="mb-12 max-w-2xl mx-auto">
-            <h3 className="font-display text-2xl font-bold text-center mb-8">
-              Свържи се с <span className="text-gradient">нас</span>
-            </h3>
+            <h3 className="font-display text-2xl font-bold text-center mb-8"
+              dangerouslySetInnerHTML={{ __html: t('footer.contactHeading') }}
+            />
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
                 <input
                   type="text"
-                  placeholder="Име"
+                  placeholder={t('footer.namePlaceholder')}
                   value={formData.name}
                   onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                   required
@@ -44,7 +46,7 @@ const Footer = () => {
                 />
               </div>
               <textarea
-                placeholder="Съобщение"
+                placeholder={t('footer.messagePlaceholder')}
                 value={formData.message}
                 onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
                 required
@@ -54,7 +56,7 @@ const Footer = () => {
               <div className="text-center">
                 <Button type="submit" variant="hero" size="lg">
                   <Send className="w-4 h-4 mr-2" />
-                  {submitted ? 'Изпратено!' : 'Изпрати'}
+                  {submitted ? t('footer.sent') : t('footer.send')}
                 </Button>
               </div>
             </form>
@@ -68,48 +70,48 @@ const Footer = () => {
                 CODE: ABUNDANCE™
               </div>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                Пренапиши реалността си. Овладей системата. Изгради изобилие отвътре.
+                {t('footer.brandDescription')}
               </p>
             </div>
 
             {/* Quick Links */}
             <div>
-              <h4 className="font-semibold mb-4">Навигация</h4>
+              <h4 className="font-semibold mb-4">{t('footer.navigation')}</h4>
               <ul className="space-y-2 text-sm">
                 <li>
                   <button onClick={() => document.getElementById('philosophy')?.scrollIntoView({ behavior: 'smooth' })} className="text-muted-foreground hover:text-primary transition-colors">
-                    Философия
+                    {t('footer.navPhilosophy')}
                   </button>
                 </li>
                 <li>
                   <button onClick={() => document.getElementById('system')?.scrollIntoView({ behavior: 'smooth' })} className="text-muted-foreground hover:text-primary transition-colors">
-                    Програма
+                    {t('footer.navProgram')}
                   </button>
                 </li>
                 <li>
                   <button onClick={() => document.getElementById('levels')?.scrollIntoView({ behavior: 'smooth' })} className="text-muted-foreground hover:text-primary transition-colors">
-                    Нива
+                    {t('footer.navLevels')}
                   </button>
                 </li>
                 <li>
                   <button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="text-muted-foreground hover:text-primary transition-colors">
-                    Контакти
+                    {t('footer.navContact')}
                   </button>
                 </li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-semibold mb-4">Правна информация</h4>
+              <h4 className="font-semibold mb-4">{t('footer.legalTitle')}</h4>
               <ul className="space-y-2 text-sm">
                 <li>
                   <a href="/privacy" className="text-muted-foreground hover:text-primary transition-colors">
-                    Политика за поверителност
+                    {t('footer.privacyPolicy')}
                   </a>
                 </li>
                 <li>
                   <a href="/terms" className="text-muted-foreground hover:text-primary transition-colors">
-                    Общи условия
+                    {t('footer.termsOfService')}
                   </a>
                 </li>
               </ul>
@@ -117,7 +119,7 @@ const Footer = () => {
 
             {/* Social */}
             <div>
-              <h4 className="font-semibold mb-4">Социални мрежи</h4>
+              <h4 className="font-semibold mb-4">{t('footer.socialTitle')}</h4>
               <div className="flex gap-3">
                 <a href="https://instagram.com/codeabundance" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-card border border-border rounded-lg flex items-center justify-center hover:border-primary/50 hover:bg-primary/10 transition-colors">
                   <Instagram size={18} />
@@ -139,10 +141,10 @@ const Footer = () => {
           <div className="pt-8 border-t border-border">
             <div className="text-xs text-muted-foreground space-y-3 max-w-4xl">
               <p>
-                <strong className="text-foreground">Финансов дисклеймър:</strong> Предоставената информация е само с образователна цел и не представлява финансов, инвестиционен или правен съвет. Резултатите варират значително в зависимост от индивидуалните обстоятелства.
+                <strong className="text-foreground">{t('footer.financialDisclaimerTitle')}</strong> {t('footer.financialDisclaimerText')}
               </p>
               <p>
-                <strong className="text-foreground">Възрастово изискване:</strong> Този сайт и неговите услуги са предназначени за лица на 18 и повече години.
+                <strong className="text-foreground">{t('footer.ageRequirementTitle')}</strong> {t('footer.ageRequirementText')}
               </p>
             </div>
           </div>
@@ -150,7 +152,7 @@ const Footer = () => {
           {/* Bottom Bar */}
           <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
             <div>
-              © {currentYear} Abundance Marketing™. Всички права запазени.
+              {t('footer.copyright', { year: currentYear })}
             </div>
           </div>
         </div>

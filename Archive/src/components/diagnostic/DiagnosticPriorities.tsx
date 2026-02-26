@@ -3,6 +3,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { DiagnosticFormData } from "@/pages/Diagnostic";
 import { toast } from "sonner";
 import { Check } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 interface DiagnosticPrioritiesProps {
   data: DiagnosticFormData;
@@ -12,13 +13,13 @@ interface DiagnosticPrioritiesProps {
 }
 
 const spheres = [
-  { value: "Финанси", label: "Финанси", gradient: "from-emerald-500 to-green-600" },
-  { value: "Бизнес", label: "Бизнес/Кариера", gradient: "from-blue-500 to-indigo-600" },
-  { value: "Здраве", label: "Здраве/Тяло", gradient: "from-rose-500 to-pink-600" },
-  { value: "Ментално", label: "Ментално състояние", gradient: "from-purple-500 to-violet-600" },
-  { value: "Романтика", label: "Романтични връзки", gradient: "from-pink-500 to-rose-600" },
-  { value: "Социални", label: "Социални връзки", gradient: "from-amber-500 to-orange-600" },
-  { value: "Мисия", label: "Мисия/Цел", gradient: "from-yellow-500 to-amber-600" },
+  { value: "Финанси", labelKey: "diagnosticPriorities.sphereFinances", gradient: "from-emerald-500 to-green-600" },
+  { value: "Бизнес", labelKey: "diagnosticPriorities.sphereBusiness", gradient: "from-blue-500 to-indigo-600" },
+  { value: "Здраве", labelKey: "diagnosticPriorities.sphereHealth", gradient: "from-rose-500 to-pink-600" },
+  { value: "Ментално", labelKey: "diagnosticPriorities.sphereMental", gradient: "from-purple-500 to-violet-600" },
+  { value: "Романтика", labelKey: "diagnosticPriorities.sphereRomantic", gradient: "from-pink-500 to-rose-600" },
+  { value: "Социални", labelKey: "diagnosticPriorities.sphereSocial", gradient: "from-amber-500 to-orange-600" },
+  { value: "Мисия", labelKey: "diagnosticPriorities.sphereMission", gradient: "from-yellow-500 to-amber-600" },
 ];
 
 export const DiagnosticPriorities = ({
@@ -27,6 +28,8 @@ export const DiagnosticPriorities = ({
   onNext,
   onBack,
 }: DiagnosticPrioritiesProps) => {
+  const { t } = useTranslation();
+
   const handleToggle = (value: string) => {
     const current = data.priority_top3 || [];
     let updated: string[];
@@ -35,7 +38,7 @@ export const DiagnosticPriorities = ({
       updated = current.filter((v) => v !== value);
     } else {
       if (current.length >= 3) {
-        toast.error("Можеш да избереш максимум 3 сфери");
+        toast.error(t('diagnosticPriorities.maxError'));
         return;
       }
       updated = [...current, value];
@@ -46,7 +49,7 @@ export const DiagnosticPriorities = ({
 
   const handleNext = () => {
     if (!data.priority_top3 || data.priority_top3.length !== 3) {
-      toast.error("Моля, избери точно 3 сфери");
+      toast.error(t('diagnosticPriorities.exactError'));
       return;
     }
     onNext();
@@ -58,17 +61,17 @@ export const DiagnosticPriorities = ({
     <div className="space-y-6 sm:space-y-8 animate-fade-in">
       <div className="text-center space-y-3 sm:space-y-4 px-4">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-500/10 to-amber-500/10 border border-yellow-500/20 rounded-full text-sm backdrop-blur-sm">
-          <span className="text-yellow-600">Стъпка 2 от 7</span>
+          <span className="text-yellow-600">{t('diagnosticPriorities.step')}</span>
         </div>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 bg-clip-text text-transparent">
-          Избери твоите ТОП 3 СФЕРИ
+          {t('diagnosticPriorities.title')}
         </h2>
         <p className="text-base sm:text-lg text-muted-foreground">
-          На които искаш да се фокусираш през следващите 90 дни
+          {t('diagnosticPriorities.subtitle')}
         </p>
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-muted rounded-full">
           <span className="text-sm font-medium">
-            Избрани: <span className={`font-bold ${selectedCount === 3 ? 'text-green-600' : 'text-yellow-600'}`}>{selectedCount}</span> / 3
+            {t('diagnosticPriorities.selected')}: <span className={`font-bold ${selectedCount === 3 ? 'text-green-600' : 'text-yellow-600'}`}>{selectedCount}</span> / 3
           </span>
         </div>
       </div>
@@ -94,10 +97,10 @@ export const DiagnosticPriorities = ({
               )}
               <div className="flex items-center gap-3 sm:gap-4">
                 <div className="flex-1">
-                  <h3 className="text-lg sm:text-xl font-semibold mb-1">{sphere.label}</h3>
+                  <h3 className="text-lg sm:text-xl font-semibold mb-1">{t(sphere.labelKey)}</h3>
                   {isSelected && (
                     <p className="text-xs sm:text-sm text-muted-foreground">
-                      Избрана за фокус
+                      {t('diagnosticPriorities.selectedForFocus')}
                     </p>
                   )}
                 </div>
@@ -109,14 +112,14 @@ export const DiagnosticPriorities = ({
 
       <div className="flex flex-col sm:flex-row justify-between gap-4 pt-6 sm:pt-8 px-4">
         <Button variant="outline" onClick={onBack} className="w-full sm:w-auto order-2 sm:order-1">
-          ← Назад
+          {t('common.back')}
         </Button>
-        <Button 
+        <Button
           onClick={handleNext}
           disabled={selectedCount !== 3}
           className="w-full sm:w-auto bg-gradient-to-r from-yellow-600 to-amber-600 hover:from-yellow-500 hover:to-amber-500 text-white disabled:opacity-50 disabled:cursor-not-allowed order-1 sm:order-2"
         >
-          Напред →
+          {t('common.next')}
         </Button>
       </div>
     </div>

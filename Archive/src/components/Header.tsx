@@ -2,15 +2,29 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-const TELEGRAM_URL = `https://t.me/alexshon7?text=${encodeURIComponent(
-  "Здравейте! Интересувам се от CODE: ABUNDANCE™ и искам да разбера повече за персонализираната диагностика и 90-дневния план. Кога мога да говоря с вас?"
-)}`;
+const TELEGRAM_MESSAGES: Record<string, string> = {
+  bg: "Здравейте! Интересувам се от CODE: ABUNDANCE™ и искам да разбера повече за персонализираната диагностика и 90-дневния план. Кога мога да говоря с вас?",
+  en: "Hello! I'm interested in CODE: ABUNDANCE™ and want to learn more about the personalized diagnostic and 90-day plan. When can I speak with you?",
+};
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+
+  const currentLang = i18n.language?.startsWith('en') ? 'en' : 'bg';
+
+  const telegramUrl = `https://t.me/alexshon7?text=${encodeURIComponent(
+    TELEGRAM_MESSAGES[currentLang] || TELEGRAM_MESSAGES.bg
+  )}`;
+
+  const toggleLanguage = () => {
+    const newLang = currentLang === 'bg' ? 'en' : 'bg';
+    i18n.changeLanguage(newLang);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +41,31 @@ const Header = () => {
       setIsMenuOpen(false);
     }
   };
+
+  const LanguageToggle = () => (
+    <div className="flex items-center rounded-full border border-border/50 overflow-hidden text-xs font-medium">
+      <button
+        onClick={toggleLanguage}
+        className={`px-2.5 py-1 transition-all duration-200 ${
+          currentLang === 'bg'
+            ? 'bg-accent text-[#0A0A0A]'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+      >
+        BG
+      </button>
+      <button
+        onClick={toggleLanguage}
+        className={`px-2.5 py-1 transition-all duration-200 ${
+          currentLang === 'en'
+            ? 'bg-accent text-[#0A0A0A]'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+      >
+        EN
+      </button>
+    </div>
+  );
 
   return (
     <header
@@ -46,36 +85,38 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-10">
             <button onClick={() => scrollToSection('philosophy')} className="text-sm text-muted-foreground/70 hover:text-foreground transition-smooth font-medium tracking-wide">
-              Философия
+              {t('header.philosophy')}
             </button>
             <button onClick={() => scrollToSection('levels')} className="text-sm text-muted-foreground/70 hover:text-foreground transition-smooth font-medium tracking-wide">
-              Нива
+              {t('header.levels')}
             </button>
             <button onClick={() => scrollToSection('system')} className="text-sm text-muted-foreground/70 hover:text-foreground transition-smooth font-medium tracking-wide">
-              Програма
+              {t('header.program')}
             </button>
             <button onClick={() => scrollToSection('founder')} className="text-sm text-muted-foreground/70 hover:text-foreground transition-smooth font-medium tracking-wide">
-              Основател
+              {t('header.founder')}
             </button>
             <button onClick={() => scrollToSection('faq')} className="text-sm text-muted-foreground/70 hover:text-foreground transition-smooth font-medium tracking-wide">
               FAQ
             </button>
-            <button onClick={() => { window.open(TELEGRAM_URL, "_blank"); setIsMenuOpen(false); }} className="text-sm text-muted-foreground/70 hover:text-foreground transition-smooth font-medium tracking-wide">
-              Контакти
+            <button onClick={() => { window.open(telegramUrl, "_blank"); setIsMenuOpen(false); }} className="text-sm text-muted-foreground/70 hover:text-foreground transition-smooth font-medium tracking-wide">
+              {t('header.contact')}
             </button>
           </nav>
 
-          {/* Desktop CTA Button */}
-          <div className="hidden md:block">
+          {/* Desktop: Language Toggle + CTA */}
+          <div className="hidden md:flex items-center gap-3">
+            <LanguageToggle />
             <Button variant="hero" size="lg" onClick={() => navigate('/diagnostic')}>
-              БЕЗПЛАТЕН АНАЛИЗ
+              {t('header.cta')}
             </Button>
           </div>
 
-          {/* Mobile: CTA + Hamburger always visible */}
-          <div className="flex items-center gap-3 md:hidden">
+          {/* Mobile: Language Toggle + CTA + Hamburger */}
+          <div className="flex items-center gap-2 md:hidden">
+            <LanguageToggle />
             <Button variant="hero" size="sm" onClick={() => navigate('/diagnostic')}>
-              БЕЗПЛАТЕН АНАЛИЗ
+              {t('header.cta')}
             </Button>
             <button
               className="text-foreground"
@@ -90,22 +131,22 @@ const Header = () => {
         {isMenuOpen && (
           <nav className="md:hidden mt-4 flex flex-col gap-4 pb-4">
             <button onClick={() => scrollToSection('philosophy')} className="text-left text-muted-foreground hover:text-foreground transition-smooth">
-              Философия
+              {t('header.philosophy')}
             </button>
             <button onClick={() => scrollToSection('levels')} className="text-left text-muted-foreground hover:text-foreground transition-smooth">
-              Нива
+              {t('header.levels')}
             </button>
             <button onClick={() => scrollToSection('system')} className="text-left text-muted-foreground hover:text-foreground transition-smooth">
-              Програма
+              {t('header.program')}
             </button>
             <button onClick={() => scrollToSection('founder')} className="text-left text-muted-foreground hover:text-foreground transition-smooth">
-              Основател
+              {t('header.founder')}
             </button>
             <button onClick={() => scrollToSection('faq')} className="text-left text-muted-foreground hover:text-foreground transition-smooth">
               FAQ
             </button>
-            <button onClick={() => { window.open(TELEGRAM_URL, "_blank"); setIsMenuOpen(false); }} className="text-left text-muted-foreground hover:text-foreground transition-smooth">
-              Контакти
+            <button onClick={() => { window.open(telegramUrl, "_blank"); setIsMenuOpen(false); }} className="text-left text-muted-foreground hover:text-foreground transition-smooth">
+              {t('header.contact')}
             </button>
           </nav>
         )}

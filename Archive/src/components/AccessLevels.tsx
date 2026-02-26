@@ -2,49 +2,49 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-
-const levels = [
-  // Entry Level (1-4)
-  { level: 1, name: "Welcome", description: "Персонализиран анализ на твоя Human Design и 7 сфери", tier: "entry" },
-  { level: 2, name: "Foundation", description: "Фундаментални системи за живот и бизнес", tier: "entry" },
-  { level: 3, name: "Awakening", description: "Активиране на скрития потенциал", tier: "entry" },
-  { level: 4, name: "Clarity", description: "Дефиниране на цели и стратегия", tier: "entry" },
-
-  // Core Level (5-8)
-  { level: 5, name: "Builder", description: "Системи за бизнес и доход", tier: "core" },
-  { level: 6, name: "Accelerator", description: "Скалиране и растеж", tier: "core" },
-  { level: 7, name: "Authority", description: "Позициониране и влияние", tier: "core" },
-  { level: 8, name: "Mastery", description: "Мастърство над уменията", tier: "core" },
-
-  // Elite Level (9-12)
-  { level: 9, name: "Empire", description: "Изграждане на империя", tier: "elite" },
-  { level: 10, name: "Legacy", description: "Мисия и legacy", tier: "elite" },
-  { level: 11, name: "Visionary", description: "Визионерско лидерство", tier: "elite" },
-  { level: 12, name: "Exclusive Partner", description: "Стратегическо партньорство", tier: "elite" }
-];
-
-const tierConfig = {
-  entry: {
-    title: "ENTRY LEVEL",
-    gradient: "from-primary/20 to-primary/10",
-    textColor: "text-primary"
-  },
-  core: {
-    title: "CORE LEVEL",
-    gradient: "from-accent/20 to-accent/10",
-    textColor: "text-accent"
-  },
-  elite: {
-    title: "ELITE LEVEL",
-    gradient: "from-gold/20 to-gold/10",
-    textColor: "text-gold"
-  }
-};
+import { useTranslation } from "react-i18next";
 
 const AccessLevels = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [hoveredLevel, setHoveredLevel] = useState<number | null>(null);
   const [revealedCards, setRevealedCards] = useState<number[]>([]);
+
+  const levels = [
+    // Entry Level (1-4)
+    { level: 1, name: "Welcome", description: t('accessLevels.level1Desc'), tier: "entry" },
+    { level: 2, name: "Foundation", description: t('accessLevels.level2Desc'), tier: "entry" },
+    { level: 3, name: "Awakening", description: t('accessLevels.level3Desc'), tier: "entry" },
+    { level: 4, name: "Clarity", description: t('accessLevels.level4Desc'), tier: "entry" },
+    // Core Level (5-8)
+    { level: 5, name: "Builder", description: t('accessLevels.level5Desc'), tier: "core" },
+    { level: 6, name: "Accelerator", description: t('accessLevels.level6Desc'), tier: "core" },
+    { level: 7, name: "Authority", description: t('accessLevels.level7Desc'), tier: "core" },
+    { level: 8, name: "Mastery", description: t('accessLevels.level8Desc'), tier: "core" },
+    // Elite Level (9-12)
+    { level: 9, name: "Empire", description: t('accessLevels.level9Desc'), tier: "elite" },
+    { level: 10, name: "Legacy", description: t('accessLevels.level10Desc'), tier: "elite" },
+    { level: 11, name: "Visionary", description: t('accessLevels.level11Desc'), tier: "elite" },
+    { level: 12, name: "Exclusive Partner", description: t('accessLevels.level12Desc'), tier: "elite" }
+  ];
+
+  const tierConfig = {
+    entry: {
+      title: "ENTRY LEVEL",
+      gradient: "from-primary/20 to-primary/10",
+      textColor: "text-primary"
+    },
+    core: {
+      title: "CORE LEVEL",
+      gradient: "from-accent/20 to-accent/10",
+      textColor: "text-accent"
+    },
+    elite: {
+      title: "ELITE LEVEL",
+      gradient: "from-gold/20 to-gold/10",
+      textColor: "text-gold"
+    }
+  };
 
   const getTierLevels = (tier: string) => levels.filter(l => l.tier === tier);
 
@@ -100,13 +100,13 @@ const AccessLevels = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="font-display text-4xl md:text-5xl font-bold mb-6">
-              Нива на <span className="text-gradient">Достъп</span>
+              {t('accessLevels.headlinePart1')} <span className="text-gradient">{t('accessLevels.headlineHighlight')}</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
-              12 Степенни на еволюция
+              {t('accessLevels.subheadline')}
             </p>
             <p className="text-muted-foreground">
-              🔱 Подредено в 3 реда
+              {t('accessLevels.arrangement')}
             </p>
           </div>
 
@@ -164,7 +164,7 @@ const AccessLevels = () => {
               variant="hero"
               onClick={() => navigate('/diagnostic')}
             >
-              СТАРТИРАЙ С НИВО 1 "ДИАГНОСТИКА"
+              {t('accessLevels.cta')}
             </Button>
           </div>
         </div>
