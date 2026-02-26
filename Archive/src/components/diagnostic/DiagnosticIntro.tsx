@@ -48,12 +48,11 @@ export const DiagnosticIntro = ({ onNext }: DiagnosticIntroProps) => {
 
       <Button
         size="lg"
-        className="group relative text-lg px-8 sm:px-12 py-6 sm:py-8 bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 hover:from-yellow-500 hover:via-amber-400 hover:to-yellow-500 text-white shadow-xl hover:shadow-2xl transition-all duration-300 animate-fade-in hover:scale-105 bg-[length:200%_auto] hover:bg-right"
+        className="group relative overflow-hidden text-lg px-8 sm:px-12 py-6 sm:py-8 bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 text-white shadow-xl hover:shadow-2xl hover:shadow-yellow-500/25 transition-all duration-300 animate-fade-in hover:scale-105 hover:brightness-110"
         onClick={onNext}
       >
         <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
         {t('diagnosticIntro.startButton')}
-        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
       </Button>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 pt-8 max-w-2xl w-full px-4 animate-fade-in">
