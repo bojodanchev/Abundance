@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DiagnosticFormData } from "@/pages/Diagnostic";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { PhoneInput } from "@/components/PhoneInput";
+import { validateName, validateEmail, validatePhone, formatPhone } from "@/lib/validation";
 
 interface DiagnosticContactProps {
   data: DiagnosticFormData;
@@ -20,16 +23,25 @@ export const DiagnosticContact = ({
   onBack,
   isSubmitting,
 }: DiagnosticContactProps) => {
+  const [countryCode, setCountryCode] = useState("+359");
+  const [localPhone, setLocalPhone] = useState(data.user_phone || "");
+
   const handleSubmit = () => {
-    if (!data.user_name || !data.user_email || !data.user_phone) {
-      toast.error("Моля, попълни задължителните полета");
+    const nameError = validateName(data.user_name);
+    if (nameError) {
+      toast.error(nameError);
       return;
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.user_email)) {
-      toast.error("Моля, въведи валиден имейл адрес");
+    const emailError = validateEmail(data.user_email);
+    if (emailError) {
+      toast.error(emailError);
+      return;
+    }
+
+    const phoneError = validatePhone(localPhone, countryCode);
+    if (phoneError) {
+      toast.error(phoneError);
       return;
     }
 
@@ -38,7 +50,12 @@ export const DiagnosticContact = ({
       return;
     }
 
-    onSubmit();
+    // Store the full international number before submitting
+    const fullPhone = formatPhone(localPhone, countryCode);
+    onUpdate({ user_phone: fullPhone });
+
+    // Small delay to let state propagate
+    setTimeout(() => onSubmit(), 0);
   };
 
   return (
@@ -56,14 +73,14 @@ export const DiagnosticContact = ({
       <div className="space-y-6 max-w-3xl mx-auto px-4">
         <div className="space-y-2">
           <Label htmlFor="user_name">
-            Име <span className="text-destructive">*</span>
+            Име и фамилия <span className="text-destructive">*</span>
           </Label>
           <Input
             id="user_name"
             type="text"
             value={data.user_name}
             onChange={(e) => onUpdate({ user_name: e.target.value })}
-            placeholder="Иван Петров"
+            placeholder="Алекс Иванов"
             required
             disabled={isSubmitting}
           />
@@ -88,13 +105,13 @@ export const DiagnosticContact = ({
           <Label htmlFor="user_phone">
             Телефон <span className="text-destructive">*</span>
           </Label>
-          <Input
+          <PhoneInput
             id="user_phone"
-            type="tel"
-            value={data.user_phone}
-            onChange={(e) => onUpdate({ user_phone: e.target.value })}
-            placeholder="+359 888 123 456"
-            required
+            value={localPhone}
+            countryCode={countryCode}
+            onChangeNumber={setLocalPhone}
+            onChangeCountryCode={setCountryCode}
+            placeholder="888 123 456"
             disabled={isSubmitting}
           />
         </div>

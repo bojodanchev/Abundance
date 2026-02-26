@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { PhoneInput } from "@/components/PhoneInput";
+import { validateName, validateEmail, validatePhone, formatPhone } from "@/lib/validation";
 
 interface FreeAnalysisDialogProps {
     isOpen: boolean;
@@ -14,18 +16,35 @@ interface FreeAnalysisDialogProps {
 export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogProps) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [countryCode, setCountryCode] = useState("+359");
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!name || !email) {
-            toast.error("Моля, попълнете име и имейл.");
+
+        const nameError = validateName(name);
+        if (nameError) {
+            toast.error(nameError);
             return;
         }
 
+        const emailError = validateEmail(email);
+        if (emailError) {
+            toast.error(emailError);
+            return;
+        }
+
+        const phoneError = validatePhone(phoneNumber, countryCode);
+        if (phoneError) {
+            toast.error(phoneError);
+            return;
+        }
+
+        const fullPhone = formatPhone(phoneNumber, countryCode);
+
         // Save to sessionStorage for the diagnostic form to pick up
-        sessionStorage.setItem("freeAnalysisData", JSON.stringify({ name, email, phone }));
+        sessionStorage.setItem("freeAnalysisData", JSON.stringify({ name, email, phone: fullPhone }));
 
         // Capture lead in CRM
         fetch("/api/lead-capture", {
@@ -34,7 +53,7 @@ export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogP
             body: JSON.stringify({
                 user_name: name,
                 user_email: email,
-                user_phone: phone || undefined,
+                user_phone: fullPhone,
                 source: "archive-free-analysis",
                 locale: "bg",
             }),
@@ -61,12 +80,12 @@ export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogP
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-6 mt-4">
                     <div className="space-y-2">
-                        <Label htmlFor="name" className="text-foreground/80">Име</Label>
+                        <Label htmlFor="name" className="text-foreground/80">Име и фамилия</Label>
                         <Input
                             id="name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            placeholder="Вашето име"
+                            placeholder="Алекс Иванов"
                             className="bg-background/50 border-gold/20 focus:border-gold/50"
                         />
                     </div>
@@ -83,13 +102,14 @@ export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogP
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="phone" className="text-foreground/80">Телефон</Label>
-                        <Input
+                        <PhoneInput
                             id="phone"
-                            type="tel"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            placeholder="+359 888 123 456"
-                            className="bg-background/50 border-gold/20 focus:border-gold/50"
+                            value={phoneNumber}
+                            countryCode={countryCode}
+                            onChangeNumber={setPhoneNumber}
+                            onChangeCountryCode={setCountryCode}
+                            placeholder="888 123 456"
+                            className="bg-background/50"
                         />
                     </div>
                     <Button
