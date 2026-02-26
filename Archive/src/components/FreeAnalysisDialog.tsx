@@ -14,6 +14,7 @@ interface FreeAnalysisDialogProps {
 export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogProps) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -24,7 +25,7 @@ export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogP
         }
 
         // Save to sessionStorage for the diagnostic form to pick up
-        sessionStorage.setItem("freeAnalysisData", JSON.stringify({ name, email }));
+        sessionStorage.setItem("freeAnalysisData", JSON.stringify({ name, email, phone }));
 
         // Capture lead in CRM
         fetch("/api/lead-capture", {
@@ -33,6 +34,7 @@ export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogP
             body: JSON.stringify({
                 user_name: name,
                 user_email: email,
+                user_phone: phone || undefined,
                 source: "archive-free-analysis",
                 locale: "bg",
             }),
@@ -76,6 +78,17 @@ export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogP
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="vashiat@email.com"
+                            className="bg-background/50 border-gold/20 focus:border-gold/50"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="phone" className="text-foreground/80">Телефон</Label>
+                        <Input
+                            id="phone"
+                            type="tel"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            placeholder="+359 888 123 456"
                             className="bg-background/50 border-gold/20 focus:border-gold/50"
                         />
                     </div>

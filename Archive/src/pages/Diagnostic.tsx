@@ -82,6 +82,7 @@ const Diagnostic = () => {
             ...prev,
             user_name: parsed.name || prev.user_name,
             user_email: parsed.email || prev.user_email,
+            user_phone: parsed.phone || prev.user_phone,
           }));
           // Optional: Clear storage so it doesn't persist forever? 
           // Keeping it for now in case they refresh.
