@@ -200,7 +200,21 @@ function PricingCard({
 
         {/* Price */}
         <div className="mt-4 mb-6">
-          <div className="flex items-baseline gap-3">
+          {tier.originalPrice && (
+            <div className="flex items-center gap-2.5 mb-1.5">
+              <span className="text-text-secondary/60 text-sm font-medium line-through decoration-1">
+                {tier.originalPrice}
+              </span>
+              <span className="text-[10px] font-bold tracking-[0.1em] uppercase px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/20">
+                Спестяваш {(() => {
+                  const orig = parseFloat(tier.originalPrice!.replace("€", ""));
+                  const curr = parseFloat(tier.price.replace("€", ""));
+                  return Math.round(((orig - curr) / orig) * 100);
+                })()}%
+              </span>
+            </div>
+          )}
+          <div className="flex items-baseline gap-2">
             <span
               className={`font-display font-extrabold text-4xl sm:text-5xl tracking-tight ${
                 isPopular ? "text-accent" : "text-text-primary"
@@ -209,16 +223,11 @@ function PricingCard({
               {tier.price}
             </span>
             {tier.originalPrice && (
-              <span className="text-text-secondary/50 text-lg sm:text-xl font-semibold line-through decoration-red-500/70 decoration-2">
-                {tier.originalPrice}
+              <span className="inline-block text-[10px] font-bold tracking-[0.15em] uppercase px-2.5 py-1 rounded bg-accent/10 text-accent border border-accent/20">
+                Launch цена
               </span>
             )}
           </div>
-          {tier.originalPrice && (
-            <span className="inline-block mt-2 text-[10px] font-bold tracking-[0.15em] uppercase px-2.5 py-1 rounded bg-accent/10 text-accent border border-accent/20">
-              Launch цена
-            </span>
-          )}
           {tier.priceSuffix && (
             <span className="text-text-secondary text-sm ml-1">
               {tier.priceSuffix}
