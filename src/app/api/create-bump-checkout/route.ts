@@ -47,7 +47,7 @@ export async function POST(request: Request) {
         {
           price_data: {
             currency: "eur",
-            unit_amount: 700,
+            unit_amount: 800,
             product_data: {
               name: "Express Review + 7-Day AI Assistant — CODE: ABUNDANCE",
             },
