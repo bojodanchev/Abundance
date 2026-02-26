@@ -73,14 +73,14 @@ export const DiagnosticContact = ({
       <div className="space-y-6 max-w-3xl mx-auto px-4">
         <div className="space-y-2">
           <Label htmlFor="user_name">
-            Име и фамилия <span className="text-destructive">*</span>
+            Име <span className="text-destructive">*</span>
           </Label>
           <Input
             id="user_name"
             type="text"
             value={data.user_name}
             onChange={(e) => onUpdate({ user_name: e.target.value })}
-            placeholder="Алекс Иванов"
+            placeholder="Иван Петров"
             required
             disabled={isSubmitting}
           />

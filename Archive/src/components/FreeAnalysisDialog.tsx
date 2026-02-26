@@ -80,12 +80,12 @@ export const FreeAnalysisDialog = ({ isOpen, onOpenChange }: FreeAnalysisDialogP
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-6 mt-4">
                     <div className="space-y-2">
-                        <Label htmlFor="name" className="text-foreground/80">Име и фамилия</Label>
+                        <Label htmlFor="name" className="text-foreground/80">Име</Label>
                         <Input
                             id="name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            placeholder="Алекс Иванов"
+                            placeholder="Вашето име"
                             className="bg-background/50 border-gold/20 focus:border-gold/50"
                         />
                     </div>

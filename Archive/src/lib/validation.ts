@@ -21,16 +21,15 @@ export const COUNTRY_CODES = [
 export type CountryCode = (typeof COUNTRY_CODES)[number];
 
 /**
- * Name must be at least two words, each at least 2 characters.
- * e.g. "Alex Ivanov" ✓, "a" ✗, "A" ✗
+ * Name must be at least 2 characters.
+ * e.g. "Alex" ✓, "Alex Ivanov" ✓, "a" ✗
  */
 export function validateName(name: string): string | null {
   const trimmed = name.trim();
-  if (!trimmed) return "Моля, въведи име и фамилия";
+  if (!trimmed) return "Моля, въведи името си";
 
-  const parts = trimmed.split(/\s+/).filter((p) => p.length >= 2);
-  if (parts.length < 2) {
-    return "Моля, въведи пълно име и фамилия (напр. Алекс Иванов)";
+  if (trimmed.length < 2) {
+    return "Името трябва да е поне 2 символа";
   }
 
   return null;
