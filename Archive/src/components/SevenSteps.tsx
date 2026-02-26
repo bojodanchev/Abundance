@@ -64,7 +64,7 @@ const SevenSteps = () => {
   return (
     <section id="seven-steps" className="py-16 md:py-24 bg-gradient-to-b from-background/50 to-background relative overflow-hidden">
       <div className="absolute inset-0 z-0">
-        <img src={luxuryPenthouse} alt="Luxury Penthouse" className="w-full h-full object-cover" />
+        <img src={luxuryPenthouse} alt="Luxury Penthouse" className="w-full h-full min-h-[2000px] object-cover object-top" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/94 via-background/92 to-background"></div>
       </div>
       <div className="absolute inset-0 bg-gradient-glow opacity-20"></div>
