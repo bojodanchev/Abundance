@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import ResultsClient, { type ResultsData } from "./ResultsClient";
+import PendingResults from "./PendingResults";
 import type { AnalysisResult } from "@/lib/schemas";
 
 type Props = {
@@ -22,21 +23,9 @@ export default async function ResultsPage({ params }: Props) {
 
   const analysis = submission.analysis_result as AnalysisResult | null;
 
-  // If analysis hasn't completed yet, show a minimal pending state
+  // If analysis hasn't completed yet, show polling state
   if (!analysis) {
-    return (
-      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <span className="text-accent text-2xl">&#9670;</span>
-          <p className="text-white font-display font-bold text-xl">
-            Анализът все още се генерира...
-          </p>
-          <p className="text-text-secondary text-sm">
-            Моля, опресни страницата след няколко секунди.
-          </p>
-        </div>
-      </div>
-    );
+    return <PendingResults submissionId={id} />;
   }
 
   const scores = (submission.scores as Record<string, number>) ?? {};
