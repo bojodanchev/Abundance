@@ -3,6 +3,10 @@ import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+const TELEGRAM_URL = `https://t.me/alexshon7?text=${encodeURIComponent(
+  "Здравейте! Интересувам се от CODE: ABUNDANCE™ и искам да разбера повече за персонализираната диагностика и 90-дневния план. Кога мога да говоря с вас?"
+)}`;
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -56,7 +60,7 @@ const Header = () => {
             <button onClick={() => scrollToSection('faq')} className="text-sm text-muted-foreground/70 hover:text-foreground transition-smooth font-medium tracking-wide">
               FAQ
             </button>
-            <button onClick={() => scrollToSection('contact')} className="text-sm text-muted-foreground/70 hover:text-foreground transition-smooth font-medium tracking-wide">
+            <button onClick={() => { window.open(TELEGRAM_URL, "_blank"); setIsMenuOpen(false); }} className="text-sm text-muted-foreground/70 hover:text-foreground transition-smooth font-medium tracking-wide">
               Контакти
             </button>
           </nav>
@@ -100,7 +104,7 @@ const Header = () => {
             <button onClick={() => scrollToSection('faq')} className="text-left text-muted-foreground hover:text-foreground transition-smooth">
               FAQ
             </button>
-            <button onClick={() => scrollToSection('contact')} className="text-left text-muted-foreground hover:text-foreground transition-smooth">
+            <button onClick={() => { window.open(TELEGRAM_URL, "_blank"); setIsMenuOpen(false); }} className="text-left text-muted-foreground hover:text-foreground transition-smooth">
               Контакти
             </button>
           </nav>
