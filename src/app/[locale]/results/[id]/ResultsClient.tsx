@@ -188,7 +188,7 @@ export default function ResultsClient({ data }: { data: ResultsData }) {
           >
             <motion.div custom={0} variants={fadeUp} className="text-center">
               <p className="text-accent text-xs sm:text-sm font-display font-semibold tracking-[0.25em] uppercase mb-4">
-                {t("soulContractLabel") ?? "ТВОЯТ ДУШЕВЕН ДОГОВОР"}
+                {t("soulContractLabel")}
               </p>
               <p className="text-text-secondary text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
                 {data.executiveSummary.soul_contract}
@@ -327,14 +327,14 @@ export default function ResultsClient({ data }: { data: ResultsData }) {
               variants={fadeUp}
               className="text-accent text-xs sm:text-sm font-display font-semibold tracking-[0.25em] uppercase text-center"
             >
-              {t("premiumSectionsLabel") ?? "ПРЕМИУМ АНАЛИЗ"}
+              {t("premiumSectionsLabel")}
             </motion.p>
 
             {/* Locked premium cards */}
             {[
-              { label: t("synthesisSectionTitle") ?? "Дълбок Синтез", desc: t("synthesisDesc") ?? "Пълен анализ на взаимодействието между Human Design, нумерология и астрология." },
-              { label: t("timingSectionTitle") ?? "Анализ на Тайминга", desc: t("timingDesc") ?? "Персонална година, универсален цикъл и китайски зодиак за 2026." },
-              { label: t("dailyPracticesTitle") ?? "Дневни Практики", desc: t("dailyPracticesDesc") ?? "Сутрешен ритуал, чекпойнти и вечерен преглед, съобразени с твоя дизайн." },
+              { label: t("synthesisSectionTitle"), desc: t("synthesisDesc") },
+              { label: t("timingSectionTitle"), desc: t("timingDesc") },
+              { label: t("dailyPracticesTitle"), desc: t("dailyPracticesDesc") },
             ].map((section, i) => (
               <motion.div
                 key={section.label}
