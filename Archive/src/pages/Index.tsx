@@ -41,11 +41,11 @@ const Index = () => {
         <TheLabs />
         <Philosophy />
         <AccessLevels />
+        <ModulesAccordion />
         <WhoIsThisFor />
         <DreamToReality />
         <SevenSteps />
         <FounderStory />
-        <ModulesAccordion />
         <FAQ />
         <FinalCTA />
         <Testimonials />
