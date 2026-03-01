@@ -506,12 +506,192 @@ function ActionPlanPage({
 }
 
 // ============================================================
+// Executive Summary Page (V2 — paid tier)
+// ============================================================
+
+function ExecutiveSummaryPage({ analysis, pageNum }: { analysis: AnalysisResult; pageNum: number }) {
+  if (!analysis.executive_summary) return null;
+  const { soul_contract, key_values, current_timing } = analysis.executive_summary;
+
+  return (
+    <Page size="A4" style={s.page}>
+      <Text style={s.sectionLabel}>EXECUTIVE SUMMARY</Text>
+      <Text style={s.sectionTitle}>Your Soul Contract</Text>
+      <Text style={s.analysisText}>{soul_contract}</Text>
+
+      {key_values.length > 0 && (
+        <View style={s.insightCard}>
+          <Text style={s.insightArea}>KEY VALUES</Text>
+          <Text style={s.insightText}>{key_values.join(" • ")}</Text>
+        </View>
+      )}
+
+      <View style={s.insightCard}>
+        <Text style={s.insightArea}>CURRENT TIMING</Text>
+        <Text style={s.insightText}>{current_timing}</Text>
+      </View>
+
+      <PageFooter pageNum={pageNum} />
+    </Page>
+  );
+}
+
+// ============================================================
+// Synthesis Page (V2 — paid tier)
+// ============================================================
+
+function SynthesisPage({ analysis, pageNum }: { analysis: AnalysisResult; pageNum: number }) {
+  if (!analysis.synthesis) return null;
+  const { pattern, confirmations, tensions, behavioral_alignment } = analysis.synthesis;
+
+  return (
+    <Page size="A4" style={s.page}>
+      <Text style={s.sectionLabel}>SYNTHESIS</Text>
+      <Text style={s.sectionTitle}>Framework Integration</Text>
+      <Text style={s.analysisText}>{pattern}</Text>
+
+      {confirmations.length > 0 && (
+        <View style={s.insightCard}>
+          <Text style={s.insightArea}>CONFIRMATIONS</Text>
+          {confirmations.map((c, i) => (
+            <Text key={i} style={s.insightText}>• {c}</Text>
+          ))}
+        </View>
+      )}
+
+      {tensions.length > 0 && (
+        <View style={s.insightCard}>
+          <Text style={s.insightArea}>CREATIVE TENSIONS</Text>
+          {tensions.map((t, i) => (
+            <Text key={i} style={s.insightText}>• {t}</Text>
+          ))}
+        </View>
+      )}
+
+      <Text style={s.analysisText}>{behavioral_alignment}</Text>
+      <PageFooter pageNum={pageNum} />
+    </Page>
+  );
+}
+
+// ============================================================
+// Timing Page (V2 — paid tier)
+// ============================================================
+
+function TimingPage({ analysis, pageNum }: { analysis: AnalysisResult; pageNum: number }) {
+  if (!analysis.timing) return null;
+  const { personal_year, universal, chinese_year, next_30_days } = analysis.timing;
+
+  return (
+    <Page size="A4" style={s.page}>
+      <Text style={s.sectionLabel}>TIMING ANALYSIS</Text>
+      <Text style={s.sectionTitle}>Your Current Cycles</Text>
+
+      <View style={s.insightCard}>
+        <Text style={s.insightArea}>PERSONAL YEAR {personal_year.number}: {personal_year.theme}</Text>
+        <Text style={s.insightText}>Best: {personal_year.best.join(", ")}</Text>
+        <Text style={s.insightText}>Avoid: {personal_year.avoid.join(", ")}</Text>
+      </View>
+
+      <View style={s.insightCard}>
+        <Text style={s.insightArea}>UNIVERSAL TIMING</Text>
+        <Text style={s.insightText}>Year {universal.year}, Month {universal.month}: {universal.combined_theme}</Text>
+      </View>
+
+      <View style={s.insightCard}>
+        <Text style={s.insightArea}>CHINESE YEAR: {chinese_year.element} {chinese_year.animal}</Text>
+        <Text style={s.insightText}>{chinese_year.implications}</Text>
+      </View>
+
+      <View style={s.insightCard}>
+        <Text style={s.insightArea}>NEXT 30 DAYS</Text>
+        <Text style={s.insightText}>{next_30_days}</Text>
+      </View>
+
+      <PageFooter pageNum={pageNum} />
+    </Page>
+  );
+}
+
+// ============================================================
+// Daily Practices Page (V2 — paid tier)
+// ============================================================
+
+function DailyPracticesPage({ analysis, pageNum }: { analysis: AnalysisResult; pageNum: number }) {
+  if (!analysis.daily_practices) return null;
+  const { morning, checkpoints, evening } = analysis.daily_practices;
+
+  return (
+    <Page size="A4" style={s.page}>
+      <Text style={s.sectionLabel}>DAILY ALIGNMENT</Text>
+      <Text style={s.sectionTitle}>Your Daily Practices</Text>
+
+      <View style={s.insightCard}>
+        <Text style={s.insightArea}>MORNING RITUAL</Text>
+        {morning.map((step, i) => (
+          <Text key={i} style={s.insightText}>• {step}</Text>
+        ))}
+      </View>
+
+      <View style={s.insightCard}>
+        <Text style={s.insightArea}>AUTHORITY CHECKPOINTS</Text>
+        {checkpoints.map((cp, i) => (
+          <Text key={i} style={s.insightText}>• {cp}</Text>
+        ))}
+      </View>
+
+      <View style={s.insightCard}>
+        <Text style={s.insightArea}>EVENING REVIEW</Text>
+        {evening.map((step, i) => (
+          <Text key={i} style={s.insightText}>• {step}</Text>
+        ))}
+      </View>
+
+      <PageFooter pageNum={pageNum} />
+    </Page>
+  );
+}
+
+// ============================================================
+// Integration Page (V2 — paid tier)
+// ============================================================
+
+function IntegrationPage({ analysis, pageNum }: { analysis: AnalysisResult; pageNum: number }) {
+  if (!analysis.integration_statement) return null;
+
+  return (
+    <Page size="A4" style={[s.page, { justifyContent: "center" }]}>
+      <View style={{ alignItems: "center" }}>
+        <Text style={[s.coverDiamond, { marginBottom: 24 }]}>&#9670;</Text>
+        <Text style={s.sectionLabel}>INTEGRATION</Text>
+        <Text style={[s.sectionTitle, { textAlign: "center", marginBottom: 32 }]}>
+          Your Integration Statement
+        </Text>
+        <Text style={[s.analysisText, { textAlign: "center", fontSize: 13, lineHeight: 1.8 }]}>
+          {analysis.integration_statement}
+        </Text>
+      </View>
+      <PageFooter pageNum={pageNum} />
+    </Page>
+  );
+}
+
+// ============================================================
 // Main Document
 // ============================================================
 
 export function AbundanceReport({ submission, tier }: Props) {
   const isFree = tier === "free";
   const full = submission.analysis_result.full_analysis;
+  const analysis = submission.analysis_result;
+
+  // Calculate dynamic page numbers for V2 sections
+  let pg = 8; // V1 pages end at 7 (action plan)
+  const execSummaryPage = analysis.executive_summary ? pg++ : 0;
+  const synthesisPage = analysis.synthesis ? pg++ : 0;
+  const timingPage = analysis.timing ? pg++ : 0;
+  const dailyPracticesPage = analysis.daily_practices ? pg++ : 0;
+  const integrationPage = analysis.integration_statement ? pg++ : 0;
 
   return (
     <Document
@@ -530,6 +710,7 @@ export function AbundanceReport({ submission, tier }: Props) {
       ) : (
         /* Paid tier: full analysis pages */
         <>
+          {/* V1 pages */}
           <FullAnalysisPage
             label="HUMAN DESIGN"
             title="Your Human Design Analysis"
@@ -549,6 +730,13 @@ export function AbundanceReport({ submission, tier }: Props) {
             pageNum={6}
           />
           <ActionPlanPage fullAnalysis={full} pageNum={7} />
+
+          {/* V2 pages (conditionally rendered) */}
+          {analysis.executive_summary && <ExecutiveSummaryPage analysis={analysis} pageNum={execSummaryPage} />}
+          {analysis.synthesis && <SynthesisPage analysis={analysis} pageNum={synthesisPage} />}
+          {analysis.timing && <TimingPage analysis={analysis} pageNum={timingPage} />}
+          {analysis.daily_practices && <DailyPracticesPage analysis={analysis} pageNum={dailyPracticesPage} />}
+          {analysis.integration_statement && <IntegrationPage analysis={analysis} pageNum={integrationPage} />}
         </>
       )}
     </Document>

@@ -4,6 +4,19 @@ import { sendEmail } from "@/lib/sendgrid";
 import { sendEmailSchema, type AnalysisResult, type LifeArea } from "@/lib/schemas";
 
 // ============================================================
+// HTML escaping for untrusted dynamic content
+// ============================================================
+
+function escapeHtml(input: string): string {
+  return input
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+// ============================================================
 // Bold Luxury email template builder
 // ============================================================
 
@@ -109,7 +122,7 @@ const AREA_LABELS_EN: Record<LifeArea, string> = {
 
 function buildPrelaunchEmail(submission: Record<string, unknown>) {
   const locale = (submission.locale as string) ?? "bg";
-  const name = submission.user_name as string;
+  const name = escapeHtml(submission.user_name as string);
   const isBg = locale === "bg";
 
   const bodyHtml = `
@@ -178,7 +191,7 @@ function buildWelcomeEmail(
   resultsUrl: string
 ) {
   const locale = (submission.locale as string) ?? "bg";
-  const name = submission.user_name as string;
+  const name = escapeHtml(submission.user_name as string);
   const isBg = locale === "bg";
   const areaLabels = isBg ? AREA_LABELS_BG : AREA_LABELS_EN;
 
@@ -186,11 +199,26 @@ function buildWelcomeEmail(
     .map(
       ([area, text]) => `
       <div class="insight-card">
-        <p class="insight-area">${areaLabels[area as LifeArea] ?? area}</p>
-        <p class="insight-text">${text}</p>
+        <p class="insight-area">${areaLabels[area as LifeArea] ?? escapeHtml(area)}</p>
+        <p class="insight-text">${escapeHtml(text)}</p>
       </div>`
     )
     .join("");
+
+  const executiveSummaryHtml = analysis.executive_summary
+    ? `
+    <hr class="divider" />
+    <div class="insight-card" style="border-color: #C9A84C; border-width: 2px;">
+      <p class="insight-area">${isBg ? "ТВОЯТ ДУШЕВЕН ДОГОВОР" : "YOUR SOUL CONTRACT"}</p>
+      <p class="insight-text" style="color: #FFFFFF; font-size: 14px; line-height: 1.7;">${escapeHtml(analysis.executive_summary.soul_contract)}</p>
+    </div>
+    ${analysis.executive_summary.current_timing
+      ? `<div style="text-align: center; padding: 12px 0;">
+          <span style="color: #C9A84C; font-size: 14px; font-weight: 600;">${escapeHtml(analysis.executive_summary.current_timing)}</span>
+        </div>`
+      : ""
+    }`
+    : "";
 
   const bodyHtml = `
     <p class="gold-label">${isBg ? "ТВОЯТ РЕЗУЛТАТ" : "YOUR RESULTS"}</p>
@@ -202,9 +230,10 @@ function buildWelcomeEmail(
     }</p>
 
     <div class="profile-badge">
-      <p class="profile-type">${analysis.hd_type_profile}</p>
-      <p class="profile-sub">Life Path: ${analysis.life_path_number} &bull; ${analysis.astro_triad}</p>
+      <p class="profile-type">${escapeHtml(analysis.hd_type_profile)}</p>
+      <p class="profile-sub">Life Path: ${escapeHtml(analysis.life_path_number)} &bull; ${escapeHtml(analysis.astro_triad)}</p>
     </div>
+    ${executiveSummaryHtml}
 
     <h2>${isBg ? "Ключови прозрения" : "Key Insights"}</h2>
     ${insightsHtml}
@@ -219,8 +248,8 @@ function buildWelcomeEmail(
   return buildEmailHtml({
     title: isBg ? "Твоята CODE: ABUNDANCE диагностика" : "Your CODE: ABUNDANCE Diagnostic",
     preheader: isBg
-      ? `${name}, ти си ${analysis.hd_type_profile}. Виж пълните резултати.`
-      : `${name}, you are a ${analysis.hd_type_profile}. See your full results.`,
+      ? `${name}, ти си ${escapeHtml(analysis.hd_type_profile)}. Виж пълните резултати.`
+      : `${name}, you are a ${escapeHtml(analysis.hd_type_profile)}. See your full results.`,
     bodyHtml,
     ctaText: isBg ? "Виж Пълните Резултати →" : "See Full Results →",
     ctaUrl: resultsUrl,
@@ -234,7 +263,7 @@ export function buildNurtureEmail(
   baseUrl: string
 ) {
   const locale = (submission.locale as string) ?? "bg";
-  const name = submission.user_name as string;
+  const name = escapeHtml(submission.user_name as string);
   const submissionId = submission.id as string;
   const isBg = locale === "bg";
 
@@ -315,6 +344,18 @@ export function buildNurtureEmail(
 
 export async function POST(request: Request) {
   try {
+    // --- Auth: internal API key check ---
+    const internalApiKey = process.env.INTERNAL_API_KEY;
+    if (internalApiKey) {
+      const providedKey = request.headers.get("x-internal-key");
+      if (providedKey !== internalApiKey) {
+        return NextResponse.json(
+          { success: false, error: "Unauthorized" },
+          { status: 401 }
+        );
+      }
+    }
+
     // --- Validate input ---
     const body = await request.json();
     const parsed = sendEmailSchema.safeParse(body);
@@ -353,10 +394,12 @@ export async function POST(request: Request) {
         ? `https://${process.env.VERCEL_URL}`
         : "http://localhost:3000");
 
+    const safeName = escapeHtml(submission.user_name as string);
+
     if (email_type === "prelaunch") {
       subject = isBg
-        ? `${submission.user_name}, мястото ти е запазено! ✦`
-        : `${submission.user_name}, your spot is reserved! ✦`;
+        ? `${safeName}, мястото ти е запазено! ✦`
+        : `${safeName}, your spot is reserved! ✦`;
       html = buildPrelaunchEmail(submission);
     } else if (email_type === "welcome") {
       const analysis = submission.analysis_result as AnalysisResult | null;
@@ -369,8 +412,8 @@ export async function POST(request: Request) {
 
       const resultsUrl = `${baseUrl}/${locale}/results/${submission_id}`;
       subject = isBg
-        ? `${submission.user_name}, твоята диагностика е готова ✦`
-        : `${submission.user_name}, your diagnostic is ready ✦`;
+        ? `${safeName}, твоята диагностика е готова ✦`
+        : `${safeName}, your diagnostic is ready ✦`;
       html = buildWelcomeEmail(submission, analysis, resultsUrl);
     } else {
       const nurture = buildNurtureEmail(submission, email_type, baseUrl);

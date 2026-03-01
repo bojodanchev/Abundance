@@ -1,0 +1,133 @@
+export interface ZodiacSignInfo {
+  element: string;
+  modality: string;
+  ruler: string;
+  archetype: string;
+  businessPatterns: string;
+  financialPatterns: string;
+  shadow: string[];
+  coreNeeds: string[];
+}
+
+export const ZODIAC_DATA: Record<string, ZodiacSignInfo> = {
+  Aries: {
+    element: "Fire",
+    modality: "Cardinal",
+    ruler: "Mars",
+    archetype: "The Warrior",
+    businessPatterns: "Initiates quickly, competitive advantage, entrepreneurial spirit. Best in leadership, sports, military, emergency services. Risk: starting without finishing.",
+    financialPatterns: "Impulsive spending and earning. Money through initiative and risk. Needs financial discipline. Competitive earning drive.",
+    shadow: ["Impatience", "Aggression", "Selfishness", "Impulsivity"],
+    coreNeeds: ["Independence", "Challenge", "Action", "Victory"],
+  },
+  Taurus: {
+    element: "Earth",
+    modality: "Fixed",
+    ruler: "Venus",
+    archetype: "The Builder",
+    businessPatterns: "Steady growth, quality over quantity, financial sector strength. Best in real estate, finance, luxury goods, food. Risk: resistance to necessary change.",
+    financialPatterns: "Slow and steady wealth building. Values security. Natural savers. Attracts money through consistency.",
+    shadow: ["Stubbornness", "Possessiveness", "Laziness", "Materialism"],
+    coreNeeds: ["Security", "Comfort", "Beauty", "Stability"],
+  },
+  Gemini: {
+    element: "Air",
+    modality: "Mutable",
+    ruler: "Mercury",
+    archetype: "The Communicator",
+    businessPatterns: "Versatile, multi-tasking, communication-focused. Best in media, writing, sales, teaching, tech. Risk: scattered focus, not finishing.",
+    financialPatterns: "Multiple income streams. Money through communication and ideas. Needs variety in revenue sources.",
+    shadow: ["Superficiality", "Restlessness", "Inconsistency", "Nervousness"],
+    coreNeeds: ["Variety", "Communication", "Mental stimulation", "Freedom"],
+  },
+  Cancer: {
+    element: "Water",
+    modality: "Cardinal",
+    ruler: "Moon",
+    archetype: "The Nurturer",
+    businessPatterns: "Care-focused, protective, real estate oriented. Best in care, real estate, food, home services. Risk: over-emotional business decisions.",
+    financialPatterns: "Security-driven. Money for home/family. Intuitive financial sense. Emotional spending patterns.",
+    shadow: ["Moodiness", "Clinging", "Oversensitivity", "Manipulation"],
+    coreNeeds: ["Security", "Nurturing", "Home", "Emotional safety"],
+  },
+  Leo: {
+    element: "Fire",
+    modality: "Fixed",
+    ruler: "Sun",
+    archetype: "The Performer",
+    businessPatterns: "Creative leadership, visibility, entertainment. Best in entertainment, leadership, creative fields, children's markets. Risk: ego in business decisions.",
+    financialPatterns: "Money through visibility and creativity. Generous spending. Needs recognition for financial success.",
+    shadow: ["Pride", "Arrogance", "Dramatics", "Domination"],
+    coreNeeds: ["Recognition", "Creativity", "Play", "Loyalty"],
+  },
+  Virgo: {
+    element: "Earth",
+    modality: "Mutable",
+    ruler: "Mercury",
+    archetype: "The Analyst",
+    businessPatterns: "Detail-oriented, service-focused, health-oriented. Best in health, analysis, service, editing, systems. Risk: perfectionism paralysis.",
+    financialPatterns: "Methodical financial planning. Money through service and expertise. Analytical approach to investments.",
+    shadow: ["Perfectionism", "Criticism", "Worry", "Over-analysis"],
+    coreNeeds: ["Service", "Order", "Health", "Usefulness"],
+  },
+  Libra: {
+    element: "Air",
+    modality: "Cardinal",
+    ruler: "Venus",
+    archetype: "The Diplomat",
+    businessPatterns: "Partnership-focused, aesthetic, justice-oriented. Best in law, design, partnerships, beauty, mediation. Risk: indecision, people-pleasing.",
+    financialPatterns: "Money through partnerships. Aesthetic investment sense. Avoidance of financial conflict.",
+    shadow: ["Indecision", "People-pleasing", "Superficiality", "Avoidance"],
+    coreNeeds: ["Balance", "Harmony", "Partnership", "Beauty"],
+  },
+  Scorpio: {
+    element: "Water",
+    modality: "Fixed",
+    ruler: "Pluto/Mars",
+    archetype: "The Transformer",
+    businessPatterns: "Deep research, transformation, finance, psychology. Best in research, finance, psychology, healing, investigation. Risk: power struggles, secrecy.",
+    financialPatterns: "Wealth through transformation. Good with others' money (8th house). Intense financial focus. Secretive about money.",
+    shadow: ["Jealousy", "Control", "Secrecy", "Obsession"],
+    coreNeeds: ["Depth", "Intimacy", "Power", "Transformation"],
+  },
+  Sagittarius: {
+    element: "Fire",
+    modality: "Mutable",
+    ruler: "Jupiter",
+    archetype: "The Explorer",
+    businessPatterns: "Expansion-oriented, educational, international. Best in education, travel, publishing, philosophy, international trade. Risk: over-expansion, lack of follow-through.",
+    financialPatterns: "Lucky with money. Wealth through expansion and optimism. Risk-taking in investments. Generous.",
+    shadow: ["Restlessness", "Bluntness", "Overconfidence", "Commitment issues"],
+    coreNeeds: ["Freedom", "Expansion", "Truth", "Adventure"],
+  },
+  Capricorn: {
+    element: "Earth",
+    modality: "Cardinal",
+    ruler: "Saturn",
+    archetype: "The Achiever",
+    businessPatterns: "Ambitious, disciplined, long-term focused. Best in management, government, structure, legacy building. Risk: workaholism, climbing wrong mountain.",
+    financialPatterns: "Steady wealth building. Long-term investments. Success through discipline. Conservative with money.",
+    shadow: ["Rigidity", "Pessimism", "Workaholism", "Status obsession"],
+    coreNeeds: ["Achievement", "Status", "Structure", "Legacy"],
+  },
+  Aquarius: {
+    element: "Air",
+    modality: "Fixed",
+    ruler: "Uranus/Saturn",
+    archetype: "The Innovator",
+    businessPatterns: "Innovative, group-oriented, technological. Best in technology, innovation, groups, social causes, future-focused fields. Risk: detachment from practical needs.",
+    financialPatterns: "Unconventional income sources. Money through innovation. Values-based investing. Detached from material concerns.",
+    shadow: ["Detachment", "Rebellion", "Unpredictability", "Aloofness"],
+    coreNeeds: ["Freedom", "Innovation", "Community", "Authenticity"],
+  },
+  Pisces: {
+    element: "Water",
+    modality: "Mutable",
+    ruler: "Neptune/Jupiter",
+    archetype: "The Mystic",
+    businessPatterns: "Creative, healing, spiritual, artistic. Best in art, healing, spirituality, film, music, service. Risk: escapism, lack of boundaries.",
+    financialPatterns: "Intuitive money sense. Wealth through creativity and service. Giving nature. Boundaries needed around money.",
+    shadow: ["Escapism", "Victimhood", "Confusion", "Boundaries"],
+    coreNeeds: ["Connection", "Meaning", "Creativity", "Spirituality"],
+  },
+};

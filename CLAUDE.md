@@ -44,6 +44,7 @@ src/app/api/          # API routes: webhook/quiz, webhook/stripe, create-checkou
 src/components/       # landing, quiz, results, layout, shared
 src/i18n/messages/    # bg.json, en.json — all UI text
 src/lib/              # schemas.ts, supabase.ts, stripe.ts, openai.ts, sendgrid.ts
+src/lib/knowledge/    # Modular analysis knowledge base (11 files) — calculations, data, prompt builder
 ```
 
 ## Architecture Pointers
@@ -54,6 +55,7 @@ src/lib/              # schemas.ts, supabase.ts, stripe.ts, openai.ts, sendgrid.
 - **Design**: Dark theme (#0A0A0A), gold accent (#C9A84C), Plus Jakarta Sans / Inter / JetBrains Mono
 - **Animations**: Framer Motion everywhere. Staggered entrance (150ms delays). Wrap `useSearchParams` in `<Suspense>`
 - **API pattern**: `getSupabaseAdmin()` for DB, `getStripe()` for payments, `.safeParse()` for validation
+- **Knowledge base**: Import from `@/lib/knowledge`, NOT old `diagnostic-knowledge.ts`. Prompt builder uses selective injection per user.
 
 ## Environment
 > Details: [docs/environment.md](docs/environment.md)
@@ -75,25 +77,24 @@ src/lib/              # schemas.ts, supabase.ts, stripe.ts, openai.ts, sendgrid.
 - Stripe webhook handles `tier: "bump"` separately (no PDF, just `bump_accepted: true`)
 - `Archive/` folder is excluded from TS compilation — old Vite SPA, don't touch
 - Vercel env vars must be added per-environment (production, preview, development separately)
-- Supabase migrations: `supabase db push --workdir .` applies all pending
-
 ## Recent Decisions
 > History: [docs/decisions/](docs/decisions/)
 
+- [2026-03-01] Modular knowledge base — selective injection, V2 schema, 11 files ([details](docs/decisions/2026-03-01-modular-knowledge-base.md))
 - [2026-02-24] Bump offer page — €7 upsell between quiz and processing ([details](docs/decisions/2026-02-24-bump-offer.md))
 
 ## Active Context
-Diagnostic quiz fully functional end-to-end: form submission → Supabase insert → OpenAI analysis (gpt-5-mini) → stored result. Archive SPA serves the frontend at root. Still missing from Vercel: Stripe keys, SendGrid keys, INTERNAL_API_KEY.
+Diagnostic quiz end-to-end with expanded knowledge base: quiz → Supabase → pre-calculations (Life Path, Sun Sign, Chinese Zodiac, Personal Year, Universal Timing) → selective prompt injection → OpenAI (gpt-5-mini, 24K tokens) → V1+V2 analysis result → results page (V2 teasers + locked premium), PDF (V2 sections for paid), email (V2 executive summary). Still missing from Vercel: Stripe keys, SendGrid keys, INTERNAL_API_KEY.
 
 ## Gotchas: OpenAI gpt-5-mini
-- Does NOT support `max_tokens` — use `max_completion_tokens`
+- Does NOT support `max_tokens` — use `max_completion_tokens` (currently 24000)
 - Does NOT support custom `temperature` — only default (1), don't send the param
-- `response_format: { type: "json_object" }` works, but set `max_completion_tokens` high enough (16k+) or response truncates and JSON parsing fails
+- `response_format: { type: "json_object" }` works, but set `max_completion_tokens` high enough or response truncates and JSON parsing fails
 - Analysis generation needs `maxDuration = 300` (Vercel function timeout)
 
 ## Discovery Log (Recent)
 > Full log: [docs/discovery-log.md](docs/discovery-log.md)
 
+- [2026-03-01] Modular knowledge base: selective injection, V2 schema, Chinese Zodiac/Personal Year calcs, 24K tokens
 - [2026-02-26] Supabase CLI has no remote SQL execute — use REST API with service role key (see above)
 - [2026-02-26] gpt-5-mini rejects max_tokens and custom temperature; Vercel env files have `\n` inside quoted values
-- [2026-02-24] Supabase CLI retrieves API keys via `supabase projects api-keys --project-ref <ref>`

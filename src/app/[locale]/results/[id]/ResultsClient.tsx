@@ -43,6 +43,16 @@ export interface ResultsData {
   teaserInsights: Record<string, string>;
   submissionId: string;
   email: string;
+  // V2 fields (optional)
+  executiveSummary?: {
+    soul_contract: string;
+    key_values: string[];
+    current_timing: string;
+  };
+  timing?: {
+    personal_year: { number: number; theme: string };
+    chinese_year: { animal: string; element: string };
+  };
 }
 
 export default function ResultsClient({ data }: { data: ResultsData }) {
@@ -168,6 +178,35 @@ export default function ResultsClient({ data }: { data: ResultsData }) {
           </motion.p>
         </motion.section>
 
+        {/* ═══════════════ A2. EXECUTIVE SUMMARY (V2 teaser) ═══════════════ */}
+        {data.executiveSummary && (
+          <motion.section
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            className="space-y-6"
+          >
+            <motion.div custom={0} variants={fadeUp} className="text-center">
+              <p className="text-accent text-xs sm:text-sm font-display font-semibold tracking-[0.25em] uppercase mb-4">
+                {t("soulContractLabel") ?? "ТВОЯТ ДУШЕВЕН ДОГОВОР"}
+              </p>
+              <p className="text-text-secondary text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
+                {data.executiveSummary.soul_contract}
+              </p>
+            </motion.div>
+
+            {data.executiveSummary.current_timing && (
+              <motion.div custom={1} variants={fadeUp} className="flex justify-center">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-accent/30 bg-accent/5">
+                  <span className="text-accent text-sm font-mono font-bold">
+                    {data.executiveSummary.current_timing}
+                  </span>
+                </div>
+              </motion.div>
+            )}
+          </motion.section>
+        )}
+
         {/* ═══════════════ B. RADAR CHART ═══════════════ */}
         <motion.section
           initial={{ opacity: 0 }}
@@ -274,6 +313,49 @@ export default function ResultsClient({ data }: { data: ResultsData }) {
             })}
           </div>
         </motion.section>
+
+        {/* ═══════════════ C2. LOCKED V2 PREMIUM SECTIONS ═══════════════ */}
+        {data.executiveSummary && (
+          <motion.section
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            className="space-y-4"
+          >
+            <motion.p
+              custom={0}
+              variants={fadeUp}
+              className="text-accent text-xs sm:text-sm font-display font-semibold tracking-[0.25em] uppercase text-center"
+            >
+              {t("premiumSectionsLabel") ?? "ПРЕМИУМ АНАЛИЗ"}
+            </motion.p>
+
+            {/* Locked premium cards */}
+            {[
+              { label: t("synthesisSectionTitle") ?? "Дълбок Синтез", desc: t("synthesisDesc") ?? "Пълен анализ на взаимодействието между Human Design, нумерология и астрология." },
+              { label: t("timingSectionTitle") ?? "Анализ на Тайминга", desc: t("timingDesc") ?? "Персонална година, универсален цикъл и китайски зодиак за 2026." },
+              { label: t("dailyPracticesTitle") ?? "Дневни Практики", desc: t("dailyPracticesDesc") ?? "Сутрешен ритуал, чекпойнти и вечерен преглед, съобразени с твоя дизайн." },
+            ].map((section, i) => (
+              <motion.div
+                key={section.label}
+                custom={i + 1}
+                variants={fadeUp}
+                className="relative overflow-hidden rounded-xl bg-[#1A1A1A] border border-border p-5"
+              >
+                <div className="relative">
+                  <p className="text-sm text-text-secondary leading-relaxed blur-[6px] select-none pointer-events-none">
+                    {section.desc}
+                  </p>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5">
+                    <Lock className="w-5 h-5 text-accent/70" />
+                    <span className="text-sm font-display font-semibold text-white">{section.label}</span>
+                    <span className="text-xs text-accent/70 font-medium">{t("locked")}</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.section>
+        )}
 
         {/* ═══════════════ D. UPGRADE SECTION ═══════════════ */}
         <motion.section

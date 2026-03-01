@@ -41,6 +41,19 @@ export default async function ResultsPage({ params }: Props) {
     teaserInsights: analysis.teaser_insights,
     submissionId: id,
     email: submission.user_email ?? "",
+    executiveSummary: analysis.executive_summary,
+    timing: analysis.timing
+      ? {
+          personal_year: {
+            number: analysis.timing.personal_year.number,
+            theme: analysis.timing.personal_year.theme,
+          },
+          chinese_year: {
+            animal: analysis.timing.chinese_year.animal,
+            element: analysis.timing.chinese_year.element,
+          },
+        }
+      : undefined,
   };
 
   return <ResultsClient data={resultsData} />;

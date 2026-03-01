@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { getStripe } from "@/lib/stripe";
 
@@ -107,27 +107,31 @@ export async function POST(request: Request) {
       console.error("Failed to insert payment record:", insertError);
     }
 
-    // Trigger PDF generation (fire-and-forget)
+    // Trigger PDF generation (runs after response is sent)
     const baseUrl =
       process.env.NEXT_PUBLIC_SITE_URL ??
       (process.env.VERCEL_URL
         ? `https://${process.env.VERCEL_URL}`
         : "http://localhost:3000");
 
-    fetch(`${baseUrl}/api/generate-pdf`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(process.env.INTERNAL_API_KEY && {
-          "x-internal-key": process.env.INTERNAL_API_KEY,
-        }),
-      },
-      body: JSON.stringify({
-        submission_id: submissionId,
-        tier: "paid",
-      }),
-    }).catch((err) => {
-      console.error("Failed to trigger PDF generation:", err);
+    after(async () => {
+      try {
+        await fetch(`${baseUrl}/api/generate-pdf`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(process.env.INTERNAL_API_KEY && {
+              "x-internal-key": process.env.INTERNAL_API_KEY,
+            }),
+          },
+          body: JSON.stringify({
+            submission_id: submissionId,
+            tier: "paid",
+          }),
+        });
+      } catch (err) {
+        console.error("Failed to trigger PDF generation:", err);
+      }
     });
   }
 

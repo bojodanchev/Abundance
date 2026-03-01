@@ -1,8 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { chatCompletion } from "@/lib/openai";
-import { generateAnalysisSchema, type AnalysisResult } from "@/lib/schemas";
-import { buildSystemPrompt, buildUserPrompt } from "@/lib/diagnostic-knowledge";
+import { generateAnalysisSchema, analysisResultSchema, type AnalysisResult } from "@/lib/schemas";
+import {
+  buildSystemPrompt,
+  buildUserPrompt,
+  calculateLifePath,
+  getSunSign,
+  calculateChineseZodiac,
+  calculatePersonalYear,
+  calculateUniversalTiming,
+  type AnalysisContext,
+} from "@/lib/knowledge";
 
 export const maxDuration = 300; // Allow up to 5min for OpenAI response
 
@@ -59,8 +68,23 @@ export async function POST(request: Request) {
     const goals = (submission.goals as Record<string, number>) ?? {};
     const locale = submission.locale ?? "bg";
 
-    const systemPrompt = buildSystemPrompt(locale);
-    const userPrompt = buildUserPrompt(submission, scores, priorities, goals);
+    // Pre-calculate all deterministic values
+    const lifePath = calculateLifePath(submission.birth_date);
+    const sunSign = getSunSign(submission.birth_date);
+    const chineseZodiac = calculateChineseZodiac(submission.birth_date);
+    const personalYear = calculatePersonalYear(submission.birth_date);
+    const universalTiming = calculateUniversalTiming();
+
+    const context: AnalysisContext = {
+      lifePath,
+      sunSign,
+      chineseZodiac,
+      personalYear,
+      universalTiming,
+    };
+
+    const systemPrompt = buildSystemPrompt(locale, context);
+    const userPrompt = buildUserPrompt(submission, scores, priorities, goals, context);
 
     // --- Call OpenAI ---
     const responseText = await chatCompletion(
@@ -70,7 +94,7 @@ export async function POST(request: Request) {
       ],
       {
         model: "gpt-5-mini",
-        max_completion_tokens: 16000,
+        max_completion_tokens: 24000,
         response_format: { type: "json_object" },
       }
     );
@@ -82,7 +106,22 @@ export async function POST(request: Request) {
       if (cleanText.startsWith("```")) {
         cleanText = cleanText.replace(/^```(?:json)?\s*\n?/, "").replace(/\n?```\s*$/, "");
       }
-      analysisResult = JSON.parse(cleanText);
+      const rawParsed = JSON.parse(cleanText);
+
+      // Runtime validation of AI output structure
+      const validated = analysisResultSchema.safeParse(rawParsed);
+      if (!validated.success) {
+        console.error("AI response failed schema validation:", validated.error.flatten().fieldErrors);
+        await getSupabaseAdmin()
+          .from("submissions")
+          .update({ status: "error" })
+          .eq("id", submission_id);
+        return NextResponse.json(
+          { success: false, error: "Invalid AI response schema" },
+          { status: 502 }
+        );
+      }
+      analysisResult = validated.data;
     } catch {
       console.error("Failed to parse OpenAI response:", responseText.slice(0, 500));
       await getSupabaseAdmin()
@@ -113,27 +152,31 @@ export async function POST(request: Request) {
       );
     }
 
-    // --- Trigger welcome email (fire-and-forget) ---
+    // --- Trigger welcome email (runs after response is sent) ---
     const baseUrl =
       process.env.NEXT_PUBLIC_SITE_URL ??
       (process.env.VERCEL_URL
         ? `https://${process.env.VERCEL_URL}`
         : "http://localhost:3000");
 
-    fetch(`${baseUrl}/api/send-email`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(process.env.INTERNAL_API_KEY && {
-          "x-internal-key": process.env.INTERNAL_API_KEY,
-        }),
-      },
-      body: JSON.stringify({
-        submission_id,
-        email_type: "welcome",
-      }),
-    }).catch((err) => {
-      console.error("Failed to trigger welcome email:", err);
+    after(async () => {
+      try {
+        await fetch(`${baseUrl}/api/send-email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(process.env.INTERNAL_API_KEY && {
+              "x-internal-key": process.env.INTERNAL_API_KEY,
+            }),
+          },
+          body: JSON.stringify({
+            submission_id,
+            email_type: "welcome",
+          }),
+        });
+      } catch (err) {
+        console.error("Failed to trigger welcome email:", err);
+      }
     });
 
     return NextResponse.json({

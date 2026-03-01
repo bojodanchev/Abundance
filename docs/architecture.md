@@ -49,13 +49,25 @@ src/
 │   ├── navigation.ts       # i18n-aware Link, useRouter
 │   └── routing.ts          # Locale config (bg default, en)
 └── lib/
-    ├── schemas.ts          # Zod schemas for all API inputs
+    ├── schemas.ts          # Zod schemas for all API inputs + AnalysisResult (V1+V2)
     ├── supabase.ts         # Supabase client (anon + admin)
     ├── stripe.ts           # Stripe client singleton
     ├── openai.ts           # OpenAI client
     ├── sendgrid.ts         # SendGrid email helpers
     ├── admin-auth.ts       # JWT auth for admin CRM
-    ├── pdf/                # PDF template components
+    ├── pdf/                # PDF template components (AbundanceReport.tsx)
+    ├── knowledge/          # Modular analysis knowledge base (11 files)
+    │   ├── index.ts            # Re-exports everything
+    │   ├── calculations.ts     # Life Path, Sun Sign, Chinese Zodiac, Personal Year, Universal Timing
+    │   ├── prompt-builder.ts   # buildSystemPrompt() + buildUserPrompt() with selective injection
+    │   ├── life-paths.ts       # Life Path 1-9, 11, 22, 33 data
+    │   ├── human-design.ts     # HD types, profiles, authorities, centers
+    │   ├── zodiac.ts           # 12 Western zodiac signs
+    │   ├── chinese-zodiac.ts   # Chinese zodiac animals, 2026 Fire Horse, Wu Xing elements
+    │   ├── personal-year.ts    # Personal Year cycles 1-9
+    │   ├── temporal.ts         # Day-of-week energy/planetary rulers
+    │   ├── plan-templates.ts   # 90-day plan templates per HD type (week-by-week)
+    │   └── daily-practices.ts  # Morning ritual, authority checkpoints, evening review
     └── utils.ts            # Shared utilities
 ```
 
@@ -86,9 +98,20 @@ src/
 - Framer Motion for all animations (staggered fade-in, 150ms delays)
 - Icons from `lucide-react`
 
+## Knowledge Base Architecture
+The analysis system uses a modular knowledge base at `src/lib/knowledge/`:
+- **Selective injection**: `prompt-builder.ts` injects ONLY the user's specific data (their Life Path, zodiac sign, Chinese zodiac, Personal Year) to stay within token budget
+- **Full HD reference**: All HD types/profiles/authorities/centers are always included since the AI estimates the user's type from behavioral data
+- **Pre-calculations**: All deterministic values (Life Path, Sun Sign, Chinese Zodiac, Personal Year, Universal Timing) computed server-side before AI call
+- **Plan templates**: Week-by-week 90-day plans per HD type guide the AI's action plan generation
+- **V1+V2 schema**: `AnalysisResult` has required V1 fields (teaser_insights, full_analysis) + optional V2 fields (executive_summary, synthesis, timing, daily_practices, integration_statement, metadata). V2 fields render conditionally in results page, PDF, and email.
+
 ## Important Files
-- `src/lib/schemas.ts` — Central schema definitions for all API inputs
+- `src/lib/schemas.ts` — Central schema definitions, including `AnalysisResult` (V1+V2)
+- `src/lib/knowledge/prompt-builder.ts` — AI prompt construction with selective knowledge injection
+- `src/lib/knowledge/calculations.ts` — All pre-calculation functions
 - `src/app/globals.css` — Design tokens (@theme block)
 - `src/i18n/messages/bg.json` / `en.json` — All UI text
 - `src/components/quiz/screens/ConfirmationScreen.tsx` — Quiz submission + redirect
 - `src/app/api/webhook/stripe/route.ts` — Payment processing hub
+- `src/app/api/generate-analysis/route.ts` — OpenAI analysis generation (24K tokens)

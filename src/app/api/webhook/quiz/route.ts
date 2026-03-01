@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { quizSubmissionSchema } from "@/lib/schemas";
 
@@ -84,31 +84,38 @@ export async function POST(request: Request) {
 
     if (isPrelaunch) {
       // --- Pre-launch mode: send confirmation email, skip AI analysis ---
-      fetch(`${baseUrl}/api/send-email`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(internalApiKey && { "x-internal-key": internalApiKey }),
-        },
-        body: JSON.stringify({
-          submission_id: submission.id,
-          email_type: "prelaunch",
-        }),
-      }).catch((err) => {
-        console.error("Failed to send pre-launch email:", err);
+      after(async () => {
+        try {
+          await fetch(`${baseUrl}/api/send-email`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(internalApiKey && { "x-internal-key": internalApiKey }),
+            },
+            body: JSON.stringify({
+              submission_id: submission.id,
+              email_type: "prelaunch",
+            }),
+          });
+        } catch (err) {
+          console.error("Failed to send pre-launch email:", err);
+        }
       });
     } else {
       // --- Trigger async analysis generation ---
-      // Fire-and-forget: don't await, let it run in the background
-      fetch(`${baseUrl}/api/generate-analysis`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(internalApiKey && { "x-internal-key": internalApiKey }),
-        },
-        body: JSON.stringify({ submission_id: submission.id }),
-      }).catch((err) => {
-        console.error("Failed to trigger analysis generation:", err);
+      after(async () => {
+        try {
+          await fetch(`${baseUrl}/api/generate-analysis`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(internalApiKey && { "x-internal-key": internalApiKey }),
+            },
+            body: JSON.stringify({ submission_id: submission.id }),
+          });
+        } catch (err) {
+          console.error("Failed to trigger analysis generation:", err);
+        }
       });
     }
 

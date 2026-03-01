@@ -53,7 +53,10 @@ export const quizSubmissionSchema = z.object({
   goals: goalSchema.optional(),
 
   // Core Code (Birth Data)
-  birth_date: z.string().min(1), // ISO date string "YYYY-MM-DD"
+  birth_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Must be YYYY-MM-DD").refine((val) => {
+    const d = new Date(val);
+    return !isNaN(d.getTime()) && d.toISOString().startsWith(val);
+  }, "Invalid date"),
   birth_time: z.string().optional(), // "HH:MM"
   birth_time_unknown: z.boolean().default(false),
   birth_city: z.string().max(255).optional(),
@@ -161,21 +164,65 @@ export const leadCaptureSchema = z.object({
 export type LeadCaptureInput = z.infer<typeof leadCaptureSchema>;
 
 // ============================================================
-// Analysis Result Shape (from OpenAI)
+// Analysis Result Shape (from OpenAI) — Zod schema + TS type
 // ============================================================
 
-export interface AnalysisResult {
-  hd_type_profile: string;
-  hd_strategy: string;
-  life_path_number: string;
-  astro_triad: string;
-  teaser_insights: Record<LifeArea, string>;
-  full_analysis: {
-    hd_analysis_text: string;
-    life_path_analysis_text: string;
-    astro_analysis_text: string;
-    phase1_plan: string;
-    phase2_plan: string;
-    phase3_plan: string;
-  };
-}
+const lifeAreaTeaserSchema = z.object({
+  finances: z.string(),
+  business: z.string(),
+  health: z.string(),
+  mental: z.string(),
+  romantic: z.string(),
+  social: z.string(),
+  mission: z.string(),
+});
+
+export const analysisResultSchema = z.object({
+  // V1 fields (required)
+  hd_type_profile: z.string(),
+  hd_strategy: z.string(),
+  life_path_number: z.string(),
+  astro_triad: z.string(),
+  teaser_insights: lifeAreaTeaserSchema,
+  full_analysis: z.object({
+    hd_analysis_text: z.string(),
+    life_path_analysis_text: z.string(),
+    astro_analysis_text: z.string(),
+    phase1_plan: z.string(),
+    phase2_plan: z.string(),
+    phase3_plan: z.string(),
+  }),
+
+  // V2 fields (optional for backward compatibility)
+  executive_summary: z.object({
+    soul_contract: z.string(),
+    key_values: z.array(z.string()),
+    current_timing: z.string(),
+  }).optional(),
+  synthesis: z.object({
+    pattern: z.string(),
+    confirmations: z.array(z.string()),
+    tensions: z.array(z.string()),
+    behavioral_alignment: z.string(),
+  }).optional(),
+  timing: z.object({
+    personal_year: z.object({ number: z.number(), theme: z.string(), best: z.array(z.string()), avoid: z.array(z.string()) }),
+    universal: z.object({ year: z.number(), month: z.number(), combined_theme: z.string() }),
+    chinese_year: z.object({ animal: z.string(), element: z.string(), implications: z.string() }),
+    next_30_days: z.string(),
+  }).optional(),
+  daily_practices: z.object({
+    morning: z.array(z.string()),
+    checkpoints: z.array(z.string()),
+    evening: z.array(z.string()),
+  }).optional(),
+  integration_statement: z.string().optional(),
+  metadata: z.object({
+    chinese_zodiac: z.string(),
+    personal_year: z.number(),
+    universal_year: z.number(),
+    confidence_level: z.string(),
+  }).optional(),
+});
+
+export type AnalysisResult = z.infer<typeof analysisResultSchema>;
