@@ -44,8 +44,8 @@ const Index = () => {
         <ModulesAccordion />
         <WhoIsThisFor />
         <DreamToReality />
-        <SevenSteps />
         <FounderStory />
+        <SevenSteps />
         <FAQ />
         <FinalCTA />
         <Testimonials />
