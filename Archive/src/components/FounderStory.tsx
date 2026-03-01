@@ -232,70 +232,6 @@ const FounderStory = () => {
             </div>
           </div>
 
-          {/* Timeline */}
-          <div className="mb-12">
-            <h3 className="font-display text-3xl font-bold text-center mb-12"
-              dangerouslySetInnerHTML={{ __html: t('founderStory.timelineHeading') }}
-            />
-
-            {(() => {
-              const visibleItems = showAll ? timelineData : timelineData.slice(0, 5);
-              return (
-                <div className="space-y-4">
-                  {visibleItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="bg-card/50 backdrop-blur-sm border border-border rounded-xl overflow-hidden hover:border-primary/50 transition-all"
-                    >
-                      <button
-                        onClick={() => toggleItem(item.id)}
-                        className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-card/50 transition-all"
-                      >
-                        <div className="flex items-center gap-4 flex-1">
-                          <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                            <span className="text-primary font-black text-lg">{item.id}</span>
-                          </div>
-                          <div className="flex-1">
-                            <div className="text-sm text-primary font-semibold mb-1">{item.phase}</div>
-                            <div className="text-base md:text-lg font-bold text-foreground">{item.title}</div>
-                          </div>
-                        </div>
-                        <ChevronDown
-                          className={`w-6 h-6 text-muted-foreground transition-transform flex-shrink-0 ${expandedItems.includes(item.id) ? 'rotate-180' : ''
-                            }`}
-                        />
-                      </button>
-
-                      {expandedItems.includes(item.id) && (
-                        <div className="px-6 pb-6 pt-2 border-t border-border/50">
-                          <ul className="space-y-3">
-                            {item.points.map((point, idx) => (
-                              <li key={idx} className="flex items-start gap-3">
-                                <span className="text-primary mt-1">•</span>
-                                <span className="text-muted-foreground leading-relaxed">{point}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-
-                  {!showAll && timelineData.length > 5 && (
-                    <div className="text-center mt-6">
-                      <button
-                        onClick={() => setShowAll(true)}
-                        className="text-primary font-bold hover:underline transition-all"
-                      >
-                        {t('founderStory.showMore', { count: timelineData.length - 5 })}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              );
-            })()}
-          </div>
-
           {/* CTA */}
           <div className="text-center">
             <div className="bg-gradient-primary rounded-2xl p-8 md:p-12">
@@ -312,7 +248,7 @@ const FounderStory = () => {
                 size="lg"
                 variant="default"
                 className="bg-background text-primary hover:bg-background/90"
-                onClick={() => navigate('/diagnostic')}
+                onClick={() => window.open('https://seanissa.com', '_blank')}
               >
                 {t('founderStory.ctaButton')}
               </Button>
