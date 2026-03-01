@@ -36,12 +36,9 @@ const PlatformCommunity = () => {
           </div>
 
           <div className="text-center mt-12">
-            <Button variant="hero" size="lg" onClick={() => window.open('#', '_blank')}>
+            <Button variant="hero" size="lg" onClick={() => window.open('https://creatorclub.bg/', '_blank')}>
               {t('platformCommunity.ctaButton')}
             </Button>
-            <p className="text-xs text-muted-foreground mt-3">
-              {t('platformCommunity.ctaNote')}
-            </p>
           </div>
         </div>
       </div>
