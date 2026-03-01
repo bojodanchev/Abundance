@@ -32,7 +32,7 @@ function ProcessingPage() {
   const t = useTranslations("processing");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const submissionId = searchParams.get("id");
+  const ref = searchParams.get("ref") ?? searchParams.get("id");
 
   /* step state */
   const [steps, setSteps] = useState<StepStatus[]>([
@@ -49,6 +49,7 @@ function ProcessingPage() {
   const [showBar, setShowBar] = useState(false);
   const [showTips, setShowTips] = useState(false);
   const [analysisReady, setAnalysisReady] = useState(false);
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
 
   const startTime = useRef(0);
   const rafRef = useRef<number>(0);
@@ -56,6 +57,15 @@ function ProcessingPage() {
 
   const tips = [t("tip1"), t("tip2"), t("tip3")];
   const stepLabels = [t("step1"), t("step2"), t("step3"), t("step4")];
+
+  // Resolve ref to UUID for API polling
+  useEffect(() => {
+    if (!ref) return;
+    fetch(`/api/submission-status?ref=${ref}`)
+      .then((r) => r.json())
+      .then((d) => { if (d.submissionId) setSubmissionId(d.submissionId); })
+      .catch(() => {});
+  }, [ref]);
 
   /* ── orchestrated entrance ── */
   useEffect(() => {
@@ -89,10 +99,11 @@ function ProcessingPage() {
   }, [submissionId]);
 
   useEffect(() => {
-    if (!submissionId) {
+    if (!ref) {
       router.push("/");
       return;
     }
+    if (!submissionId) return; // wait for UUID resolution
 
     // Start polling immediately
     checkStatus();
@@ -101,7 +112,7 @@ function ProcessingPage() {
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
     };
-  }, [submissionId, checkStatus, router]);
+  }, [ref, submissionId, checkStatus, router]);
 
   /* ── when analysis is ready, complete all steps and redirect ── */
   useEffect(() => {
@@ -116,11 +127,11 @@ function ProcessingPage() {
 
     // Redirect after a brief moment to show 100% state
     const timeout = setTimeout(() => {
-      router.push(`/results/${submissionId}`);
+      router.push(`/results/${ref}`);
     }, 1500);
 
     return () => clearTimeout(timeout);
-  }, [analysisReady, router, submissionId]);
+  }, [analysisReady, router, ref]);
 
   /* ── progress bar + cosmetic step advancement ── */
   useEffect(() => {

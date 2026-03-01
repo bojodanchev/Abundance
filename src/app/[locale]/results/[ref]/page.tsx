@@ -1,23 +1,36 @@
 import { notFound } from "next/navigation";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import { isUUID } from "@/lib/short-code";
 import ResultsClient, { type ResultsData } from "./ResultsClient";
 import PendingResults from "./PendingResults";
 import type { AnalysisResult } from "@/lib/schemas";
 
 type Props = {
-  params: Promise<{ locale: string; id: string }>;
+  params: Promise<{ locale: string; ref: string }>;
 };
 
 export default async function ResultsPage({ params }: Props) {
-  const { id } = await params;
+  const { ref } = await params;
 
-  const { data: submission, error } = await getSupabaseAdmin()
-    .from("submissions")
-    .select("*")
-    .eq("id", id)
-    .single();
+  // Try short_code first, fall back to UUID for old bookmarks
+  let submission;
+  if (isUUID(ref)) {
+    const result = await getSupabaseAdmin()
+      .from("submissions")
+      .select("*")
+      .eq("id", ref)
+      .single();
+    submission = result.data;
+  } else {
+    const result = await getSupabaseAdmin()
+      .from("submissions")
+      .select("*")
+      .eq("short_code", ref)
+      .single();
+    submission = result.data;
+  }
 
-  if (error || !submission) {
+  if (!submission) {
     notFound();
   }
 
@@ -25,7 +38,7 @@ export default async function ResultsPage({ params }: Props) {
 
   // If analysis hasn't completed yet, show polling state
   if (!analysis) {
-    return <PendingResults submissionId={id} />;
+    return <PendingResults submissionId={submission.id} />;
   }
 
   const scores = (submission.scores as Record<string, number>) ?? {};
@@ -39,7 +52,8 @@ export default async function ResultsPage({ params }: Props) {
     scores,
     priorities,
     teaserInsights: analysis.teaser_insights,
-    submissionId: id,
+    submissionId: submission.id,
+    submissionRef: (submission.short_code as string) ?? ref,
     email: submission.user_email ?? "",
     executiveSummary: analysis.executive_summary,
     timing: analysis.timing

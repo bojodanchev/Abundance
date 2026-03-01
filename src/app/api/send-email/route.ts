@@ -264,11 +264,11 @@ export function buildNurtureEmail(
 ) {
   const locale = (submission.locale as string) ?? "bg";
   const name = escapeHtml(submission.user_name as string);
-  const submissionId = submission.id as string;
+  const shortCode = (submission.short_code as string) ?? (submission.id as string);
   const isBg = locale === "bg";
 
-  const resultsUrl = `${baseUrl}/${locale}/results/${submissionId}`;
-  const upgradeUrl = `${baseUrl}/${locale}/results/${submissionId}?upgrade=true`;
+  const resultsUrl = `${baseUrl}/${locale}/results/${shortCode}`;
+  const upgradeUrl = `${baseUrl}/${locale}/results/${shortCode}?upgrade=true`;
 
   const nurtureContent: Record<string, { subject: string; heading: string; body: string; cta: string; ctaUrl: string }> = {
     nurture_1: {
@@ -410,7 +410,8 @@ export async function POST(request: Request) {
         );
       }
 
-      const resultsUrl = `${baseUrl}/${locale}/results/${submission_id}`;
+      const shortCode = (submission.short_code as string) ?? submission_id;
+      const resultsUrl = `${baseUrl}/${locale}/results/${shortCode}`;
       subject = isBg
         ? `${safeName}, твоята диагностика е готова ✦`
         : `${safeName}, your diagnostic is ready ✦`;

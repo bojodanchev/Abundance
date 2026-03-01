@@ -42,6 +42,7 @@ export interface ResultsData {
   priorities: string[];
   teaserInsights: Record<string, string>;
   submissionId: string;
+  submissionRef: string;
   email: string;
   // V2 fields (optional)
   executiveSummary?: {
@@ -106,7 +107,7 @@ export default function ResultsClient({ data }: { data: ResultsData }) {
 
   const thankYouParams = new URLSearchParams({
     email: data.email,
-    id: data.submissionId,
+    ref: data.submissionRef,
   });
 
   return (

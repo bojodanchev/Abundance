@@ -66,7 +66,7 @@ export default function ConfirmationScreen() {
         throw new Error(body.error || "Нещо се обърка. Опитай отново.");
       }
 
-      const { submissionId } = await res.json();
+      const { shortCode } = await res.json();
 
       // Clear localStorage on success
       try {
@@ -77,9 +77,9 @@ export default function ConfirmationScreen() {
       }
 
       if (IS_PRELAUNCH) {
-        router.push(`/spot-reserved?id=${submissionId}&email=${encodeURIComponent(data.email.trim())}`);
+        router.push(`/spot-reserved?ref=${shortCode}&email=${encodeURIComponent(data.email.trim())}`);
       } else {
-        router.push(`/bump-offer?id=${submissionId}`);
+        router.push(`/bump-offer?ref=${shortCode}`);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Нещо се обърка.");

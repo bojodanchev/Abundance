@@ -29,24 +29,34 @@ function BumpOfferPage() {
   const router = useRouter();
   const locale = useLocale();
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const ref = searchParams.get("ref") ?? searchParams.get("id");
 
   const [secondsLeft, setSecondsLeft] = useState(TIMER_DURATION);
   const [isLoading, setIsLoading] = useState(false);
+  const [submissionId, setSubmissionId] = useState<string | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Redirect if no id
+  // Redirect if no ref
   useEffect(() => {
-    if (!id) {
+    if (!ref) {
       router.push("/");
     }
-  }, [id, router]);
+  }, [ref, router]);
+
+  // Resolve ref to UUID for API calls
+  useEffect(() => {
+    if (!ref) return;
+    fetch(`/api/submission-status?ref=${ref}`)
+      .then((r) => r.json())
+      .then((d) => { if (d.submissionId) setSubmissionId(d.submissionId); })
+      .catch(() => {});
+  }, [ref]);
 
   // Countdown timer persisted in sessionStorage
   useEffect(() => {
-    if (!id) return;
+    if (!ref) return;
 
-    const storageKey = `bump_timer_${id}`;
+    const storageKey = `bump_timer_${ref}`;
     const stored = sessionStorage.getItem(storageKey);
 
     let endTime: number;
@@ -64,7 +74,7 @@ function BumpOfferPage() {
       if (remaining <= 0) {
         if (intervalRef.current) clearInterval(intervalRef.current);
         sessionStorage.removeItem(storageKey);
-        router.push(`/processing?id=${id}`);
+        router.push(`/processing?ref=${ref}`);
       }
     };
 
@@ -74,21 +84,21 @@ function BumpOfferPage() {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [id, router]);
+  }, [ref, router]);
 
   const minutes = Math.floor(secondsLeft / 60);
   const seconds = secondsLeft % 60;
   const timerDisplay = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 
   const handleBuy = useCallback(async () => {
-    if (isLoading || !id) return;
+    if (isLoading || !submissionId) return;
     setIsLoading(true);
 
     try {
       const res = await fetch("/api/create-bump-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ submission_id: id, locale }),
+        body: JSON.stringify({ submission_id: submissionId, locale }),
       });
 
       if (!res.ok) throw new Error("Checkout failed");
@@ -98,14 +108,14 @@ function BumpOfferPage() {
     } catch {
       setIsLoading(false);
     }
-  }, [id, isLoading, locale]);
+  }, [submissionId, isLoading, locale]);
 
   const handleSkip = useCallback(() => {
-    if (!id) return;
-    router.push(`/processing?id=${id}`);
-  }, [id, router]);
+    if (!ref) return;
+    router.push(`/processing?ref=${ref}`);
+  }, [ref, router]);
 
-  if (!id) return null;
+  if (!ref) return null;
 
   const benefits = [t("benefit1"), t("benefit2"), t("benefit3")];
 

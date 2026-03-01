@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Shield, Play, Check, Star, ArrowRight, Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -300,18 +300,27 @@ function ThankYouPage() {
   const searchParams = useSearchParams();
   const locale = useLocale();
   const email = searchParams.get("email") ?? "";
-  const submissionId = searchParams.get("id") ?? "";
+  const ref = searchParams.get("ref") ?? searchParams.get("id") ?? "";
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [resolvedId, setResolvedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!ref) return;
+    fetch(`/api/submission-status?ref=${ref}`)
+      .then((r) => r.json())
+      .then((d) => { if (d.submissionId) setResolvedId(d.submissionId); })
+      .catch(() => {});
+  }, [ref]);
 
   async function handleCheckout(tier: CheckoutTier) {
-    if (!submissionId || checkoutLoading) return;
+    if (!resolvedId || checkoutLoading) return;
     setCheckoutLoading(tier);
     try {
       const res = await fetch("/api/create-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          submission_id: submissionId,
+          submission_id: resolvedId,
           tier,
           locale,
         }),

@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     // Fetch submission to get email for Stripe prefill
     const { data: submission, error: fetchError } = await getSupabaseAdmin()
       .from("submissions")
-      .select("id, user_email")
+      .select("id, user_email, short_code")
       .eq("id", submission_id)
       .single();
 
@@ -46,6 +46,7 @@ export async function POST(request: Request) {
         : "http://localhost:3000");
 
     const email = submission.user_email as string;
+    const shortCode = submission.short_code as string;
 
     const stripe = getStripe();
     const session = await stripe.checkout.sessions.create({
@@ -67,8 +68,8 @@ export async function POST(request: Request) {
         submission_id,
         tier,
       },
-      success_url: `${baseUrl}/${locale}/thank-you?session_id={CHECKOUT_SESSION_ID}&tier=${tier}&id=${submission_id}&email=${encodeURIComponent(email)}`,
-      cancel_url: `${baseUrl}/${locale}/results/${submission_id}`,
+      success_url: `${baseUrl}/${locale}/thank-you?session_id={CHECKOUT_SESSION_ID}&tier=${tier}&ref=${shortCode}&email=${encodeURIComponent(email)}`,
+      cancel_url: `${baseUrl}/${locale}/results/${shortCode}`,
     });
 
     // Save stripe session ID on the submission
