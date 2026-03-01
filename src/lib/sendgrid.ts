@@ -1,6 +1,14 @@
-import sgMail from "@sendgrid/mail";
+import nodemailer from "nodemailer";
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST ?? "smtp-relay.brevo.com",
+  port: parseInt(process.env.SMTP_PORT ?? "587", 10),
+  secure: false,
+  auth: {
+    user: process.env.SMTP_USER!,
+    pass: process.env.SMTP_PASS!,
+  },
+});
 
 type EmailParams = {
   to: string;
@@ -15,13 +23,17 @@ type EmailParams = {
 };
 
 export async function sendEmail({ to, subject, html, attachments }: EmailParams) {
-  const msg = {
+  const mailAttachments = attachments?.map((a) => ({
+    filename: a.filename,
+    content: Buffer.from(a.content, "base64"),
+    contentType: a.type,
+  }));
+
+  return transporter.sendMail({
+    from: process.env.SMTP_FROM_EMAIL ?? "noreply@codeabundance.com",
     to,
-    from: process.env.SENDGRID_FROM_EMAIL!,
     subject,
     html,
-    ...(attachments && { attachments }),
-  };
-
-  return sgMail.send(msg);
+    ...(mailAttachments && { attachments: mailAttachments }),
+  });
 }

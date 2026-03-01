@@ -378,7 +378,7 @@ export async function POST(request: Request) {
       html = nurture.html;
     }
 
-    // --- Send via SendGrid ---
+    // --- Send via SMTP ---
     try {
       await sendEmail({
         to: submission.user_email as string,
@@ -386,7 +386,7 @@ export async function POST(request: Request) {
         html,
       });
     } catch (emailError) {
-      console.error("SendGrid error:", emailError);
+      console.error("SMTP email error:", emailError);
       return NextResponse.json(
         { success: false, error: "Failed to send email" },
         { status: 502 }
