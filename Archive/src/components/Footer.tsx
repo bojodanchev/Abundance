@@ -121,7 +121,7 @@ const Footer = () => {
             <div>
               <h4 className="font-semibold mb-4">{t('footer.socialTitle')}</h4>
               <div className="flex gap-3">
-                <a href="https://instagram.com/codeabundance" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-card border border-border rounded-lg flex items-center justify-center hover:border-primary/50 hover:bg-primary/10 transition-colors">
+                <a href="https://instagram.com/sean.isa" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-card border border-border rounded-lg flex items-center justify-center hover:border-primary/50 hover:bg-primary/10 transition-colors">
                   <Instagram size={18} />
                 </a>
                 <a href="https://youtube.com/@codeabundance" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-card border border-border rounded-lg flex items-center justify-center hover:border-primary/50 hover:bg-primary/10 transition-colors">
@@ -130,7 +130,7 @@ const Footer = () => {
                 <a href="https://t.me/codeabundance" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-card border border-border rounded-lg flex items-center justify-center hover:border-secondary/50 hover:bg-secondary/10 transition-colors">
                   <MessageSquare size={18} />
                 </a>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-card border border-border rounded-lg flex items-center justify-center hover:border-primary/50 hover:bg-primary/10 transition-colors">
+                <a href="https://tiktok.com/@sean.isa" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-card border border-border rounded-lg flex items-center justify-center hover:border-primary/50 hover:bg-primary/10 transition-colors">
                   <Music2 size={18} />
                 </a>
               </div>
