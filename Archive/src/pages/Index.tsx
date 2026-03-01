@@ -46,9 +46,9 @@ const Index = () => {
         <DreamToReality />
         <FounderStory />
         <SevenSteps />
+        <Testimonials />
         <FAQ />
         <FinalCTA />
-        <Testimonials />
         <PlatformCommunity />
         <TelegramChat />
       </main>
