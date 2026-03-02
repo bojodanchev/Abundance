@@ -106,15 +106,26 @@ export default function WelcomeScreen() {
           <label htmlFor="quiz-phone" className="block text-sm text-text-secondary mb-1.5">
             Телефон <span className="text-text-secondary/50 text-xs">(по избор)</span>
           </label>
-          <input
-            id="quiz-phone"
-            type="tel"
-            value={data.phone}
-            onChange={(e) => updateData({ phone: e.target.value })}
-            placeholder="+359 ..."
-            autoComplete="tel"
-            className="w-full bg-surface-muted border border-border rounded-lg px-4 py-3 text-text-primary placeholder:text-text-secondary/40 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-colors"
-          />
+          <div className="flex">
+            <span className="inline-flex items-center px-3 bg-surface-muted border border-r-0 border-border rounded-l-lg text-text-secondary text-sm select-none">
+              +359
+            </span>
+            <input
+              id="quiz-phone"
+              type="tel"
+              value={data.phone}
+              onChange={(e) => {
+                let v = e.target.value.replace(/[^\d]/g, "");
+                // Strip leading country code if user pastes/autofills full number
+                if (v.startsWith("359") && v.length > 9) v = v.slice(3);
+                if (v.startsWith("0")) v = v.slice(1);
+                updateData({ phone: v });
+              }}
+              placeholder="87 123 4567"
+              autoComplete="tel-national"
+              className="w-full bg-surface-muted border border-border rounded-r-lg px-4 py-3 text-text-primary placeholder:text-text-secondary/40 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/30 transition-colors"
+            />
+          </div>
         </div>
 
         {/* GDPR */}

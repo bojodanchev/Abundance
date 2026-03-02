@@ -522,13 +522,23 @@ function ThankYouPage() {
             </div>
 
             <h3 className="font-display font-bold text-lg sm:text-xl text-text-primary">
-              30-дневна гаранция за връщане на парите
+              {locale === "bg"
+                ? "30-дневна гаранция за качество"
+                : "30-day quality guarantee"}
             </h3>
 
             <p className="text-text-secondary text-sm sm:text-base leading-relaxed">
-              Ако не си доволен от анализа, връщаме 100% от сумата.
+              {locale === "bg"
+                ? "Ако не си доволен от качеството на услугата, ще получиш 100% съдействие за достигане на удовлетвореност в рамките на 30 дни."
+                : "If you're not satisfied with the quality of the service, you'll receive 100% support to reach satisfaction within 30 days."}
+              <br /><br />
+              {locale === "bg"
+                ? "Само ни пиши и ще получиш подкрепа."
+                : "Just reach out and you'll get support."}
               <br />
-              Без въпроси, без усложнения.
+              {locale === "bg"
+                ? "Без усложнения."
+                : "No complications."}
             </p>
           </motion.div>
         </motion.section>

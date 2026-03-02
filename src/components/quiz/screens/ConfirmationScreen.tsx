@@ -40,7 +40,7 @@ export default function ConfirmationScreen() {
       const payload = {
         user_name: data.name.trim(),
         user_email: data.email.trim(),
-        user_phone: data.phone.trim() || undefined,
+        user_phone: data.phone.trim() ? `+359${data.phone.trim()}` : undefined,
         locale: locale === "en" ? "en" : "bg",
         scores: data.scores,
         priority_top3: data.priorities,
