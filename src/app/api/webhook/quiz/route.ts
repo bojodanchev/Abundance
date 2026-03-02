@@ -122,7 +122,7 @@ export async function POST(request: Request) {
       // --- Trigger async analysis generation ---
       after(async () => {
         try {
-          await fetch(`${baseUrl}/api/generate-analysis`, {
+          const res = await fetch(`${baseUrl}/api/generate-analysis`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -130,8 +130,23 @@ export async function POST(request: Request) {
             },
             body: JSON.stringify({ submission_id: submission.id }),
           });
+          if (!res.ok) {
+            console.error("Analysis generation returned non-2xx:", res.status);
+            await getSupabaseAdmin()
+              .from("submissions")
+              .update({ status: "error" })
+              .eq("id", submission.id);
+          }
         } catch (err) {
           console.error("Failed to trigger analysis generation:", err);
+          try {
+            await getSupabaseAdmin()
+              .from("submissions")
+              .update({ status: "error" })
+              .eq("id", submission.id);
+          } catch {
+            // best-effort
+          }
         }
       });
     }

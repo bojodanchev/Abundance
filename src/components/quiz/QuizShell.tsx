@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, ArrowLeft, ArrowRight, LogOut, Diamond } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useQuiz } from "./QuizContext";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import LifeAuditScreen from "./screens/LifeAuditScreen";

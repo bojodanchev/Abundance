@@ -1,4 +1,8 @@
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY!;
+function getOpenAIKey(): string {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key) throw new Error("Missing OPENAI_API_KEY environment variable");
+  return key;
+}
 
 interface ChatMessage {
   role: "system" | "user" | "assistant";
@@ -26,7 +30,7 @@ export async function chatCompletion(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${OPENAI_API_KEY}`,
+      Authorization: `Bearer ${getOpenAIKey()}`,
     },
     body: JSON.stringify({
       model: options?.model ?? "gpt-5-mini",

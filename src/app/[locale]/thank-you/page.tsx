@@ -299,16 +299,19 @@ export default function ThankYouPageWrapper() {
 function ThankYouPage() {
   const searchParams = useSearchParams();
   const locale = useLocale();
-  const email = searchParams.get("email") ?? "";
   const ref = searchParams.get("ref") ?? searchParams.get("id") ?? "";
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [resolvedId, setResolvedId] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     if (!ref) return;
     fetch(`/api/submission-status?ref=${ref}`)
       .then((r) => r.json())
-      .then((d) => { if (d.submissionId) setResolvedId(d.submissionId); })
+      .then((d) => {
+        if (d.submissionId) setResolvedId(d.submissionId);
+        if (d.email) setEmail(d.email);
+      })
       .catch(() => {});
   }, [ref]);
 

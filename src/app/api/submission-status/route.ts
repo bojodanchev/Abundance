@@ -16,7 +16,7 @@ export async function GET(request: Request) {
 
   let query = getSupabaseAdmin()
     .from("submissions")
-    .select("id, status, analysis_result");
+    .select("id, status, analysis_result, user_email");
 
   if (id) {
     query = query.eq("id", id);
@@ -39,5 +39,6 @@ export async function GET(request: Request) {
     status: data.status,
     ready: data.status === "completed" && data.analysis_result != null,
     submissionId: data.id,
+    email: data.user_email,
   });
 }

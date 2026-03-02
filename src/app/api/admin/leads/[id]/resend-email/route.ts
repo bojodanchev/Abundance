@@ -34,10 +34,19 @@ export async function POST(
       );
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ??
+      (process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : "http://localhost:3000");
     const res = await fetch(`${baseUrl}/api/send-email`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(process.env.INTERNAL_API_KEY && {
+          "x-internal-key": process.env.INTERNAL_API_KEY,
+        }),
+      },
       body: JSON.stringify({ submission_id: id, email_type }),
     });
 

@@ -9,6 +9,18 @@ import type { PdfSubmission } from "@/lib/pdf/AbundanceReport";
 
 export async function POST(request: Request) {
   try {
+    // --- Auth: internal API key check ---
+    const internalApiKey = process.env.INTERNAL_API_KEY;
+    if (internalApiKey) {
+      const providedKey = request.headers.get("x-internal-key");
+      if (providedKey !== internalApiKey) {
+        return NextResponse.json(
+          { success: false, error: "Unauthorized" },
+          { status: 401 }
+        );
+      }
+    }
+
     // --- Validate input ---
     const body = await request.json();
     const parsed = generatePdfSchema.safeParse(body);

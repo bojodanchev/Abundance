@@ -46,6 +46,16 @@ export async function POST(request: Request) {
 
     const supabase = getSupabaseAdmin();
 
+    // --- Idempotency guard: skip if this session was already processed ---
+    const { count: existingCount } = await supabase
+      .from("payments")
+      .select("id", { count: "exact", head: true })
+      .eq("stripe_session_id", session.id);
+
+    if (existingCount && existingCount > 0) {
+      return NextResponse.json({ received: true }); // already processed
+    }
+
     // Handle bump offer purchase separately
     if (tier === "bump") {
       const { error: bumpUpdateError } = await supabase
@@ -55,6 +65,7 @@ export async function POST(request: Request) {
 
       if (bumpUpdateError) {
         console.error("Failed to update bump_accepted:", bumpUpdateError);
+        return NextResponse.json({ error: "DB write failed" }, { status: 500 });
       }
 
       // Insert payment record for bump
@@ -72,6 +83,7 @@ export async function POST(request: Request) {
 
       if (bumpInsertError) {
         console.error("Failed to insert bump payment record:", bumpInsertError);
+        return NextResponse.json({ error: "DB write failed" }, { status: 500 });
       }
 
       return NextResponse.json({ received: true });
@@ -88,6 +100,7 @@ export async function POST(request: Request) {
 
     if (updateError) {
       console.error("Failed to update submission payment status:", updateError);
+      return NextResponse.json({ error: "DB write failed" }, { status: 500 });
     }
 
     // Insert payment record
@@ -105,6 +118,7 @@ export async function POST(request: Request) {
 
     if (insertError) {
       console.error("Failed to insert payment record:", insertError);
+      return NextResponse.json({ error: "DB write failed" }, { status: 500 });
     }
 
     // Trigger PDF generation (runs after response is sent)
@@ -126,7 +140,7 @@ export async function POST(request: Request) {
           },
           body: JSON.stringify({
             submission_id: submissionId,
-            tier: "paid",
+            tier,
           }),
         });
       } catch (err) {

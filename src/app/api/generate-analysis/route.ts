@@ -16,6 +16,8 @@ import {
 export const maxDuration = 300; // Allow up to 5min for OpenAI response
 
 export async function POST(request: Request) {
+  let submission_id: string | undefined;
+
   try {
     // --- Auth: internal API key check ---
     const internalApiKey = process.env.INTERNAL_API_KEY;
@@ -40,7 +42,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { submission_id } = parsed.data;
+    submission_id = parsed.data.submission_id;
 
     // --- Fetch submission ---
     const { data: submission, error: fetchError } = await getSupabaseAdmin()
@@ -56,11 +58,21 @@ export async function POST(request: Request) {
       );
     }
 
-    // --- Update status to processing ---
-    await getSupabaseAdmin()
+    // --- Atomically claim the job (only succeeds if still pending) ---
+    const { data: claimed, error: claimError } = await getSupabaseAdmin()
       .from("submissions")
       .update({ status: "processing" })
-      .eq("id", submission_id);
+      .eq("id", submission_id)
+      .eq("status", "pending")
+      .select("id")
+      .single();
+
+    if (claimError || !claimed) {
+      return NextResponse.json(
+        { success: false, error: "Already processing or completed" },
+        { status: 409 }
+      );
+    }
 
     // --- Build specialist prompts with pre-calculated data ---
     const scores = submission.scores as Record<string, number>;
@@ -186,6 +198,17 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("Generate analysis error:", error);
+    // Best-effort: mark submission as error so it doesn't stay stuck in "processing"
+    if (submission_id) {
+      try {
+        await getSupabaseAdmin()
+          .from("submissions")
+          .update({ status: "error" })
+          .eq("id", submission_id);
+      } catch {
+        // best-effort, don't throw
+      }
+    }
     return NextResponse.json(
       { success: false, error: "Internal server error" },
       { status: 500 }

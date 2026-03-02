@@ -68,7 +68,7 @@ export async function POST(request: Request) {
         submission_id,
         tier,
       },
-      success_url: `${baseUrl}/${locale}/thank-you?session_id={CHECKOUT_SESSION_ID}&tier=${tier}&ref=${shortCode}&email=${encodeURIComponent(email)}`,
+      success_url: `${baseUrl}/${locale}/thank-you?session_id={CHECKOUT_SESSION_ID}&tier=${tier}&ref=${shortCode}`,
       cancel_url: `${baseUrl}/${locale}/results/${shortCode}`,
     });
 

@@ -62,7 +62,8 @@ src/lib/knowledge/    # Modular analysis knowledge base (11 files) — calculati
 
 - Supabase ref: `dyyoknmfcbulvliqsjls` (Central EU)
 - Vercel project: `code-abundance`
-- Missing from Vercel: Stripe keys, SendGrid keys, INTERNAL_API_KEY
+- Stripe account: `acct_1T6CHPE5ba8bhUjl` (Code Abundance under KINGDOM LTD org)
+- All env vars configured on Vercel (Stripe, SMTP, Supabase, OpenAI, INTERNAL_API_KEY)
 
 ## Rules & Style
 - Bulgarian is primary language — all hardcoded UI text should have i18n keys
@@ -84,7 +85,7 @@ src/lib/knowledge/    # Modular analysis knowledge base (11 files) — calculati
 - [2026-02-24] Bump offer page — €7 upsell between quiz and processing ([details](docs/decisions/2026-02-24-bump-offer.md))
 
 ## Active Context
-Diagnostic quiz end-to-end with expanded knowledge base: quiz → Supabase → pre-calculations (Life Path, Sun Sign, Chinese Zodiac, Personal Year, Universal Timing) → selective prompt injection → OpenAI (gpt-5-mini, 24K tokens) → V1+V2 analysis result → results page (V2 teasers + locked premium), PDF (V2 sections for paid), email (V2 executive summary). Still missing from Vercel: Stripe keys, SendGrid keys, INTERNAL_API_KEY.
+Diagnostic quiz end-to-end with expanded knowledge base: quiz → Supabase → pre-calculations (Life Path, Sun Sign, Chinese Zodiac, Personal Year, Universal Timing) → selective prompt injection → OpenAI (gpt-5-mini, 24K tokens) → V1+V2 analysis result → results page (V2 teasers + locked premium), PDF (V2 sections for paid), email (V2 executive summary). Stripe live mode configured with 4 products/prices and webhook. All Vercel env vars are set.
 
 ## Gotchas: OpenAI gpt-5-mini
 - Does NOT support `max_tokens` — use `max_completion_tokens` (currently 24000)
