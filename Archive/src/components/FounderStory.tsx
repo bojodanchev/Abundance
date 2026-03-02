@@ -248,7 +248,7 @@ const FounderStory = () => {
                 size="lg"
                 variant="default"
                 className="bg-background text-primary hover:bg-background/90"
-                onClick={() => window.open('https://seanissa.com', '_blank')}
+                onClick={() => window.open('https://seanisa.com', '_blank')}
               >
                 {t('founderStory.ctaButton')}
               </Button>
