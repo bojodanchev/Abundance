@@ -34,6 +34,8 @@ function BumpOfferPage() {
   const [secondsLeft, setSecondsLeft] = useState(TIMER_DURATION);
   const [isLoading, setIsLoading] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
+  const [loadingSubmission, setLoadingSubmission] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Redirect if no ref
@@ -46,10 +48,14 @@ function BumpOfferPage() {
   // Resolve ref to UUID for API calls
   useEffect(() => {
     if (!ref) return;
+    setLoadingSubmission(true);
     fetch(`/api/submission-status?ref=${ref}`)
       .then((r) => r.json())
-      .then((d) => { if (d.submissionId) setSubmissionId(d.submissionId); })
-      .catch(() => {});
+      .then((d) => {
+        if (d.submissionId) setSubmissionId(d.submissionId);
+      })
+      .catch(() => {})
+      .finally(() => setLoadingSubmission(false));
   }, [ref]);
 
   // Countdown timer persisted in sessionStorage
@@ -93,6 +99,7 @@ function BumpOfferPage() {
   const handleBuy = useCallback(async () => {
     if (isLoading || !submissionId) return;
     setIsLoading(true);
+    setError(null);
 
     try {
       const res = await fetch("/api/create-bump-checkout", {
@@ -101,11 +108,14 @@ function BumpOfferPage() {
         body: JSON.stringify({ submission_id: submissionId, locale }),
       });
 
-      if (!res.ok) throw new Error("Checkout failed");
-
       const data = await res.json();
+      if (!res.ok || !data.url) {
+        throw new Error(data.error ?? "Checkout failed");
+      }
       window.location.href = data.url;
-    } catch {
+    } catch (err) {
+      console.error("Bump checkout error:", err);
+      setError(locale === "bg" ? "Грешка при плащане. Моля, опитай отново." : "Payment error. Please try again.");
       setIsLoading(false);
     }
   }, [submissionId, isLoading, locale]);
@@ -208,10 +218,10 @@ function BumpOfferPage() {
           >
             <button
               onClick={handleBuy}
-              disabled={isLoading}
+              disabled={isLoading || loadingSubmission || !submissionId}
               className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-lg font-display font-bold text-base bg-accent text-[#0A0A0A] transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed hover:brightness-110 cursor-pointer"
             >
-              {isLoading ? (
+              {isLoading || loadingSubmission ? (
                 <span className="animate-pulse">{t("cta")}</span>
               ) : (
                 <>
@@ -220,6 +230,9 @@ function BumpOfferPage() {
                 </>
               )}
             </button>
+            {error && (
+              <p className="text-red-400 text-xs text-center mt-2">{error}</p>
+            )}
           </motion.div>
 
           {/* Skip link */}

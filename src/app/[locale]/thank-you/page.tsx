@@ -142,10 +142,12 @@ function PricingCard({
   tier,
   onCheckout,
   loading,
+  disabled,
 }: {
   tier: PricingTier;
   onCheckout?: (checkoutTier: CheckoutTier) => void;
   loading?: boolean;
+  disabled?: boolean;
 }) {
   const isPopular = tier.highlighted;
 
@@ -250,7 +252,7 @@ function PricingCard({
           {tier.buttonVariant === "primary" && (
             <button
               onClick={() => tier.checkoutTier && onCheckout?.(tier.checkoutTier)}
-              disabled={loading}
+              disabled={loading || disabled}
               className="w-full inline-flex items-center justify-center gap-2 bg-accent text-primary font-display font-bold rounded-lg px-6 py-3.5 text-sm transition-all duration-300 hover:bg-accent-light cursor-pointer disabled:opacity-60 disabled:cursor-wait"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
@@ -261,7 +263,7 @@ function PricingCard({
           {tier.buttonVariant === "secondary" && (
             <button
               onClick={() => tier.checkoutTier && onCheckout?.(tier.checkoutTier)}
-              disabled={loading}
+              disabled={loading || disabled}
               className="w-full inline-flex items-center justify-center gap-2 border-2 border-accent text-accent font-display font-bold rounded-lg px-6 py-3.5 text-sm transition-all duration-300 hover:bg-accent/10 cursor-pointer disabled:opacity-60 disabled:cursor-wait"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
@@ -302,22 +304,27 @@ function ThankYouPage() {
   const ref = searchParams.get("ref") ?? searchParams.get("id") ?? "";
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [resolvedId, setResolvedId] = useState<string | null>(null);
+  const [loadingSubmission, setLoadingSubmission] = useState(true);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [email, setEmail] = useState("");
 
   useEffect(() => {
     if (!ref) return;
+    setLoadingSubmission(true);
     fetch(`/api/submission-status?ref=${ref}`)
       .then((r) => r.json())
       .then((d) => {
         if (d.submissionId) setResolvedId(d.submissionId);
         if (d.email) setEmail(d.email);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLoadingSubmission(false));
   }, [ref]);
 
   async function handleCheckout(tier: CheckoutTier) {
     if (!resolvedId || checkoutLoading) return;
     setCheckoutLoading(tier);
+    setCheckoutError(null);
     try {
       const res = await fetch("/api/create-checkout", {
         method: "POST",
@@ -333,10 +340,12 @@ function ThankYouPage() {
         window.location.href = json.url;
       } else {
         console.error("Checkout error:", json.error);
+        setCheckoutError(locale === "bg" ? "Грешка при плащане. Моля, опитай отново." : "Payment error. Please try again.");
         setCheckoutLoading(null);
       }
     } catch (err) {
       console.error("Checkout fetch error:", err);
+      setCheckoutError(locale === "bg" ? "Грешка при плащане. Моля, опитай отново." : "Payment error. Please try again.");
       setCheckoutLoading(null);
     }
   }
@@ -481,8 +490,14 @@ function ThankYouPage() {
                   tier={tier}
                   onCheckout={handleCheckout}
                   loading={checkoutLoading === tier.checkoutTier}
+                  disabled={loadingSubmission || !resolvedId}
                 />
               ))}
+              {checkoutError && (
+                <div className="col-span-full text-center mt-4">
+                  <p className="text-red-400 text-sm">{checkoutError}</p>
+                </div>
+              )}
             </motion.div>
           </div>
         </motion.section>

@@ -61,6 +61,7 @@ export default function ResultsClient({ data }: { data: ResultsData }) {
   const locale = useLocale();
   const [chartVisible, setChartVisible] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [viewerCount] = useState(
     () => 30 + Math.floor(Math.random() * 15),
   );
@@ -68,6 +69,7 @@ export default function ResultsClient({ data }: { data: ResultsData }) {
   async function handleCheckout() {
     if (checkoutLoading) return;
     setCheckoutLoading(true);
+    setCheckoutError(null);
     try {
       const res = await fetch("/api/create-checkout", {
         method: "POST",
@@ -83,10 +85,12 @@ export default function ResultsClient({ data }: { data: ResultsData }) {
         window.location.href = json.url;
       } else {
         console.error("Checkout error:", json.error);
+        setCheckoutError(locale === "bg" ? "Грешка при плащане. Моля, опитай отново." : "Payment error. Please try again.");
         setCheckoutLoading(false);
       }
     } catch (err) {
       console.error("Checkout fetch error:", err);
+      setCheckoutError(locale === "bg" ? "Грешка при плащане. Моля, опитай отново." : "Payment error. Please try again.");
       setCheckoutLoading(false);
     }
   }
@@ -397,11 +401,14 @@ export default function ResultsClient({ data }: { data: ResultsData }) {
             <button
               onClick={handleCheckout}
               disabled={checkoutLoading}
-              className="px-8 py-4 rounded-lg bg-accent text-black font-display font-bold text-base sm:text-lg transition-all duration-200 hover:bg-accent-dark hover:shadow-[0_0_30px_rgba(201,168,76,0.3)] active:scale-[0.98] disabled:opacity-60 disabled:cursor-wait inline-flex items-center gap-2"
+              className="px-8 py-4 rounded-lg bg-accent text-black font-display font-bold text-base sm:text-lg transition-all duration-200 hover:bg-accent-dark hover:shadow-[0_0_30px_rgba(201,168,76,0.3)] active:scale-[0.98] disabled:opacity-60 disabled:cursor-wait inline-flex items-center gap-2 cursor-pointer"
             >
               {checkoutLoading && <Loader2 className="w-5 h-5 animate-spin" />}
               {t("upgradeCta")}
             </button>
+            {checkoutError && (
+              <p className="text-red-400 text-xs">{checkoutError}</p>
+            )}
 
             <Link
               href={`/thank-you?${thankYouParams.toString()}`}

@@ -3,6 +3,9 @@ import { getSupabaseAdmin } from "@/lib/supabase";
 import { quizSubmissionSchema } from "@/lib/schemas";
 import { generateShortCode } from "@/lib/short-code";
 
+// Allow enough time for after() to wait for generate-analysis response
+export const maxDuration = 300;
+
 export async function POST(request: Request) {
   try {
     // --- Rate limiting: basic global throttle ---
@@ -132,18 +135,22 @@ export async function POST(request: Request) {
           });
           if (!res.ok) {
             console.error("Analysis generation returned non-2xx:", res.status);
+            // Only set error if still pending — don't overwrite "processing" or "completed"
             await getSupabaseAdmin()
               .from("submissions")
               .update({ status: "error" })
-              .eq("id", submission.id);
+              .eq("id", submission.id)
+              .eq("status", "pending");
           }
         } catch (err) {
           console.error("Failed to trigger analysis generation:", err);
           try {
+            // Only set error if still pending
             await getSupabaseAdmin()
               .from("submissions")
               .update({ status: "error" })
-              .eq("id", submission.id);
+              .eq("id", submission.id)
+              .eq("status", "pending");
           } catch {
             // best-effort
           }
