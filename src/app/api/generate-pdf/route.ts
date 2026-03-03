@@ -10,9 +10,9 @@ import type { PdfSubmission } from "@/lib/pdf/AbundanceReport";
 export async function POST(request: Request) {
   try {
     // --- Auth: internal API key check ---
-    const internalApiKey = process.env.INTERNAL_API_KEY;
+    const internalApiKey = process.env.INTERNAL_API_KEY?.trim();
     if (internalApiKey) {
-      const providedKey = request.headers.get("x-internal-key");
+      const providedKey = request.headers.get("x-internal-key")?.trim();
       if (providedKey !== internalApiKey) {
         return NextResponse.json(
           { success: false, error: "Unauthorized" },
