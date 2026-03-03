@@ -185,7 +185,7 @@ function buildPrelaunchEmail(submission: Record<string, unknown>) {
   });
 }
 
-function buildWelcomeEmail(
+export function buildWelcomeEmail(
   submission: Record<string, unknown>,
   analysis: AnalysisResult,
   resultsUrl: string

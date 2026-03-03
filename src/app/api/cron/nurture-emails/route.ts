@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { sendEmail } from "@/lib/sendgrid";
-import { buildNurtureEmail } from "@/app/api/send-email/route";
+import { buildNurtureEmail, buildWelcomeEmail } from "@/app/api/send-email/route";
+import type { AnalysisResult } from "@/lib/schemas";
 
 // Env: CRON_SECRET — Vercel injects this automatically for cron jobs.
 // Must match the Authorization: Bearer <CRON_SECRET> header.
@@ -33,6 +34,7 @@ export async function GET(request: Request) {
   const supabase = getSupabaseAdmin();
   const errors: string[] = [];
   let processed = 0;
+  let welcomeRetried = 0;
 
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL ??
@@ -40,6 +42,62 @@ export async function GET(request: Request) {
       ? `https://${process.env.VERCEL_URL}`
       : "http://localhost:3000");
 
+  // --- Retry failed welcome emails ---
+  // Catches completed submissions where the after() callback failed silently
+  try {
+    const { data: missed } = await supabase
+      .from("submissions")
+      .select("*")
+      .eq("status", "completed")
+      .eq("email_sent", false)
+      .not("analysis_result", "is", null);
+
+    if (missed && missed.length > 0) {
+      for (const submission of missed) {
+        try {
+          const locale = (submission.locale as string) ?? "bg";
+          const safeName = submission.user_name as string;
+          const isBg = locale === "bg";
+          const analysis = submission.analysis_result as AnalysisResult;
+          const shortCode = (submission.short_code as string) ?? submission.id;
+          const resultsUrl = `${baseUrl}/${locale}/results/${shortCode}`;
+
+          const subject = isBg
+            ? `${safeName}, твоята диагностика е готова ✦`
+            : `${safeName}, your diagnostic is ready ✦`;
+          const html = buildWelcomeEmail(submission, analysis, resultsUrl);
+
+          await sendEmail({
+            to: submission.user_email as string,
+            subject,
+            html,
+          });
+
+          await supabase.from("email_logs").insert({
+            submission_id: submission.id,
+            email_type: "welcome",
+            locale,
+          });
+
+          await supabase
+            .from("submissions")
+            .update({ email_sent: true })
+            .eq("id", submission.id);
+
+          welcomeRetried++;
+          processed++;
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : String(err);
+          errors.push(`welcome_retry:${submission.id} ${msg}`);
+        }
+      }
+    }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    errors.push(`welcome_retry query failed: ${msg}`);
+  }
+
+  // --- Nurture sequence ---
   for (const step of NURTURE_SEQUENCE) {
     try {
       const recipientIds = await findEligible(supabase, step);
@@ -65,7 +123,7 @@ export async function GET(request: Request) {
             baseUrl
           );
 
-          // Send via SendGrid
+          // Send via SMTP
           await sendEmail({
             to: submission.user_email as string,
             subject,
@@ -91,7 +149,7 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.json({ processed, errors });
+  return NextResponse.json({ processed, welcomeRetried, errors });
 }
 
 // ----------------------------------------------------------------
