@@ -120,6 +120,27 @@ export async function POST(request: Request) {
       }
       const rawParsed = JSON.parse(cleanText);
 
+      // Normalize AI response: fix common structural issues
+      // 1. Move top-level phase plans into full_analysis if misplaced
+      if (rawParsed.full_analysis && typeof rawParsed.full_analysis === "object") {
+        const fa = rawParsed.full_analysis;
+        const planKeys = ["phase1_plan", "phase2_plan", "phase3_plan"] as const;
+        for (const key of planKeys) {
+          if (!fa[key] && rawParsed[key]) {
+            fa[key] = rawParsed[key];
+            delete rawParsed[key];
+          }
+        }
+        // 2. Move top-level analysis texts into full_analysis if misplaced
+        const textKeys = ["hd_analysis_text", "life_path_analysis_text", "astro_analysis_text"] as const;
+        for (const key of textKeys) {
+          if (!fa[key] && rawParsed[key]) {
+            fa[key] = rawParsed[key];
+            delete rawParsed[key];
+          }
+        }
+      }
+
       // Runtime validation of AI output structure
       const validated = analysisResultSchema.safeParse(rawParsed);
       if (!validated.success) {
