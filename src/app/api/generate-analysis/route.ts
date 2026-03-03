@@ -123,13 +123,21 @@ export async function POST(request: Request) {
       // Runtime validation of AI output structure
       const validated = analysisResultSchema.safeParse(rawParsed);
       if (!validated.success) {
-        console.error("AI response failed schema validation:", validated.error.flatten().fieldErrors);
+        const fieldErrors = validated.error.flatten().fieldErrors;
+        const topLevelKeys = Object.keys(rawParsed);
+        console.error("AI response failed schema validation:", fieldErrors);
+        console.error("AI response top-level keys:", topLevelKeys);
         await getSupabaseAdmin()
           .from("submissions")
           .update({ status: "error" })
           .eq("id", submission_id);
         return NextResponse.json(
-          { success: false, error: "Invalid AI response schema" },
+          {
+            success: false,
+            error: "Invalid AI response schema",
+            fieldErrors,
+            receivedKeys: topLevelKeys,
+          },
           { status: 502 }
         );
       }
