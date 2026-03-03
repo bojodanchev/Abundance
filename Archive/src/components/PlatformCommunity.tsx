@@ -36,7 +36,7 @@ const PlatformCommunity = () => {
           </div>
 
           <div className="text-center mt-12">
-            <Button variant="hero" size="lg" onClick={() => window.open('https://creatorclub.bg/', '_blank')}>
+            <Button variant="hero" size="lg" onClick={() => window.open('https://creatorclub.bg/community/8fae1979-fe9a-4079-8279-51cd95028000', '_blank')}>
               {t('platformCommunity.ctaButton')}
             </Button>
           </div>
