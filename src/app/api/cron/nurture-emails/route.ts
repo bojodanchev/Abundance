@@ -97,6 +97,54 @@ export async function GET(request: Request) {
     errors.push(`welcome_retry query failed: ${msg}`);
   }
 
+  // --- Retry failed analyses ---
+  // Re-triggers generate-analysis for submissions stuck in "error" status
+  let analysisRetried = 0;
+  try {
+    const { data: errored } = await supabase
+      .from("submissions")
+      .select("id")
+      .eq("status", "error")
+      .is("analysis_result", null);
+
+    if (errored && errored.length > 0) {
+      for (const row of errored) {
+        try {
+          // Reset to pending
+          await supabase
+            .from("submissions")
+            .update({ status: "pending", updated_at: new Date().toISOString() })
+            .eq("id", row.id)
+            .eq("status", "error");
+
+          // Re-trigger analysis
+          const res = await fetch(`${baseUrl}/api/generate-analysis`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(process.env.INTERNAL_API_KEY && {
+                "x-internal-key": process.env.INTERNAL_API_KEY,
+              }),
+            },
+            body: JSON.stringify({ submission_id: row.id }),
+          });
+
+          if (res.ok) {
+            analysisRetried++;
+          } else {
+            errors.push(`analysis_retry:${row.id} status=${res.status}`);
+          }
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : String(err);
+          errors.push(`analysis_retry:${row.id} ${msg}`);
+        }
+      }
+    }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    errors.push(`analysis_retry query failed: ${msg}`);
+  }
+
   // --- Nurture sequence ---
   for (const step of NURTURE_SEQUENCE) {
     try {
@@ -149,7 +197,7 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.json({ processed, welcomeRetried, errors });
+  return NextResponse.json({ processed, welcomeRetried, analysisRetried, errors });
 }
 
 // ----------------------------------------------------------------

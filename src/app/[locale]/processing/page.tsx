@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Check } from "lucide-react";
+import { Check, AlertTriangle, RefreshCw } from "lucide-react";
 
 /* ─── visual timing (cosmetic step reveals) ─── */
 const STEP_TIMINGS = [2000, 5000, 9000]; // first 3 steps are cosmetic
@@ -49,6 +49,8 @@ function ProcessingPage() {
   const [showBar, setShowBar] = useState(false);
   const [showTips, setShowTips] = useState(false);
   const [analysisReady, setAnalysisReady] = useState(false);
+  const [analysisError, setAnalysisError] = useState(false);
+  const [retrying, setRetrying] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
 
   const startTime = useRef(0);
@@ -92,9 +94,33 @@ function ProcessingPage() {
       const data = await res.json();
       if (data.ready) {
         setAnalysisReady(true);
+      } else if (data.status === "error") {
+        setAnalysisError(true);
       }
     } catch {
       // silently retry on next interval
+    }
+  }, [submissionId]);
+
+  /* ── retry failed analysis ── */
+  const handleRetry = useCallback(async () => {
+    if (!submissionId) return;
+    setRetrying(true);
+    setAnalysisError(false);
+    try {
+      const res = await fetch(`/api/retry-analysis`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ submission_id: submissionId }),
+      });
+      if (!res.ok) {
+        setAnalysisError(true);
+      }
+      // If successful, polling will pick up the new status
+    } catch {
+      setAnalysisError(true);
+    } finally {
+      setRetrying(false);
     }
   }, [submissionId]);
 
@@ -104,6 +130,7 @@ function ProcessingPage() {
       return;
     }
     if (!submissionId) return; // wait for UUID resolution
+    if (analysisError) return; // stop polling on error
 
     // Start polling immediately
     checkStatus();
@@ -112,7 +139,7 @@ function ProcessingPage() {
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
     };
-  }, [ref, submissionId, checkStatus, router]);
+  }, [ref, submissionId, checkStatus, router, analysisError]);
 
   /* ── when analysis is ready, complete all steps and redirect ── */
   useEffect(() => {
@@ -247,11 +274,11 @@ function ProcessingPage() {
                 </span>
               </div>
               <div className="w-full h-1.5 bg-[#1A1A1A] rounded-full overflow-hidden">
-                <motion.div
+                <div
                   className="h-full rounded-full bg-accent"
                   style={{
                     width: `${progress * 100}%`,
-                    transition: "width 0.3s ease-out",
+                    transition: "width 0.5s ease-out",
                   }}
                 />
               </div>
@@ -259,9 +286,37 @@ function ProcessingPage() {
           )}
         </AnimatePresence>
 
+        {/* ── Error State ── */}
+        <AnimatePresence>
+          {analysisError && (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="flex flex-col items-center gap-4 text-center"
+            >
+              <AlertTriangle className="w-8 h-8 text-amber-400" />
+              <h2 className="font-display font-semibold text-lg text-white">
+                {t("errorTitle")}
+              </h2>
+              <p className="text-sm text-text-secondary max-w-sm">
+                {t("errorDescription")}
+              </p>
+              <button
+                onClick={handleRetry}
+                disabled={retrying}
+                className="mt-2 flex items-center gap-2 px-6 py-2.5 rounded-full bg-accent text-[#0A0A0A] font-semibold text-sm hover:brightness-110 transition-all disabled:opacity-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${retrying ? "animate-spin" : ""}`} />
+                {t("retry")}
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* ── Rotating Tips ── */}
         <AnimatePresence>
-          {showTips && (
+          {showTips && !analysisError && (
             <div className="h-16 flex items-center justify-center">
               <AnimatePresence mode="wait">
                 <motion.p

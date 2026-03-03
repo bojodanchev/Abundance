@@ -129,7 +129,10 @@
     "step4": "Building your plan",
     "tip1": "People with a clear plan achieve their goals 3x faster.",
     "tip2": "Your profile is unique — no two people are alike.",
-    "tip3": "The 90-day plan is the optimal window for transformation."
+    "tip3": "The 90-day plan is the optimal window for transformation.",
+    "errorTitle": "Something went wrong",
+    "errorDescription": "There was a problem generating your analysis. Please try again.",
+    "retry": "Try again"
   },
   "results": {
     "label": "YOUR PROFILE",
