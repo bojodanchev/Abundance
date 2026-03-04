@@ -4,7 +4,7 @@ let _stripe: Stripe | null = null;
 
 export function getStripe(): Stripe {
   if (!_stripe) {
-    const key = process.env.STRIPE_SECRET_KEY;
+    const key = process.env.STRIPE_SECRET_KEY?.replace(/[\s\\n]+$/g, "").trim();
     if (!key) {
       throw new Error("Missing STRIPE_SECRET_KEY environment variable");
     }
