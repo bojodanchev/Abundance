@@ -128,19 +128,22 @@ export async function POST(request: Request) {
         ? `https://${process.env.VERCEL_URL}`
         : "http://localhost:3000");
 
+    // Map checkout tier (low/mid/high) to PDF tier (free/paid)
+    const pdfTier = "paid";
+
     after(async () => {
       try {
         await fetch(`${baseUrl}/api/generate-pdf`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            ...(process.env.INTERNAL_API_KEY && {
-              "x-internal-key": process.env.INTERNAL_API_KEY,
+            ...(process.env.INTERNAL_API_KEY?.trim() && {
+              "x-internal-key": process.env.INTERNAL_API_KEY.trim(),
             }),
           },
           body: JSON.stringify({
             submission_id: submissionId,
-            tier,
+            tier: pdfTier,
           }),
         });
       } catch (err) {

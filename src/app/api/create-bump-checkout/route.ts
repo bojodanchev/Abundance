@@ -64,6 +64,12 @@ export async function POST(request: Request) {
       cancel_url: `${baseUrl}/${locale}/bump-offer?ref=${shortCode}`,
     });
 
+    // Save stripe session ID on submission for tracking
+    await getSupabaseAdmin()
+      .from("submissions")
+      .update({ stripe_session_id: session.id })
+      .eq("id", submission_id);
+
     return NextResponse.json({ success: true, url: session.url });
   } catch (error) {
     console.error("Create bump checkout error:", error);
