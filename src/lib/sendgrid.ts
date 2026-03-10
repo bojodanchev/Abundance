@@ -39,7 +39,7 @@ export async function sendEmail({ to, subject, html, attachments }: EmailParams)
   }));
 
   return getTransporter().sendMail({
-    from: process.env.SMTP_FROM_EMAIL ?? "noreply@codeabundance.com",
+    from: `CODE: ABUNDANCE™ <${process.env.SMTP_FROM_EMAIL ?? "noreply@codeabundance.com"}>`,
     to,
     subject,
     html,

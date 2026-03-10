@@ -97,6 +97,35 @@ export async function GET(request: Request) {
     errors.push(`welcome_retry query failed: ${msg}`);
   }
 
+  // --- Recover stale "processing" submissions ---
+  // If a submission has been in "processing" for >15 min, the Vercel function
+  // likely crashed without updating status. Reset to "error" so the next
+  // section picks it up for retry.
+  let staleRecovered = 0;
+  try {
+    const staleCutoff = new Date(Date.now() - 15 * 60 * 1000).toISOString();
+    const { data: stale } = await supabase
+      .from("submissions")
+      .select("id")
+      .eq("status", "processing")
+      .is("analysis_result", null)
+      .lt("updated_at", staleCutoff);
+
+    if (stale && stale.length > 0) {
+      for (const row of stale) {
+        await supabase
+          .from("submissions")
+          .update({ status: "error", updated_at: new Date().toISOString() })
+          .eq("id", row.id)
+          .eq("status", "processing");
+        staleRecovered++;
+      }
+    }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    errors.push(`stale_recovery failed: ${msg}`);
+  }
+
   // --- Retry failed analyses ---
   // Re-triggers generate-analysis for submissions stuck in "error" status
   let analysisRetried = 0;
@@ -197,7 +226,7 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.json({ processed, welcomeRetried, analysisRetried, errors });
+  return NextResponse.json({ processed, welcomeRetried, staleRecovered, analysisRetried, errors });
 }
 
 // ----------------------------------------------------------------
